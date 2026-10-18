@@ -1,0 +1,878 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHAMPION CLASSES</title>
+<style>
+:root{--navy:#142b50;--blue:#315fba;--bg:#f3f6fc;--ink:#1e2b42;--muted:#68758b;--line:#e0e7f1;--white:#fff;--green:#13835c;--red:#b52e42}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;background:var(--blue);color:white;font-weight:650}
+button.secondary{background:#eaf0ff;color:var(--navy)}
+button.danger{background:var(--red)}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #ccd6e5;border-radius:9px;background:white;color:var(--ink)}
+label{font-size:13px;font-weight:650;display:block;margin-bottom:6px}
+.field{margin-bottom:12px}
+.hidden{display:none!important}
+.top{background:var(--navy);color:white;padding:17px 24px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.brand{font-size:22px;font-weight:800}
+.tagline{font-size:12px;color:#dbe6ff;margin-top:4px}
+.userline{display:flex;align-items:center;gap:12px}
+.layout{display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 78px)}
+aside{background:white;border-right:1px solid var(--line);padding:16px 12px}
+.navbtn{display:block;width:100%;text-align:left;background:transparent;color:var(--ink);margin:4px 0;font-weight:500}
+.navbtn.active,.navbtn:hover{background:#eaf0ff;color:var(--blue)}
+main{padding:25px;min-width:0}
+.section{display:none}
+.section.active{display:block}
+.page-title{margin:0 0 20px;font-size:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card{background:white;border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:0 4px 18px #233c6508;min-width:0;margin-bottom:15px}
+.stat{font-size:30px;font-weight:800;color:var(--blue);margin-top:10px}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+.row button{flex:0 0 auto}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:14px}
+th{background:#f7f9fd;color:#52627a}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:12px}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:16px}
+.test-card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;min-width:0;overflow-wrap:anywhere}
+.question{padding:13px 0;border-bottom:1px solid var(--line)}
+.option{display:flex;gap:9px;align-items:flex-start;margin:10px 0;font-weight:400}
+.option input{width:auto;margin-top:3px}
+.notice{background:white;padding:15px;border:1px solid var(--line);border-radius:11px;margin-top:10px}
+.badge{display:inline-block;background:#eaf0ff;color:var(--navy);border-radius:999px;padding:5px 9px;font-size:12px}
+.message{font-size:14px;color:var(--green);margin-top:12px}
+.error{color:var(--red)}
+.auth-wrap{max-width:470px;margin:40px auto;padding:18px}
+.auth-card{background:white;border:1px solid var(--line);border-radius:18px;padding:27px;box-shadow:0 10px 35px #142b5010}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+@media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}aside{display:flex;overflow-x:auto;gap:5px;padding:8px}.navbtn{width:auto;white-space:nowrap;margin:0}.split{grid-template-columns:1fr}main{padding:14px}.userline{width:100%;justify-content:space-between}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <div class="brand">🏆 CHAMPION CLASSES</div>
+    <div class="tagline">Student Management & Learning Portal</div>
+  </div>
+  <div id="userLine" class="userline hidden">
+    <span id="userName"></span>
+    <button class="secondary" id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="auth-wrap">
+  <div class="auth-card">
+    <h1>Welcome Back</h1>
+    <p class="muted">Secure login using password and email OTP.</p>
+
+    <div class="field">
+      <label>Login type</label>
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="admin">Admin</option>
+        <option value="cashier">Cashier</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" autocomplete="username" placeholder="Enter email">
+    </div>
+    <div class="field">
+      <label>Password (minimum 6 characters)</label>
+      <input id="password" type="password" minlength="6" autocomplete="current-password" placeholder="Enter password">
+    </div>
+    <button id="requestOtp" style="width:100%">Send Login OTP</button>
+
+    <div id="otpArea" class="hidden" style="margin-top:15px">
+      <div class="field">
+        <label>6-digit OTP</label>
+        <input id="otp" inputmode="numeric" maxlength="6" placeholder="Enter OTP">
+      </div>
+      <button id="verifyOtp" style="width:100%">Verify OTP & Login</button>
+    </div>
+    <p id="loginMessage" class="message"></p>
+    <p class="hint">Local testing mein OTP server terminal mein milega. Real email OTP ke liye SMTP settings zaroori hain. Student accounts Admin banata hai.</p>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portal" class="layout hidden">
+  <aside id="nav"></aside>
+  <main>
+
+    <section class="section active" id="page-dashboard">
+      <h1 class="page-title">Dashboard Overview</h1>
+      <div class="grid" id="stats"></div>
+      <div class="card" style="margin-top:18px">
+        <h3>Welcome to CHAMPION CLASSES</h3>
+        <p class="muted">Manage students, attendance, tests, results and fees from the sidebar.</p>
+      </div>
+    </section>
+
+    <section class="section" id="page-students">
+      <h1 class="page-title">Student Management</h1>
+      <div class="card admin-only">
+        <h3>Create Student Account</h3>
+        <div class="split">
+          <div class="field"><label>Student name</label><input id="sName"></div>
+          <div class="field"><label>Student email</label><input id="sEmail" type="email"></div>
+          <div class="field"><label>Class</label><input id="sClass" placeholder="Class 10"></div>
+          <div class="field"><label>Password (6+ characters)</label><input id="sPassword" type="password"></div>
+        </div>
+        <button id="addStudent">Create Student</button>
+        <p class="hint">Student ko login email aur password privately dena.</p>
+      </div>
+      <div class="card">
+        <h3>Student List</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Student ID</th><th>Email</th><th>Class</th><th>Action</th></tr></thead>
+          <tbody id="studentsRows"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="page-attendance">
+      <h1 class="page-title">Date-wise Attendance</h1>
+      <div class="card">
+        <div class="row">
+          <div class="field"><label>Attendance date</label><input type="date" id="attDate"></div>
+          <button id="loadAttendance">Load Students</button>
+          <button id="saveAttendance">Save Attendance</button>
+        </div>
+        <div id="attendanceEditor"></div>
+        <p id="attMessage" class="message"></p>
+      </div>
+    </section>
+
+    <section class="section" id="page-attendance-overview">
+      <h1 class="page-title">Attendance Overview</h1>
+      <div class="card">
+        <button id="loadAttOverview">Refresh Overview</button>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Student</th><th>Student ID</th><th>Class</th><th>Present</th><th>Absent</th><th>Total Days</th><th>Attendance %</th></tr></thead>
+          <tbody id="attOverviewRows"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="page-tests">
+      <h1 class="page-title">MCQ Tests</h1>
+      <div class="card staff-only">
+        <h3>Create Class-wise MCQ Test</h3>
+        <div class="split">
+          <div class="field"><label>Test title</label><input id="testTitle" placeholder="HTML Basics"></div>
+          <div class="field"><label>Target class</label><input id="testClass" placeholder="Class 10"></div>
+        </div>
+        <div class="field">
+          <label>Questions JSON</label>
+          <textarea id="questionsJSON" rows="12" spellcheck="false">[
+  {
+    "text": "Which language runs in a web browser?",
+    "options": ["Python", "JavaScript", "C", "SQL"],
+    "answer": "JavaScript"
+  },
+  {
+    "text": "HTML is used to create what?",
+    "options": ["Web page structure", "Database server", "Operating system", "Router"],
+    "answer": "Web page structure"
+  }
+]</textarea>
+          <p class="hint">Each question needs text, options and an answer that exactly matches one option.</p>
+        </div>
+        <button id="createTest">Save as Draft</button>
+        <div id="testAdminList"></div>
+      </div>
+      <h3 style="margin-top:24px">Available Tests</h3>
+      <div id="studentTests" class="test-grid"></div>
+      <p id="testsMessage" class="message"></p>
+    </section>
+
+    <section class="section" id="page-results">
+      <h1 class="page-title">Results Overview</h1>
+      <div class="card staff-only">
+        <h3>Publish Results</h3>
+        <div class="split">
+          <div class="field"><label>Test ID (optional)</label><input id="publishTestId" placeholder="Paste test ID"></div>
+          <div class="field"><label>Class (optional)</label><input id="publishClass" placeholder="Class 10"></div>
+        </div>
+        <button id="publishResults">Publish Results</button>
+        <p class="hint">Test ID aur class dono blank chhodne par sabhi submitted results publish ho jayenge.</p>
+        <div id="submissionsRows"></div>
+      </div>
+      <div class="card">
+        <h3>Published Results</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Test</th><th>Student</th><th>Class</th><th>Marks</th><th>Percentage</th><th>Status</th><th>Download</th></tr></thead>
+          <tbody id="resultsRows"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="page-fees">
+      <h1 class="page-title">Cashier / Fee Collection</h1>
+      <div class="card cashier-only">
+        <div class="split">
+          <div class="field"><label>Student ID</label><input id="feeStudentId" placeholder="CC-..."></div>
+          <div class="field"><label>Amount (₹)</label><input id="feeAmount" type="number" min="1"></div>
+          <div class="field"><label>Month / purpose</label><input id="feeMonth" placeholder="October tuition"></div>
+        </div>
+        <button id="collectFee">Record Payment</button>
+      </div>
+      <div class="card">
+        <h3>Fee Receipts</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Receipt</th><th>Student</th><th>Class</th><th>Amount</th><th>Purpose</th><th>Date</th></tr></thead>
+          <tbody id="feesRows"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="page-notices">
+      <h1 class="page-title">Notices</h1>
+      <div class="card staff-only">
+        <div class="field"><label>Notice title</label><input id="noticeTitle"></div>
+        <div class="field"><label>Message</label><textarea id="noticeBody" rows="3"></textarea></div>
+        <div class="field"><label>Class or All</label><input id="noticeClass" value="All"></div>
+        <button id="addNotice">Publish Notice</button>
+      </div>
+      <div id="noticesList"></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="footer">CHAMPION CLASSES · Coaching Management Portal</div>
+
+<script>
+    
+  
+function downloadResultPDF(result) {
+  try {
+    if (!result) {
+      alert("Result ka data nahi mila.");
+      return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert("PDF library load nahi hui. Internet check karo.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    const score = result.score ?? result.marks ?? 0;
+    const total = result.total ?? result.totalMarks ?? 0;
+    const percentage =
+      result.percentage ?? (total > 0 ? (score / total) * 100 : 0);
+
+    pdf.setFontSize(20);
+    pdf.text("CHAMPION CLASSES", 20, 20);
+
+    pdf.setFontSize(14);
+    pdf.text("Test Result", 20, 35);
+
+    pdf.setFontSize(11);
+    pdf.text(`Student: ${result.studentName || "Student"}`, 20, 50);
+    pdf.text(`Class: ${result.className || "Not specified"}`, 20, 60);
+    pdf.text(`Test: ${result.testTitle || "Test Result"}`, 20, 70);
+    pdf.text(`Marks: ${score} / ${total}`, 20, 80);
+    pdf.text(`Percentage: ${Number(percentage).toFixed(2)}%`, 20, 90);
+    pdf.text("Status: Published", 20, 100);
+
+    pdf.save("Champion-Classes-Result.pdf");
+  } catch (error) {
+    console.error("PDF error:", error);
+    alert("PDF download nahi hui. Browser Console check karo.");
+  }
+}
+  
+
+
+async function deleteTest(testId) {
+  if (!confirm("Kya aap is test ko delete karna chahte hain? Iske results aur submissions bhi delete ho sakte hain.")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `/api/tests/${encodeURIComponent(testId)}`,
+      { method: "DELETE" }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Test delete nahi hua.");
+    }
+
+    alert(data.message);
+    await loadTests();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let studentsCache = [];
+
+async function api(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || `Request failed (${response.status})`);
+  }
+
+  return data;
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[ch]);
+}
+
+function message(id, text, isError = false) {
+  $(id).textContent = text;
+  $(id).className = isError ? "message error" : "message";
+}
+
+function roleIsStaff() {
+  return ["admin", "teacher"].includes(currentUser.role);
+}
+
+function setupNavigation() {
+  const items = [["dashboard", "🏠 Dashboard"]];
+
+  if (["admin", "teacher", "cashier"].includes(currentUser.role)) {
+    items.push(["students", "👥 Students"]);
+  }
+
+  if (roleIsStaff()) {
+    items.push(["attendance", "📅 Attendance"]);
+    items.push(["attendance-overview", "📊 Attendance Overview"]);
+  }
+
+  items.push(["tests", "📝 MCQ Tests"]);
+  items.push(["results", "🎓 Results Overview"]);
+
+  if (["admin", "cashier", "student"].includes(currentUser.role)) {
+    items.push(["fees", "💳 Fees / Receipts"]);
+  }
+
+  items.push(["notices", "📢 Notices"]);
+
+  $("nav").innerHTML = items.map(([page, title]) =>
+    `<button class="navbtn ${page === "dashboard" ? "active" : ""}"
+      data-page="${page}">${title}</button>`
+  ).join("");
+
+  document.querySelectorAll(".navbtn").forEach(button => {
+    button.onclick = () => showPage(button.dataset.page);
+  });
+
+  document.querySelectorAll(".admin-only").forEach(element => {
+    element.classList.toggle("hidden", currentUser.role !== "admin");
+  });
+
+  document.querySelectorAll(".staff-only").forEach(element => {
+    element.classList.toggle("hidden", !roleIsStaff());
+  });
+
+  document.querySelectorAll(".cashier-only").forEach(element => {
+    element.classList.toggle(
+      "hidden", !["admin", "cashier"].includes(currentUser.role)
+    );
+  });
+}
+
+async function openPortal(user) {
+  currentUser = user;
+  $("loginScreen").classList.add("hidden");
+  $("portal").classList.remove("hidden");
+  $("userLine").classList.remove("hidden");
+  $("userName").textContent = user.name + " · " + user.role;
+  setupNavigation();
+  await loadPage("dashboard");
+}
+
+function showPage(page) {
+  document.querySelectorAll(".section").forEach(section =>
+    section.classList.remove("active")
+  );
+
+  $("page-" + page).classList.add("active");
+
+  document.querySelectorAll(".navbtn").forEach(button =>
+    button.classList.toggle("active", button.dataset.page === page)
+  );
+
+  loadPage(page).catch(error => alert(error.message));
+}
+
+async function loadPage(page) {
+  if (page === "dashboard") {
+    const data = await api("/api/dashboard");
+    const titles = {
+      students: "Students",
+      tests: "Available Tests",
+      results: "Results",
+      attendanceRecords: "Attendance Records",
+      feesDue: "Fees Due"
+    };
+
+    $("stats").innerHTML = Object.entries(data.stats).map(([key, value]) =>
+      `<div class="card"><div class="muted">${titles[key] || key}</div>
+       <div class="stat">${value}</div></div>`
+    ).join("");
+  }
+
+  if (page === "students") await loadStudents();
+  if (page === "attendance") await loadAttendanceEditor();
+  if (page === "attendance-overview") await loadAttendanceOverview();
+  if (page === "tests") await loadTests();
+  if (page === "results") await loadResults();
+  if (page === "fees") await loadFees();
+  if (page === "notices") await loadNotices();
+}
+
+// STUDENTS
+async function loadStudents() {
+  const data = await api("/api/students");
+  studentsCache = data.students;
+
+  $("studentsRows").innerHTML = studentsCache.map(student => `
+    <tr>
+      <td>${escapeHTML(student.name)}</td>
+      <td>${escapeHTML(student.studentCode)}</td>
+      <td>${escapeHTML(student.email)}</td>
+      <td>${escapeHTML(student.className)}</td>
+      <td>${currentUser.role === "admin"
+        ? `<button class="danger" onclick="deleteStudent('${student.id}')">Delete</button>`
+        : ""}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="5">No students added yet.</td></tr>`;
+}
+
+async function deleteStudent(id) {
+  if (!confirm("Delete this student account?")) return;
+  await api("/api/students/" + encodeURIComponent(id), { method: "DELETE" });
+  await loadStudents();
+}
+
+$("addStudent").onclick = async () => {
+  try {
+    const data = await api("/api/students", {
+      method: "POST",
+      body: JSON.stringify({
+        name: $("sName").value,
+        email: $("sEmail").value,
+        className: $("sClass").value,
+        password: $("sPassword").value
+      })
+    });
+
+    alert("Student created. Student ID: " + data.student.studentCode);
+
+    ["sName", "sEmail", "sClass", "sPassword"].forEach(id => $(id).value = "");
+    await loadStudents();
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// DATE-WISE ATTENDANCE
+$("attDate").value = new Date().toLocaleDateString("en-CA");
+
+async function loadAttendanceEditor() {
+  await loadStudents();
+
+  const date = $("attDate").value;
+  const data = await api("/api/attendance?date=" + encodeURIComponent(date));
+  const existing = new Map(data.attendance.map(item => [item.studentId, item.status]));
+
+  $("attendanceEditor").innerHTML = studentsCache.map(student => `
+    <div class="row" style="padding:12px 0;border-bottom:1px solid #e0e7f1">
+      <div><b>${escapeHTML(student.name)}</b>
+        <div class="muted">${escapeHTML(student.studentCode)} · ${escapeHTML(student.className)}</div>
+      </div>
+      <div>
+        <select data-student="${student.id}">
+          <option ${existing.get(student.id) === "Present" ? "selected" : ""}>Present</option>
+          <option ${existing.get(student.id) === "Absent" ? "selected" : ""}>Absent</option>
+          <option ${existing.get(student.id) === "Late" ? "selected" : ""}>Late</option>
+        </select>
+      </div>
+    </div>
+  `).join("") || "<p class='muted'>Admin se pehle students add karwayein.</p>";
+}
+
+$("loadAttendance").onclick = () =>
+  loadAttendanceEditor().catch(error => message("attMessage", error.message, true));
+
+$("saveAttendance").onclick = async () => {
+  try {
+    const records = [...$("attendanceEditor").querySelectorAll("select[data-student]")]
+      .map(select => ({
+        studentId: select.dataset.student,
+        status: select.value
+      }));
+
+    const data = await api("/api/attendance/bulk", {
+      method: "POST",
+      body: JSON.stringify({ date: $("attDate").value, records })
+    });
+
+    message("attMessage", data.message);
+  } catch (error) {
+    message("attMessage", error.message, true);
+  }
+};
+
+async function loadAttendanceOverview() {
+  const data = await api("/api/attendance/overview");
+
+  $("attOverviewRows").innerHTML = data.overview.map(student => `
+    <tr>
+      <td>${escapeHTML(student.name)}</td>
+      <td>${escapeHTML(student.studentCode)}</td>
+      <td>${escapeHTML(student.className)}</td>
+      <td>${student.presentDays}</td>
+      <td>${student.absentDays}</td>
+      <td>${student.totalDays}</td>
+      <td><b>${student.percentage}%</b></td>
+    </tr>
+  `).join("") || `<tr><td colspan="7">No students found.</td></tr>`;
+}
+
+$("loadAttOverview").onclick = () =>
+  loadAttendanceOverview().catch(error => alert(error.message));
+
+// TESTS
+async function loadTests() {
+  const data = await api("/api/tests");
+  const tests = data.tests;
+
+  $("testAdminList").innerHTML = roleIsStaff() ? tests.map(test => `
+    <div class="notice">
+      <b>${escapeHTML(test.title)}</b> · ${escapeHTML(test.className)}
+      · ${test.questions.length} questions
+      <span class="badge">${test.published ? "Published" : "Draft"}</span>
+      <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
+      ${!test.published
+        ? `<button style="margin-top:9px" onclick="publishTest('${test.id}')">Publish to class</button>`
+        : ""}
+    </div>
+  `).join("") : "";
+
+  const visibleTests = currentUser.role === "student"
+    ? tests.filter(test => test.published && test.className === currentUser.className)
+    : tests;
+
+  $("studentTests").innerHTML = visibleTests.map(test => `
+    <div class="test-card">
+      <h3>${escapeHTML(test.title)}</h3>
+      <p class="muted">${escapeHTML(test.className)} · ${test.questions.length} questions</p>
+      <form onsubmit="submitTest(event, '${test.id}')">
+        ${test.questions.map((question, index) => `
+          <div class="question">
+            <b>${index + 1}. ${escapeHTML(question.text)}</b>
+            ${question.options.map(option => `
+              <label class="option">
+                <input type="radio" name="${question.id}" value="${escapeHTML(option)}" required>
+                <span>${escapeHTML(option)}</span>
+              </label>
+            `).join("")}
+          </div>
+        `).join("")}
+        ${currentUser.role === "student"
+          ? `<button style="margin-top:12px" type="submit">Submit Answers</button>`
+          : ""}
+      </form>
+    </div>
+  `).join("") || `<div class="card">No published tests available for your class.</div>`;
+}
+
+async function publishTest(id) {
+  try {
+    const data = await api("/api/tests/" + encodeURIComponent(id) + "/publish", {
+      method: "POST",
+      body: "{}"
+    });
+    alert(data.message);
+    await loadTests();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+$("createTest").onclick = async () => {
+  try {
+    const questions = JSON.parse($("questionsJSON").value);
+
+    const data = await api("/api/tests", {
+      method: "POST",
+      body: JSON.stringify({
+        title: $("testTitle").value,
+        className: $("testClass").value,
+        questions
+      })
+    });
+
+    $("publishTestId").value = data.test.id;
+    alert("Test draft saved. Publish it when ready.");
+    await loadTests();
+  } catch (error) {
+    alert("Test save nahi hua: " + error.message);
+  }
+};
+
+async function submitTest(event, testId) {
+  event.preventDefault();
+
+  try {
+    const form = event.target;
+    const answers = {};
+
+    new FormData(form).forEach((value, key) => answers[key] = value);
+
+    const data = await api("/api/tests/" + encodeURIComponent(testId) + "/submit", {
+      method: "POST",
+      body: JSON.stringify({ answers })
+    });
+
+    message("testsMessage", data.message);
+    await loadTests();
+  } catch (error) {
+    message("testsMessage", error.message, true);
+  }
+}
+
+// RESULTS
+
+async function loadResults() {
+  const data = await api("/api/results");
+
+  $("resultsRows").innerHTML = data.results.map((result, index) => `
+    <tr>
+      <td>${escapeHTML(result.testTitle)}</td>
+      <td>${escapeHTML(result.studentName)}</td>
+      <td>${escapeHTML(result.className)}</td>
+      <td>${result.score}/${result.total}</td>
+      <td>${result.percentage}%</td>
+      <td><span class="badge">Published</span></td>
+      <td>
+        <button type="button"
+          onclick="downloadResultPDF(window.studentResults[${index}])">
+          📄 Download PDF
+        </button>
+      </td>
+    </tr>
+  `).join("") ||
+    `<tr><td colspan="7">No published results.</td></tr>`;
+
+  // PDF function ko result data available karana
+  window.studentResults = data.results;
+
+  if (roleIsStaff()) {
+    const overview = await api("/api/results/overview");
+
+    $("submissionsRows").innerHTML = `
+      <h3>Student Submissions — Teacher View</h3>
+      <div class="table-wrap"><table>
+        <thead>
+          <tr>
+            <th>Test / ID</th>
+            <th>Student</th>
+            <th>Class</th>
+            <th>Marks</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${overview.overview.map(item => `
+            <tr>
+              <td>
+                ${escapeHTML(item.testTitle)}
+                <div class="muted">${escapeHTML(item.testId)}</div>
+              </td>
+              <td>${escapeHTML(item.studentName)}</td>
+              <td>${escapeHTML(item.className)}</td>
+              <td>${item.score}/${item.total}</td>
+              <td>${item.published ? "Published" : "Pending"}</td>
+            </tr>
+          `).join("") ||
+            `<tr><td colspan="5">No submissions yet.</td></tr>`}
+        </tbody>
+      </table></div>`;
+  }
+}
+
+
+$("publishResults").onclick = async () => {
+  try {
+    const data = await api("/api/results/publish", {
+      method: "POST",
+      body: JSON.stringify({
+        testId: $("publishTestId").value.trim() || undefined,
+        className: $("publishClass").value.trim() || undefined
+      })
+    });
+
+    alert(data.message);
+    await loadResults();
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// FEES
+async function loadFees() {
+  const data = await api("/api/fees");
+
+  $("feesRows").innerHTML = data.fees.map(fee => `
+    <tr>
+      <td>${escapeHTML(fee.receiptNo)}</td>
+      <td>${escapeHTML(fee.studentName)}</td>
+      <td>${escapeHTML(fee.className)}</td>
+      <td>₹${fee.amount}</td>
+      <td>${escapeHTML(fee.month)}</td>
+      <td>${new Date(fee.createdAt).toLocaleDateString()}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="6">No fee receipts yet.</td></tr>`;
+}
+
+$("collectFee").onclick = async () => {
+  try {
+    const data = await api("/api/fees", {
+      method: "POST",
+      body: JSON.stringify({
+        studentId: $("feeStudentId").value.trim(),
+        amount: $("feeAmount").value,
+        month: $("feeMonth").value
+      })
+    });
+
+    alert("Payment saved. Receipt: " + data.fee.receiptNo);
+    await loadFees();
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// NOTICES
+async function loadNotices() {
+  const data = await api("/api/notices");
+
+  $("noticesList").innerHTML = data.notices.map(notice => `
+    <div class="notice">
+      <b>${escapeHTML(notice.title)}</b>
+      <span class="badge">${escapeHTML(notice.className)}</span>
+      <p>${escapeHTML(notice.body)}</p>
+      <div class="muted">${new Date(notice.createdAt).toLocaleString()}</div>
+    </div>
+  `).join("") || `<p class="muted">No notices available.</p>`;
+}
+
+$("addNotice").onclick = async () => {
+  try {
+    await api("/api/notices", {
+      method: "POST",
+      body: JSON.stringify({
+        title: $("noticeTitle").value,
+        body: $("noticeBody").value,
+        className: $("noticeClass").value || "All"
+      })
+    });
+
+    $("noticeTitle").value = "";
+    $("noticeBody").value = "";
+    await loadNotices();
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// LOGIN WITH PASSWORD + OTP
+$("requestOtp").onclick = async () => {
+  try {
+    const data = await api("/api/auth/request-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        role: $("role").value,
+        email: $("email").value,
+        password: $("password").value
+      })
+    });
+
+    $("otpArea").classList.remove("hidden");
+    message("loginMessage", data.message);
+  } catch (error) {
+    message("loginMessage", error.message, true);
+  }
+};
+
+$("verifyOtp").onclick = async () => {
+  try {
+    const data = await api("/api/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        role: $("role").value,
+        email: $("email").value,
+        otp: $("otp").value
+      })
+    });
+
+    await openPortal(data.user);
+  } catch (error) {
+    message("loginMessage", error.message, true);
+  }
+};
+
+$("logoutBtn").onclick = async () => {
+  try {
+    await api("/api/auth/logout", { method: "POST", body: "{}" });
+  } finally {
+    location.reload();
+  }
+};
+
+// Restore an existing session after page refresh.
+(async () => {
+  try {
+    const data = await api("/api/me");
+    await openPortal(data.user);
+  } catch (error) {
+    // Not logged in yet; login screen stays visible.
+  }
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+</html>
