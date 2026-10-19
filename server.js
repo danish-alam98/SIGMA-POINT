@@ -6,7 +6,6 @@ const session = require("express-session");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
-const { Resend } = require("resend");
 const fs = require("fs");
 const path = require("path");
 
