@@ -25,7 +25,7 @@ const SESSION_SECRET = process.env.SESSION_SECRET ||
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false }));
-
+app.set("trust proxy", 1);
 app.use(session({
   name: "champion.sid",
   secret: SESSION_SECRET,
