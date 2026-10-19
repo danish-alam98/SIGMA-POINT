@@ -573,21 +573,28 @@ $("loadAttOverview").onclick = () =>
   loadAttendanceOverview().catch(error => alert(error.message));
 
 // TESTS
+
 async function loadTests() {
   const data = await api("/api/tests");
   const tests = data.tests;
 
-  $("testAdminList").innerHTML = roleIsStaff() ? tests.map(test => `
-    <div class="notice">
-      <b>${escapeHTML(test.title)}</b> · ${escapeHTML(test.className)}
-      · ${test.questions.length} questions
-      <span class="badge">${test.published ? "Published" : "Draft"}</span>
-      <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
-      ${!test.published
-        ? `<button style="margin-top:9px" onclick="publishTest('${test.id}')">Publish to class</button>`
-        : ""}
-    </div>
-  `).join("") : "";
+  $("testAdminList").innerHTML = roleIsStaff()
+    ? tests.map(test => `
+      <div class="notice">
+        <b>${escapeHTML(test.title)}</b> · ${escapeHTML(test.className)}
+        · ${test.questions.length} questions
+        <span class="badge">${test.published ? "Published" : "Draft"}</span>
+        <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
+
+        ${!test.published
+          ? `<button style="margin-top:9px" onclick="publishTest('${test.id}')">Publish to class</button>`
+          : ""}
+
+        <button style="margin-top:9px;background:#dc2626;color:white"
+          onclick="deleteTest('${test.id}')">Delete Test</button>
+      </div>
+    `).join("")
+    : "";
 
   const visibleTests = currentUser.role === "student"
     ? tests.filter(test => test.published && test.className === currentUser.className)
@@ -616,6 +623,26 @@ async function loadTests() {
     </div>
   `).join("") || `<div class="card">No published tests available for your class.</div>`;
 }
+
+async function deleteTest(testId) {
+  if (currentUser.role !== "admin") {
+    alert("Sirf admin test delete kar sakta hai.");
+    return;
+  }
+
+  if (!confirm("Kya aap sach mein ye test delete karna chahte hain?")) return;
+
+  try {
+    await api("/api/tests/" + encodeURIComponent(testId), {
+      method: "DELETE"
+    });
+    alert("Test delete ho gaya.");
+    await loadTests();
+  } catch (error) {
+    alert("Test delete nahi hua: " + error.message);
+  }
+}
+
 
 async function publishTest(id) {
   try {

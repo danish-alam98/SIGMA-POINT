@@ -512,6 +512,26 @@ app.post("/api/tests", requireLogin, allowRoles("admin", "teacher"), (req, res) 
   });
 });
 
+
+app.delete("/api/tests/:id", requireLogin, allowRoles("admin"), (req, res) => {
+  const testIndex = db.tests.findIndex(
+    t => t.id === req.params.id
+  );
+
+  if (testIndex === -1) {
+    return res.status(404).json({
+      error: "Test nahi mila."
+    });
+  }
+
+  db.tests.splice(testIndex, 1);
+  saveDB();
+
+  res.json({
+    message: "Test successfully delete ho gaya."
+  });
+});
+
 app.post("/api/tests/:id/publish", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
   const test = db.tests.find(t => t.id === req.params.id);
 
