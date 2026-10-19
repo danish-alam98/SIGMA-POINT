@@ -330,6 +330,7 @@ async function api(url, options = {}) {
   const response = await fetch(url, {
     ...options,
     headers: {
+      credentials: "same-origin",
       "Content-Type": "application/json",
       ...(options.headers || {})
     }
