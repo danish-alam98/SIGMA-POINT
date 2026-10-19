@@ -1,12 +1,12 @@
 
 require("dotenv").config();
-
+const { Resend } = require("resend");
 const express = require("express");
 const session = require("express-session");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const fs = require("fs");
 const path = require("path");
 
@@ -192,58 +192,57 @@ async function initializeAccounts() {
   saveDB();
 }
 
-let mailer = null;
-
-if (process.env.SMTP_HOST &&
-    process.env.SMTP_USER &&
-    process.env.SMTP_PASS) {
-  mailer = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: String(process.env.SMTP_SECURE) === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendOTP(email, code) {
-  if (mailer) {
-    await mailer.sendMail({
-      from: process.env.MAIL_FROM || process.env.SMTP_USER,
-      to: email,
-      subject: "CHAMPION CLASSES login OTP",
-      text: "Your OTP is " + code +
-        ". It expires in 5 minutes. Do not share it."
-    });
-    return;
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is missing.");
   }
 
-  if (process.env.NODE_ENV !== "production" &&
-      process.env.DEV_SHOW_OTP === "true") {
-    console.log("\nLOCAL TEST OTP for " + email + ": " + code + "\n");
-    return;
+  const from = process.env.RESEND_FROM;
+
+  if (!from) {
+    throw new Error("RESEND_FROM is missing.");
   }
 
-  throw new Error("Configure SMTP before enabling email OTP in production.");
+  const { data, error } = await resend.emails.send({
+    from,
+    to: email,
+    subject: "CHAMPION CLASSES login OTP",
+    text:
+      "Your CHAMPION CLASSES login OTP is " +
+      code +
+      ". It expires in 5 minutes. Do not share it."
+  });
+
+  if (error) {
+    console.error("Resend email error:", error.message);
+    throw new Error("Email provider could not send OTP.");
+  }
+
+  if (!data) {
+    throw new Error("Email provider returned no confirmation.");
+  }
 }
 
 // STEP 1: Email + password check, then send a 6-digit OTP.
-app.post("/api/auth/request-otp", loginLimiter, async (req, res) => {
+// DIRECT LOGIN: Email + password, no OTP required.
+app.post("/api/auth/login", loginLimiter, async (req, res) => {
   try {
     const email = clean(req.body.email, 160).toLowerCase();
     const password = String(req.body.password || "");
     const role = clean(req.body.role, 20);
 
-    if (!validEmail(email) || password.length < 6) {
+    if (!validEmail(email) || !password) {
       return res.status(400).json({
-        error: "Valid email and password of at least 6 characters required."
+        error: "Valid email aur password required hai."
       });
     }
 
     if (!["admin", "teacher", "student", "cashier"].includes(role)) {
-      return res.status(400).json({ error: "Select a valid login type." });
+      return res.status(400).json({
+        error: "Valid login type select karo."
+      });
     }
 
     const user = findUser(email);
@@ -253,81 +252,36 @@ app.post("/api/auth/request-otp", loginLimiter, async (req, res) => {
 
     if (!passwordOK) {
       return res.status(401).json({
-        error: "Invalid email, password, or login type."
+        error: "Email, password ya login type galat hai."
       });
     }
 
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    req.session.regenerate(error => {
+      if (error) {
+        return res.status(500).json({
+          error: "Login session create nahi hua."
+        });
+      }
 
-    db.otps = db.otps.filter(o => o.email !== email);
-    db.otps.push({
-      email,
-      role,
-      hash: await bcrypt.hash(code, 10),
-      expiresAt: Date.now() + 5 * 60 * 1000,
-      attempts: 0
-    });
+      req.session.userId = user.id;
 
-    saveDB();
-    await sendOTP(email, code);
+      req.session.save(saveError => {
+        if (saveError) {
+          return res.status(500).json({
+            error: "Login session save nahi hua."
+          });
+        }
 
-    res.json({
-      message: mailer
-        ? "OTP email bhej diya gaya hai. Inbox/spam check karein."
-        : "Local testing: OTP VS Code terminal mein dekhein."
+        return res.json({ user: safeUser(user) });
+      });
     });
   } catch (error) {
-    console.error("OTP error:", error.message);
-    res.status(500).json({ error: "OTP send nahi hua. Email settings check karein." });
-  }
-});
-
-// STEP 2: Verify OTP and create login session.
-app.post("/api/auth/verify-otp", loginLimiter, async (req, res) => {
-  const email = clean(req.body.email, 160).toLowerCase();
-  const role = clean(req.body.role, 20);
-  const code = clean(req.body.otp, 6);
-
-  const record = db.otps.find(o => o.email === email && o.role === role);
-
-  if (!record || record.expiresAt < Date.now() || record.attempts >= 5) {
-    return res.status(400).json({
-      error: "OTP expire ho gaya. Dobara OTP mangwayein."
+    console.error("Login error:", error);
+    return res.status(500).json({
+      error: "Login mein problem hui. Dobara try karo."
     });
   }
-
-  record.attempts++;
-
-  if (!(await bcrypt.compare(code, record.hash))) {
-    saveDB();
-    return res.status(401).json({ error: "OTP galat hai." });
-  }
-
-  const user = findUser(email);
-
-  if (!user || user.role !== role) {
-    return res.status(401).json({ error: "Account details match nahi karte." });
-  }
-
-  db.otps = db.otps.filter(o => o.email !== email);
-  saveDB();
-
-  req.session.regenerate(error => {
-    if (error) {
-      return res.status(500).json({ error: "Session create nahi hua." });
-    }
-
-    req.session.userId = user.id;
-
-    req.session.save(saveError => {
-      if (saveError) {
-        return res.status(500).json({ error: "Session save nahi hua." });
-      }
-      res.json({ user: safeUser(user) });
-    });
-  });
 });
-
 app.get("/api/me", requireLogin, (req, res) => {
   res.json({ user: safeUser(req.user) });
 });
