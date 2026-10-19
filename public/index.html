@@ -1,4 +1,4 @@
-i
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +56,7 @@ th{background:#f7f9fd;color:#52627a}
 .footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 @media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}aside{display:flex;overflow-x:auto;gap:5px;padding:8px}.navbtn{width:auto;white-space:nowrap;margin:0}.split{grid-template-columns:1fr}main{padding:14px}.userline{width:100%;justify-content:space-between}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -75,8 +75,8 @@ th{background:#f7f9fd;color:#52627a}
 <div id="loginScreen" class="auth-wrap">
   <div class="auth-card">
     <h1>Welcome Back</h1>
-    <p class="muted">Secure login using password and email OTP.</p>
-
+    
+<p class="muted">Login securely using your registered email and password.</p>
     <div class="field">
       <label>Login type</label>
       <select id="role">
@@ -94,12 +94,10 @@ th{background:#f7f9fd;color:#52627a}
       <label>Password (minimum 6 characters)</label>
       <input id="password" type="password" minlength="6" autocomplete="current-password" placeholder="Enter password">
     </div>
-    ```html
 <button id="requestOtp" type="button" style="width:100%">Login</button>
 
 <p id="loginMessage" class="message"></p>
 <p class="hint">Apne registered email aur password se login karein. Student accounts Admin banata hai.</p>
-```
   </div>
 </div>
 
@@ -326,15 +324,18 @@ const $ = id => document.getElementById(id);
 let currentUser = null;
 let studentsCache = [];
 
+
 async function api(url, options = {}) {
   const response = await fetch(url, {
     ...options,
+    credentials: "same-origin",
     headers: {
-      credentials: "same-origin",
       "Content-Type": "application/json",
       ...(options.headers || {})
     }
   });
+
+
 
   const data = await response.json().catch(() => ({}));
 
@@ -343,8 +344,8 @@ async function api(url, options = {}) {
   }
 
   return data;
-}
 
+}
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;",
@@ -360,6 +361,7 @@ function message(id, text, isError = false) {
 function roleIsStaff() {
   return ["admin", "teacher"].includes(currentUser.role);
 }
+
 
 function setupNavigation() {
   const items = [["dashboard", "🏠 Dashboard"]];
@@ -401,10 +403,12 @@ function setupNavigation() {
 
   document.querySelectorAll(".cashier-only").forEach(element => {
     element.classList.toggle(
-      "hidden", !["admin", "cashier"].includes(currentUser.role)
+      "hidden",
+      !["admin", "cashier"].includes(currentUser.role)
     );
   });
 }
+
 
 async function openPortal(user) {
   currentUser = user;
@@ -813,7 +817,7 @@ $("addNotice").onclick = async () => {
   }
 };
 
-// LOGIN WITH PASSWORD + OTP
+// LOGIN WITH PASSWORD
 
 $("requestOtp").onclick = async () => {
   try {
@@ -852,8 +856,5 @@ $("logoutBtn").onclick = async () => {
   }
 })();
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </body>
 </html>
