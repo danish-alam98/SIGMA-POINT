@@ -1,5 +1,6 @@
 
 require("dotenv").config();
+const { Pool } = require("pg");
 const { Resend } = require("resend");
 const express = require("express");
 const session = require("express-session");
@@ -12,6 +13,23 @@ const path = require("path");
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const DATA_FILE = path.join(__dirname, "data.json");
+
+const pool = new Pool({
+  
+pool.query("SELECT NOW() AS server_time")
+  .then(result => {
+    console.log("PostgreSQL connected successfully!");
+    console.log("Database time:", result.rows[0].server_time);
+  })
+  .catch(error => {
+    console.error("PostgreSQL connection failed:", error.message);
+  });
+
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production"
+    ? { rejectUnauthorized: false }
+    : false
+});
 
 if (process.env.NODE_ENV === "production" &&
     (!process.env.SESSION_SECRET ||
@@ -191,7 +209,9 @@ async function initializeAccounts() {
   saveDB();
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 async function sendOTP(email, code) {
   if (!process.env.RESEND_API_KEY) {
@@ -365,18 +385,67 @@ app.post("/api/students", requireLogin, allowRoles("admin"), async (req, res) =>
   res.status(201).json({ student });
 });
 
-app.delete("/api/students/:id", requireLogin, allowRoles("admin"), (req, res) => {
+
+app.put("/api/students/:id", requireLogin, allowRoles("admin"), async (req, res) => {
   const student = db.students.find(s => s.id === req.params.id);
 
   if (!student) {
     return res.status(404).json({ error: "Student nahi mila." });
   }
 
-  db.students = db.students.filter(s => s.id !== student.id);
-  db.users = db.users.filter(u => u.id !== student.userId);
+  const name = clean(req.body.name);
+  const email = clean(req.body.email, 160).toLowerCase();
+  const className = clean(req.body.className, 60);
+  const studentCode = clean(req.body.studentCode, 40);
+
+  if (!name || !validEmail(email) || !className || !studentCode) {
+    return res.status(400).json({
+      error: "Name, valid email, class aur Student ID required hain."
+    });
+  }
+
+  const duplicateEmail = db.users.find(
+    u => u.email === email && u.id !== student.userId
+  );
+
+  if (duplicateEmail) {
+    return res.status(409).json({
+      error: "Ye email kisi aur account mein use ho raha hai."
+    });
+  }
+
+  const duplicateCode = db.students.find(
+    s => s.studentCode === studentCode && s.id !== student.id
+  );
+
+  if (duplicateCode) {
+    return res.status(409).json({
+      error: "Ye Student ID pehle se kisi aur student ki hai."
+    });
+  }
+
+  const user = db.users.find(u => u.id === student.userId);
+
+  if (!user) {
+    return res.status(404).json({
+      error: "Student ka login account nahi mila."
+    });
+  }
+
+  student.name = name;
+  student.email = email;
+  student.className = className;
+  student.studentCode = studentCode;
+
+  user.name = name;
+  user.email = email;
+  user.className = className;
+
   saveDB();
-  res.json({ ok: true });
+
+  res.json({ ok: true, student });
 });
+
 
 // ATTENDANCE: date-wise marking; one status per student/date.
 app.get("/api/attendance", requireLogin, (req, res) => {
