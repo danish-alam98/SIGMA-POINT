@@ -55,16 +55,537 @@ th{background:#f7f9fd;color:#52627a}
 .hint{font-size:12px;color:var(--muted);line-height:1.5}
 .footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 @media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}aside{display:flex;overflow-x:auto;gap:5px;padding:8px}.navbtn{width:auto;white-space:nowrap;margin:0}.split{grid-template-columns:1fr}main{padding:14px}.userline{width:100%;justify-content:space-between}}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  width: 66px;
+  height: 66px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #10264c, #2459a6);
+  box-shadow: 0 7px 18px rgba(16, 38, 76, 0.22);
+  border: 1px solid rgba(255, 225, 155, 0.6);
+}
+
+.brand-logo svg {
+  width: 54px;
+  height: 54px;
+}
+
+.brand-copy .brand {
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #15315e;
+}
+
+.brand-copy .brand span {
+  color: #c18a20;
+}
+
+.brand-copy .tagline {
+  margin-top: 4px;
+  color: #536987;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.brand-copy .brand-subtitle {
+  margin-top: 3px;
+  color: #78869b;
+  font-size: 11px;
+}
+
+@media (max-width: 520px) {
+  .brand-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+  }
+
+  .brand-logo svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-copy .brand {
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+
+  .brand-copy .tagline {
+    font-size: 11px;
+  }
+
+  .brand-copy .brand-subtitle {
+    font-size: 10px;
+  }
+}
+
+/* ===== CHAMPION CLASSES PREMIUM HEADER ===== */
+
+.top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  flex-wrap: wrap;
+  padding: 24px 30px;
+  color: #ffffff;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(67, 123, 220, 0.32), transparent 45%),
+    linear-gradient(125deg, #07162f 0%, #102b54 55%, #173e73 100%);
+  border-bottom: 3px solid #d9a63c;
+  box-shadow: 0 8px 28px rgba(5, 20, 45, 0.22);
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #244f8c, #10284c);
+  border: 1px solid rgba(255, 224, 153, 0.85);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.045),
+    0 8px 22px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.brand-logo:hover {
+  transform: translateY(-3px) rotate(-2deg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.brand-logo svg {
+  width: 61px;
+  height: 61px;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.brand-copy .brand {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(19px, 2.3vw, 29px);
+  font-weight: 850;
+  letter-spacing: 1.5px;
+  line-height: 1.25;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.brand-copy .brand span {
+  color: #ffcc59;
+}
+
+.brand-copy .tagline {
+  margin-top: 7px;
+  color: #e0eaff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.35px;
+}
+
+.brand-copy .brand-subtitle {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 4px 9px;
+  color: #ffe3a0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+}
+
+.top .userline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #edf4ff;
+  font-weight: 600;
+}
+
+.top .userline button {
+  padding: 11px 19px;
+  color: #10284c;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff, #e7efff);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.top .userline button:hover {
+  transform: translateY(-2px);
+  background: #ffdc8b;
+}
+
+@media (max-width: 600px) {
+  .top {
+    padding: 18px 15px;
+    gap: 17px;
+  }
+
+  .brand-wrap {
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+  }
+
+  .brand-logo svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand-copy .brand {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-copy .tagline {
+    font-size: 11px;
+  }
+
+  .brand-copy .brand-subtitle {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+
+  .top .userline {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+/* Navigation ko mobile aur desktop par scrollable rakho */
+#nav {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+#nav button {
+  flex-shrink: 0;
+}
+
+.layout {
+  min-width: 0;
+}
+
+.layout main {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* Professional Student Management tools */
+.student-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) minmax(160px, 1fr);
+  gap: 14px;
+  margin: 18px 0 10px;
+}
+
+.student-tools input,
+.student-tools select {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 15px;
+  color: #183153;
+  background: #f8faff;
+  border: 1px solid #d8e2f0;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.student-tools input:focus,
+.student-tools select:focus {
+  border-color: #3268b2;
+  box-shadow: 0 0 0 3px rgba(50, 104, 178, .12);
+}
+
+.student-count {
+  margin: 8px 0 16px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#page-students .table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+#page-students table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#page-students th {
+  padding: 14px;
+  color: #24446f;
+  background: #edf3fc;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#page-students td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #e8edf5;
+}
+
+#page-students tbody tr:hover {
+  background: #f7faff;
+}
+
+@media (max-width: 600px) {
+  .student-tools {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== EDIT STUDENT PREMIUM MODAL ===== */
+.edit-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(12, 25, 48, 0.68);
+  backdrop-filter: blur(7px);
+}
+
+.edit-modal-card {
+  width: 100%;
+  max-width: 510px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e4ebf5;
+  border-radius: 22px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  animation: editModalIn 0.25s ease-out;
+}
+
+.edit-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.edit-modal-header h2 {
+  margin: 0 0 7px;
+  color: #17345f;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.edit-modal-header p {
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+}
+
+.edit-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 11px;
+  background: #eef3fa;
+  color: #29486f;
+  font-size: 26px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.edit-close:hover {
+  background: #dce8f8;
+  transform: rotate(90deg);
+}
+
+#editStudentForm label {
+  display: block;
+  margin: 16px 0 7px;
+  color: #334b6b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#editStudentForm input:not([type="hidden"]) {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid #d7e1ef;
+  border-radius: 11px;
+  background: #f8faff;
+  color: #183153;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#editStudentForm input:focus {
+  border-color: #3268b2;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(50, 104, 178, 0.12);
+}
+
+.edit-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 11px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid #edf1f7;
+}
+
+.edit-modal-actions button {
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.edit-modal-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.edit-cancel {
+  background: #edf1f7;
+  color: #344761;
+}
+
+.edit-cancel:hover {
+  background: #dfe7f2;
+}
+
+.edit-save {
+  background: linear-gradient(135deg, #3478d4, #204d9a);
+  color: #ffffff;
+  box-shadow: 0 5px 14px rgba(36, 99, 181, 0.22);
+}
+
+.edit-save:hover {
+  box-shadow: 0 8px 20px rgba(36, 99, 181, 0.32);
+}
+
+@keyframes editModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .edit-modal {
+    padding: 12px;
+  }
+
+  .edit-modal-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .edit-modal-header h2 {
+    font-size: 21px;
+  }
+
+  .edit-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .edit-modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edit-modal-card {
+    animation: none;
+  }
+  .edit-close,
+  .edit-modal-actions button {
+    transition: none;
+  }
+}
+
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
 
+
 <header class="top">
-  <div>
-    <div class="brand">🏆 CHAMPION CLASSES</div>
-    <div class="tagline">Student Management & Learning Portal</div>
+  <div class="brand-wrap">
+    <div class="brand-logo" aria-label="Champion Classes logo">
+      <svg viewBox="0 0 100 100" role="img" aria-label="Graduation cap logo">
+        <defs>
+          <linearGradient id="ccGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe7a0"/>
+            <stop offset="100%" stop-color="#d99b22"/>
+          </linearGradient>
+        </defs>
+        <path d="M50 9 5 31 50 53 95 31 50 9Z" fill="url(#ccGold)" stroke="#fff4ce" stroke-width="2"/>
+        <path d="M23 41V61Q50 82 77 61V41L50 55 23 41Z" fill="#ffffff"/>
+        <path d="M83 35V59" stroke="#ffe7a0" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="83" cy="64" r="5" fill="#ffe7a0"/>
+        <path d="M27 71Q50 86 73 71" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="brand-copy">
+      <div class="brand">CHAMPION <span>CLASSES</span></div>
+      <div class="tagline">Learn Today, Lead Tomorrow</div>
+      <div class="brand-subtitle">Coaching Management Portal</div>
+    </div>
   </div>
+
   <div id="userLine" class="userline hidden">
     <span id="userName"></span>
     <button class="secondary" id="logoutBtn">Logout</button>
@@ -130,6 +651,22 @@ th{background:#f7f9fd;color:#52627a}
       </div>
       <div class="card">
         <h3>Student List</h3>
+        
+<div class="student-tools">
+  <input
+    id="studentSearch"
+    type="search"
+    placeholder="Search name, email or Student ID..."
+    aria-label="Search students"
+  >
+
+  <select id="studentClassFilter" aria-label="Filter students by class">
+    <option value="">All Classes</option>
+  </select>
+</div>
+
+<p id="studentCount" class="student-count">All students</p>
+
         <div class="table-wrap"><table>
           <thead><tr><th>Name</th><th>Student ID</th><th>Email</th><th>Class</th><th>Action</th></tr></thead>
           <tbody id="studentsRows"></tbody>
@@ -461,28 +998,157 @@ async function loadPage(page) {
 }
 
 // STUDENTS
+
 async function loadStudents() {
   const data = await api("/api/students");
   studentsCache = data.students;
 
-  $("studentsRows").innerHTML = studentsCache.map(student => `
+  const searchText = ($("studentSearch")?.value || "").trim().toLowerCase();
+  const selectedClass = $("studentClassFilter")?.value || "";
+
+  const filteredStudents = studentsCache.filter(student => {
+    const matchesSearch = [
+      student.name,
+      student.studentCode,
+      student.email,
+      student.className
+    ].some(value =>
+      String(value || "").toLowerCase().includes(searchText)
+    );
+
+    const matchesClass =
+      !selectedClass || student.className === selectedClass;
+
+    return matchesSearch && matchesClass;
+  });
+
+  // Class filter ke options update karo
+  const classFilter = $("studentClassFilter");
+  if (classFilter) {
+    const previousClass = classFilter.value;
+    const classes = [...new Set(
+      studentsCache.map(student => student.className).filter(Boolean)
+    )].sort();
+
+    classFilter.innerHTML =
+      '<option value="">All Classes</option>' +
+      classes.map(className =>
+        `<option value="${escapeHTML(className)}">${escapeHTML(className)}</option>`
+      ).join("");
+
+    classFilter.value = classes.includes(previousClass) ? previousClass : "";
+  }
+
+  // Current filter ke hisaab se students dobara calculate karo
+  const finalStudents = studentsCache.filter(student => {
+    const matchesSearch = [
+      student.name,
+      student.studentCode,
+      student.email,
+      student.className
+    ].some(value =>
+      String(value || "").toLowerCase().includes(
+        ($("studentSearch")?.value || "").trim().toLowerCase()
+      )
+    );
+
+    const selected = $("studentClassFilter")?.value || "";
+    return matchesSearch && (!selected || student.className === selected);
+  });
+
+  if ($("studentCount")) {
+    $("studentCount").textContent =
+      `Showing ${finalStudents.length} of ${studentsCache.length} students`;
+  }
+
+  $("studentsRows").innerHTML = finalStudents.map(student => `
     <tr>
       <td>${escapeHTML(student.name)}</td>
       <td>${escapeHTML(student.studentCode)}</td>
       <td>${escapeHTML(student.email)}</td>
       <td>${escapeHTML(student.className)}</td>
-      <td>${currentUser.role === "admin"
-        ? `<button class="danger" onclick="deleteStudent('${student.id}')">Delete</button>`
-        : ""}</td>
+      
+      <td>
+        ${currentUser.role === "admin" ? `
+          <button type="button" onclick="editStudent('${student.id}')">Edit</button>
+          <button type="button" class="danger" onclick="deleteStudent('${student.id}')">Delete</button>
+        ` : ""}
+      </td>
     </tr>
-  `).join("") || `<tr><td colspan="5">No students added yet.</td></tr>`;
+  `).join("") || `<tr><td colspan="5">No matching students found.</td></tr>`;
 }
 
-async function deleteStudent(id) {
-  if (!confirm("Delete this student account?")) return;
-  await api("/api/students/" + encodeURIComponent(id), { method: "DELETE" });
-  await loadStudents();
+$("studentSearch")?.addEventListener("input", () => loadStudents());
+$("studentClassFilter")?.addEventListener("change", () => loadStudents());
+
+
+
+
+
+async function editStudent(id) {
+  const student = studentsCache.find(s => s.id === id);
+
+  if (!student) {
+    alert("Student nahi mila.");
+    return;
+  }
+
+  $("editStudentId").value = student.id;
+  $("editStudentName").value = student.name || "";
+  $("editStudentEmail").value = student.email || "";
+  $("editStudentClass").value = student.className || "";
+  $("editStudentCode").value = student.studentCode || "";
+
+  $("editStudentModal").style.display = "flex";
 }
+
+function closeEditStudentModal() {
+  $("editStudentModal").style.display = "none";
+}
+
+
+
+
+const editStudentForm = $("editStudentForm");
+console.log("EDIT FORM ELEMENT:", editStudentForm);
+
+if (editStudentForm) {
+  editStudentForm.addEventListener("submit", async function (event) {
+    console.log("EDIT FORM SUBMIT CHAL RAHA HAI");
+    event.preventDefault();
+
+    const id = $("editStudentId").value;
+
+    const studentData = {
+      name: $("editStudentName").value.trim(),
+      email: $("editStudentEmail").value.trim(),
+      className: $("editStudentClass").value.trim(),
+      studentCode: $("editStudentCode").value.trim()
+    };
+
+    try {
+      console.log("Form se bheja ja raha data:", studentData);
+      const result = await api(
+        "/api/students/" + encodeURIComponent(id),
+        {
+          method: "PUT",
+          body: JSON.stringify(studentData)
+        }
+      );
+
+      console.log("Server response:", result);
+console.log("Updated student name:", result.student?.name);
+      await loadStudents();
+      closeEditStudentModal();
+
+      alert("Student details update ho gayi!");
+    } catch (error) {
+      console.error("Student update error:", error);
+      alert(error.message || "Student update nahi ho saka.");
+    }
+  });
+}
+
 
 $("addStudent").onclick = async () => {
   try {
@@ -847,12 +1513,23 @@ $("addNotice").onclick = async () => {
 // LOGIN WITH PASSWORD
 
 $("requestOtp").onclick = async () => {
+  const button = $("requestOtp");
+
+  if (button.disabled) return;
+
+  const originalText = button.textContent;
+
+  button.disabled = true;
+  button.textContent = "Logging in...";
+  button.style.opacity = "0.7";
+  button.style.cursor = "wait";
+
   try {
     const data = await api("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
         role: $("role").value,
-        email: $("email").value,
+        email: $("email").value.trim(),
         password: $("password").value
       })
     });
@@ -860,6 +1537,11 @@ $("requestOtp").onclick = async () => {
     await openPortal(data.user);
   } catch (error) {
     message("loginMessage", error.message, true);
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+    button.style.opacity = "";
+    button.style.cursor = "";
   }
 };
 
@@ -883,5 +1565,35 @@ $("logoutBtn").onclick = async () => {
   }
 })();
 </script>
+
+<div id="editStudentModal" class="edit-modal" style="display:none;">
+  <div class="edit-modal-card">
+    <h2>Edit Student</h2>
+
+    <form id="editStudentForm">
+      <input type="hidden" id="editStudentId">
+
+      <label for="editStudentName">Student Name</label>
+      <input id="editStudentName" type="text" required>
+
+      <label for="editStudentEmail">Email</label>
+      <input id="editStudentEmail" type="email" required>
+
+      <label for="editStudentClass">Class / Course</label>
+      <input id="editStudentClass" type="text" required>
+
+      <label for="editStudentCode">Student ID</label>
+      <input id="editStudentCode" type="text" required>
+
+      <button type="submit">Save Changes</button>
+      <button type="button" onclick="closeEditStudentModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
 </body>
+<script>
+  alert("CHAMPION TEST OK");
+  console.log("CHAMPION TEST OK");
+</script>
 </html>
