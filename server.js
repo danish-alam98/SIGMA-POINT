@@ -1,4 +1,5 @@
 
+
 require("dotenv").config();
 const { Pool } = require("pg");
 const { Resend } = require("resend");
@@ -14,22 +15,39 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const DATA_FILE = path.join(__dirname, "data.json");
 
+
 const pool = new Pool({
-  
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL
+    ? { rejectUnauthorized: false }
+    : false,
+  connectionTimeoutMillis: 10000
+});
+
+console.log(
+  "DATABASE_URL loaded:",
+  Boolean(process.env.DATABASE_URL)
+);
+
+console.log(
+  "DATABASE_URL host:",
+  process.env.DATABASE_URL
+    ? new URL(process.env.DATABASE_URL).hostname
+    : "MISSING"
+);
+
+
 pool.query("SELECT NOW() AS server_time")
   .then(result => {
     console.log("PostgreSQL connected successfully!");
     console.log("Database time:", result.rows[0].server_time);
   })
   .catch(error => {
-    console.error("PostgreSQL connection failed:", error.message);
+    console.error("PostgreSQL connection failed:");
+    console.error("Error code:", error.code);
+    console.error("Error message:", error.message);
   });
 
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false
-});
 
 if (process.env.NODE_ENV === "production" &&
     (!process.env.SESSION_SECRET ||
