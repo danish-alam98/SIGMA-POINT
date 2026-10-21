@@ -90,39 +90,85 @@ function validEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function loadDB() {
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify({
-      users: [],
-      students: [],
-      attendance: [],
-      tests: [],
-      submissions: [],
-      results: [],
-      fees: [],
-      notices: [],
-      otps: []
-    }, null, 2));
+let db = {
+  users: [],
+  students: [],
+  attendance: [],
+  tests: [],
+  submissions: [],
+  results: [],
+  fees: [],
+  notices: [],
+  otps: []
+};
+
+async function loadDB() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS champion_app_state (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      data JSONB NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  const result = await pool.query(
+    "SELECT data FROM champion_app_state WHERE id = 1"
+  );
+
+  if (result.rows.length > 0) {
+    db = result.rows[0].data;
+
+    for (const key of [
+      "users", "students", "attendance", "tests",
+      "submissions", "results", "fees", "notices", "otps"
+    ]) {
+      if (!Array.isArray(db[key])) db[key] = [];
+    }
+
+    console.log("Application data PostgreSQL se load ho gaya.");
+    return;
   }
 
-  const data = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  // PostgreSQL mein record nahi hai, to existing data.json se import karo.
+  const initialData = fs.existsSync(DATA_FILE)
+    ? JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))
+    : db;
 
   for (const key of [
     "users", "students", "attendance", "tests",
     "submissions", "results", "fees", "notices", "otps"
   ]) {
-    if (!Array.isArray(data[key])) data[key] = [];
+    if (!Array.isArray(initialData[key])) initialData[key] = [];
   }
 
-  return data;
+  await pool.query(
+    `INSERT INTO champion_app_state (id, data)
+     VALUES (1, $1::jsonb)
+     ON CONFLICT (id) DO NOTHING`,
+    [JSON.stringify(initialData)]
+  );
+
+  const saved = await pool.query(
+    "SELECT data FROM champion_app_state WHERE id = 1"
+  );
+
+  db = saved.rows[0].data;
+  console.log("Application data PostgreSQL se initialize ho gaya.");
 }
 
-let db = loadDB();
+async function saveDB() {
+  await pool.query(
+    `INSERT INTO champion_app_state (id, data, updated_at)
+     VALUES (1, $1::jsonb, NOW())
+     ON CONFLICT (id)
+     DO UPDATE SET data = EXCLUDED.data,
+                   updated_at = NOW()`,
+    [JSON.stringify(db)]
+  );
 
-function saveDB() {
+  // Local backup bhi update rahega.
   fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2));
 }
-
 function findUser(email) {
   return db.users.find(
     user => user.email.toLowerCase() === email.toLowerCase()
@@ -135,6 +181,7 @@ function safeUser(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+  
     className: user.className || ""
   };
 }
@@ -224,7 +271,7 @@ async function initializeAccounts() {
     process.env.CASHIER_PASSWORD || "ChangeCashier123!"
   );
 
-  saveDB();
+   await saveDB();
 }
 
 const resend = process.env.RESEND_API_KEY
@@ -547,168 +594,183 @@ app.get("/api/tests", requireLogin, (req, res) => {
   res.json({ tests });
 });
 
-app.post("/api/tests", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
-  const title = clean(req.body.title);
-  const className = clean(req.body.className, 60);
-  const questions = req.body.questions;
+app.post("/api/tests", requireLogin, allowRoles("admin", "teacher"), async (req, res) => {
+  try {
+    const title = clean(req.body.title);
+    const className = clean(req.body.className, 60);
+    const questions = req.body.questions;
 
-  if (!title || !className || !Array.isArray(questions) || !questions.length) {
-    return res.status(400).json({ error: "Title, class aur JSON questions required." });
-  }
+    if (!title || !className || !Array.isArray(questions) || !questions.length) {
+      return res.status(400).json({
+        error: "Title, class aur JSON questions required."
+      });
+    }
 
-  if (questions.length > 100) {
-    return res.status(400).json({ error: "Ek test mein maximum 100 questions." });
-  }
+    if (questions.length > 100) {
+      return res.status(400).json({
+        error: "Ek test mein maximum 100 questions."
+      });
+    }
 
-  for (const q of questions) {
-    if (!clean(q.text, 500) ||
+    for (const q of questions) {
+      if (
+        !clean(q.text, 500) ||
         !Array.isArray(q.options) ||
         q.options.length < 2 ||
         q.options.length > 10 ||
-        !q.options.includes(q.answer)) {
-      return res.status(400).json({
-        error: "Har question mein text, 2-10 options aur options se matching answer required."
-      });
+        !q.options.includes(q.answer)
+      ) {
+        return res.status(400).json({
+          error: "Har question mein text, 2-10 options aur matching answer required."
+        });
+      }
     }
+
+    const test = {
+      id: makeId("test"),
+      title,
+      className,
+      questions: questions.map(q => ({
+        id: makeId("q"),
+        text: clean(q.text, 500),
+        options: q.options.map(option => clean(option, 250)),
+        answer: clean(q.answer, 250)
+      })),
+      published: false,
+      createdBy: req.user.id,
+      createdAt: new Date().toISOString(),
+      publishedAt: null
+    };
+
+    db.tests.push(test);
+    await saveDB();
+
+    res.status(201).json({
+      test: {
+        ...test,
+        questions: test.questions.map(({ answer, ...q }) => q)
+      }
+    });
+  } catch (error) {
+    console.error("Create test error:", error);
+    res.status(500).json({ error: "Test save nahi ho saka." });
   }
+});
 
-  const test = {
-    id: makeId("test"),
-    title,
-    className,
-    questions: questions.map(q => ({
-      id: makeId("q"),
-      text: clean(q.text, 500),
-      options: q.options.map(option => clean(option, 250)),
-      answer: clean(q.answer, 250)
-    })),
-    published: false,
-    createdBy: req.user.id,
-    createdAt: new Date().toISOString(),
-    publishedAt: null
-  };
+app.delete("/api/tests/:id", requireLogin, allowRoles("admin"), async (req, res) => {
+  try {
+    const testId = req.params.id;
+    const test = db.tests.find(t => t.id === testId);
 
-  db.tests.push(test);
-  saveDB();
-
-  res.status(201).json({
-    test: {
-      ...test,
-      questions: test.questions.map(({ answer, ...q }) => q)
+    if (!test) {
+      return res.status(404).json({ error: "Test nahi mila." });
     }
-  });
-});
 
+    db.submissions = db.submissions.filter(
+      s => s.testId !== testId
+    );
 
-app.delete("/api/tests/:id", requireLogin, allowRoles("admin"), (req, res) => {
-  const testIndex = db.tests.findIndex(
-    t => t.id === req.params.id
-  );
-
-  if (testIndex === -1) {
-    return res.status(404).json({
-      error: "Test nahi mila."
-    });
-  }
-
-  db.tests.splice(testIndex, 1);
-  saveDB();
-
-  res.json({
-    message: "Test successfully delete ho gaya."
-  });
-});
-
-app.post("/api/tests/:id/publish", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
-  const test = db.tests.find(t => t.id === req.params.id);
-
-  if (!test) return res.status(404).json({ error: "Test nahi mila." });
-
-  test.published = true;
-  test.publishedAt = new Date().toISOString();
-  saveDB();
-
-  res.json({ ok: true, message: test.title + " " + test.className + " ke liye publish ho gaya." });
-});
-
-app.delete("/api/tests/:id", requireLogin, allowRoles("admin"), (req, res) => {
-  const testId = req.params.id;
-
-  const test = db.tests.find(t => t.id === testId);
-
-  if (!test) {
-    return res.status(404).json({
-      error: "Test nahi mila."
-    });
-  }
-
-  // Test ke saath uski submissions aur results bhi delete honge.
-  db.submissions = db.submissions.filter(
-    s => s.testId !== testId
-  );
-
-  if (Array.isArray(db.results)) {
     db.results = db.results.filter(
       r => r.testId !== testId
     );
+
+    db.tests = db.tests.filter(
+      t => t.id !== testId
+    );
+
+    await saveDB();
+
+    res.json({
+      ok: true,
+      message: "Test aur uske related results delete ho gaye."
+    });
+  } catch (error) {
+    console.error("Delete test error:", error);
+    res.status(500).json({ error: "Test delete nahi ho saka." });
   }
+});
 
-  db.tests = db.tests.filter(
-    t => t.id !== testId
-  );
+app.post("/api/tests/:id/publish", requireLogin, allowRoles("admin", "teacher"), async (req, res) => {
+  try {
+    const test = db.tests.find(t => t.id === req.params.id);
 
-  saveDB();
+    if (!test) {
+      return res.status(404).json({ error: "Test nahi mila." });
+    }
 
-  res.json({
-    ok: true,
-    message: "Test successfully delete ho gaya."
-  });
+    test.published = true;
+    test.publishedAt = new Date().toISOString();
+
+    await saveDB();
+
+    res.json({
+      ok: true,
+      message: test.title + " " + test.className + " ke liye publish ho gaya."
+    });
+  } catch (error) {
+    console.error("Publish test error:", error);
+    res.status(500).json({ error: "Test publish nahi ho saka." });
+  }
 });
 
 
-app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), (req, res) => {
-  const test = db.tests.find(t =>
-    t.id === req.params.id &&
-    t.published &&
-    t.className === req.user.className
-  );
+app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), async (req, res) => {
+  try {
+    const test = db.tests.find(t =>
+      t.id === req.params.id &&
+      t.published &&
+      t.className === req.user.className
+    );
 
-  if (!test) return res.status(404).json({ error: "Test available nahi hai." });
+    if (!test) {
+      return res.status(404).json({ error: "Test available nahi hai." });
+    }
 
-  if (db.submissions.some(s =>
-    s.testId === test.id && s.studentUserId === req.user.id
-  )) {
-    return res.status(409).json({ error: "Aap ye test pehle submit kar chuke hain." });
+    if (db.submissions.some(s =>
+      s.testId === test.id && s.studentUserId === req.user.id
+    )) {
+      return res.status(409).json({
+        error: "Aap ye test pehle submit kar chuke hain."
+      });
+    }
+
+    const answers =
+      req.body.answers && typeof req.body.answers === "object"
+        ? req.body.answers
+        : {};
+
+    let score = 0;
+
+    for (const question of test.questions) {
+      if (answers[question.id] === question.answer) {
+        score++;
+      }
+    }
+
+    db.submissions.push({
+      id: makeId("submission"),
+      testId: test.id,
+      testTitle: test.title,
+      studentUserId: req.user.id,
+      studentName: req.user.name,
+      className: test.className,
+      score,
+      total: test.questions.length,
+      submittedAt: new Date().toISOString(),
+      published: false
+    });
+
+    await saveDB();
+
+    res.json({
+      message: "Test submit ho gaya. Teacher result publish karega tabhi marks dikhenge."
+    });
+  } catch (error) {
+    console.error("Submit test error:", error);
+    res.status(500).json({ error: "Test submit nahi ho saka." });
   }
-
-  const answers = req.body.answers && typeof req.body.answers === "object"
-    ? req.body.answers : {};
-
-  let score = 0;
-  for (const question of test.questions) {
-    if (answers[question.id] === question.answer) score++;
-  }
-
-  db.submissions.push({
-    id: makeId("submission"),
-    testId: test.id,
-    testTitle: test.title,
-    studentUserId: req.user.id,
-    studentName: req.user.name,
-    className: test.className,
-    score,
-    total: test.questions.length,
-    submittedAt: new Date().toISOString(),
-    published: false
-  });
-
-  saveDB();
-
-  // Student gets only a message, never the marks.
-  res.json({
-    message: "Test submit ho gaya. Teacher result publish karega tabhi marks dikhenge."
-  });
 });
+
 
 // RESULTS: student can only see published results.
 app.get("/api/results", requireLogin, (req, res) => {
@@ -736,45 +798,60 @@ app.get("/api/results/overview", requireLogin, allowRoles("admin", "teacher"), (
   res.json({ overview });
 });
 
-app.post("/api/results/publish", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
-  const testId = clean(req.body.testId, 100);
-  const className = clean(req.body.className, 60);
 
-  let count = 0;
+app.post("/api/results/publish", requireLogin, allowRoles("admin", "teacher"), async (req, res) => {
+  try {
+    const testId = clean(req.body.testId, 100);
+    const className = clean(req.body.className, 60);
 
-  for (const submission of db.submissions) {
-    if (testId && submission.testId !== testId) continue;
-    if (className && submission.className !== className) continue;
+    let count = 0;
 
-    submission.published = true;
+    for (const submission of db.submissions) {
+      if (testId && submission.testId !== testId) continue;
+      if (className && submission.className !== className) continue;
 
-    const result = {
-      id: makeId("result"),
-      submissionId: submission.id,
-      testId: submission.testId,
-      testTitle: submission.testTitle,
-      studentUserId: submission.studentUserId,
-      studentName: submission.studentName,
-      className: submission.className,
-      score: submission.score,
-      total: submission.total,
-      percentage: submission.total
-        ? Math.round(submission.score / submission.total * 100) : 0,
-      published: true,
-      publishedAt: new Date().toISOString()
-    };
+      // Already-published results ko dobara count nahi karna.
+      const alreadyPublished = db.results.some(
+        r => r.submissionId === submission.id
+      );
 
-    const oldIndex = db.results.findIndex(r => r.submissionId === submission.id);
+      if (alreadyPublished) continue;
 
-    if (oldIndex >= 0) db.results[oldIndex] = result;
-    else db.results.push(result);
+      submission.published = true;
 
-    count++;
+      const result = {
+        id: makeId("result"),
+        submissionId: submission.id,
+        testId: submission.testId,
+        testTitle: submission.testTitle,
+        studentUserId: submission.studentUserId,
+        studentName: submission.studentName,
+        className: submission.className,
+        score: submission.score,
+        total: submission.total,
+        percentage: submission.total
+          ? Math.round(submission.score / submission.total * 100)
+          : 0,
+        published: true,
+        publishedAt: new Date().toISOString()
+      };
+
+      db.results.push(result);
+      count++;
+    }
+
+    await saveDB();
+
+    res.json({
+      ok: true,
+      message: count + " result(s) publish ho gaye."
+    });
+  } catch (error) {
+    console.error("Publish results error:", error);
+    res.status(500).json({ error: "Results publish nahi ho sake." });
   }
-
-  saveDB();
-  res.json({ ok: true, message: count + " result(s) publish ho gaye." });
 });
+
 
 // CASHIER: payment entry and receipts.
 app.get("/api/fees", requireLogin, allowRoles("admin", "cashier", "student"), (req, res) => {
@@ -784,31 +861,39 @@ app.get("/api/fees", requireLogin, allowRoles("admin", "cashier", "student"), (r
   res.json({ fees });
 });
 
-app.post("/api/fees", requireLogin, allowRoles("admin", "cashier"), (req, res) => {
-  const student = db.students.find(s => s.id === req.body.studentId);
-  const amount = Number(req.body.amount);
+app.post("/api/fees", requireLogin, allowRoles("admin", "cashier"), async (req, res) => {
+  try {
+    const student = db.students.find(s => s.id === req.body.studentId);
+    const amount = Number(req.body.amount);
 
-  if (!student || !Number.isFinite(amount) || amount <= 0) {
-    return res.status(400).json({ error: "Student aur valid amount required." });
+    if (!student || !Number.isFinite(amount) || amount <= 0) {
+      return res.status(400).json({
+        error: "Student aur valid amount required."
+      });
+    }
+
+    const fee = {
+      id: makeId("fee"),
+      receiptNo: "CC-R-" + Date.now(),
+      studentId: student.id,
+      studentUserId: student.userId,
+      studentName: student.name,
+      className: student.className,
+      amount,
+      month: clean(req.body.month, 60),
+      status: "Paid",
+      collectedBy: req.user.id,
+      createdAt: new Date().toISOString()
+    };
+
+    db.fees.push(fee);
+    await saveDB();
+
+    res.status(201).json({ fee });
+  } catch (error) {
+    console.error("Fee save error:", error);
+    res.status(500).json({ error: "Fee save nahi ho saki." });
   }
-
-  const fee = {
-    id: makeId("fee"),
-    receiptNo: "CC-R-" + Date.now(),
-    studentId: student.id,
-    studentUserId: student.userId,
-    studentName: student.name,
-    className: student.className,
-    amount,
-    month: clean(req.body.month, 60),
-    status: "Paid",
-    collectedBy: req.user.id,
-    createdAt: new Date().toISOString()
-  };
-
-  db.fees.push(fee);
-  saveDB();
-  res.status(201).json({ fee });
 });
 
 // NOTICES
@@ -822,28 +907,40 @@ app.get("/api/notices", requireLogin, (req, res) => {
   });
 });
 
-app.post("/api/notices", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
-  const title = clean(req.body.title);
-  const body = clean(req.body.body, 2000);
-  const className = clean(req.body.className, 60) || "All";
 
-  if (!title || !body) {
-    return res.status(400).json({ error: "Notice title aur message required." });
+app.post("/api/notices", requireLogin, allowRoles("admin", "teacher"), async (req, res) => {
+  try {
+    const title = clean(req.body.title);
+    const body = clean(req.body.body, 2000);
+    const className = clean(req.body.className, 60) || "All";
+
+    if (!title || !body) {
+      return res.status(400).json({
+        error: "Notice title aur message required."
+      });
+    }
+
+    const notice = {
+      id: makeId("notice"),
+      title,
+      body,
+      className,
+      createdAt: new Date().toISOString(),
+      createdBy: req.user.id
+    };
+
+    db.notices.unshift(notice);
+    await saveDB();
+
+    res.status(201).json({ notice });
+  } catch (error) {
+    console.error("Notice save error:", error);
+    res.status(500).json({
+      error: "Notice save nahi ho saka."
+    });
   }
-
-  const notice = {
-    id: makeId("notice"),
-    title,
-    body,
-    className,
-    createdAt: new Date().toISOString(),
-    createdBy: req.user.id
-  };
-
-  db.notices.unshift(notice);
-  saveDB();
-  res.status(201).json({ notice });
 });
+
 
 // Keep this 404 handler AFTER all API routes.
 app.use("/api", (req, res) => {
@@ -854,15 +951,35 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-initializeAccounts()
-  .then(() => {
+
+async function startServer() {
+  try {
+    // Step 1: PostgreSQL se application data load karo
+    await loadDB();
+
+    // Step 2: Accounts initialize karo aur PostgreSQL mein save karo
+    await initializeAccounts();
+    await saveDB();
+
+    // Step 3: Sab ready hone ke baad server start karo
     app.listen(PORT, () => {
-      console.log("CHAMPION CLASSES running at http://localhost:" + PORT);
-      console.log("Admin email: " + (process.env.ADMIN_EMAIL || "admin@example.com"));
-      console.log("Teacher email: " + (process.env.TEACHER_EMAIL || "teacher@example.com"));
+      console.log(
+        "CHAMPION CLASSES running at http://localhost:" + PORT
+      );
+      console.log("PostgreSQL data loaded successfully.");
+      console.log(
+        "Admin email: " +
+        (process.env.ADMIN_EMAIL || "admin@example.com")
+      );
+      console.log(
+        "Teacher email: " +
+        (process.env.TEACHER_EMAIL || "teacher@example.com")
+      );
     });
-  })
-  .catch(error => {
-    console.error("Startup error:", error);
+  } catch (error) {
+    console.error("Startup error:", error.message);
     process.exit(1);
-  });
+  }
+}
+
+startServer();
