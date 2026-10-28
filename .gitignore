@@ -1,5 +1,6 @@
-
 node_modules/
 .env
-data.json
 *.log
+data.json
+data-backup.json
+postgres-backup.json

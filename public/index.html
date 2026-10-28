@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CHAMPION CLASSES</title>
+<title>SIGMA POINT</title>
 <style>
-:root{--navy:#142b50;--blue:#315fba;--bg:#f3f6fc;--ink:#1e2b42;--muted:#68758b;--line:#e0e7f1;--white:#fff;--green:#13835c;--red:#b52e42}
+:root{--navy:#142b50;--blue:#c49a32;--bg:#f3f6fc;--ink:#1e2b42;--muted:#68758b;--line:#e0e7f1;--white:#fff;--green:#13835c;--red:#b52e42}
 *{box-sizing:border-box}
 body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button,input,select,textarea{font:inherit}
@@ -56,11 +56,7 @@ th{background:#f7f9fd;color:#52627a}
 .footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 @media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}aside{display:flex;overflow-x:auto;gap:5px;padding:8px}.navbtn{width:auto;white-space:nowrap;margin:0}.split{grid-template-columns:1fr}main{padding:14px}.userline{width:100%;justify-content:space-between}}
 
-.brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+
 
 .brand-logo {
   width: 66px;
@@ -74,34 +70,97 @@ th{background:#f7f9fd;color:#52627a}
   border: 1px solid rgba(255, 225, 155, 0.6);
 }
 
+
+/* SIGMA POINT PREMIUM BRANDING */
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #07162f 0%, #173e73 100%);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  border: 1px solid #e0b64d;
+}
+
 .brand-logo svg {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
+}
+
+.brand-copy {
+  min-width: 0;
 }
 
 .brand-copy .brand {
-  font-size: 23px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #15315e;
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 850;
+  letter-spacing: 1.1px;
+  line-height: 1.2;
+  color: #ffffff;
 }
 
 .brand-copy .brand span {
-  color: #c18a20;
+  color: #ffcc59;
 }
 
 .brand-copy .tagline {
-  margin-top: 4px;
-  color: #536987;
-  font-size: 13px;
+  margin-top: 5px;
+  color: #e0eaff;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 .brand-copy .brand-subtitle {
-  margin-top: 3px;
-  color: #78869b;
-  font-size: 11px;
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 204, 89, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffdc8a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
 }
+
+@media (max-width: 720px) {
+  .brand-wrap {
+    gap: 11px;
+  }
+
+  .brand-logo {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  .brand-logo svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand-copy .brand {
+    font-size: 21px;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-copy .tagline {
+    font-size: 11px;
+  }
+}
+
 
 @media (max-width: 520px) {
   .brand-logo {
@@ -129,7 +188,7 @@ th{background:#f7f9fd;color:#52627a}
   }
 }
 
-/* ===== CHAMPION CLASSES PREMIUM HEADER ===== */
+/* ===== SIGMA POINTs PREMIUM HEADER ===== */
 
 .top {
   position: relative;
@@ -268,7 +327,7 @@ th{background:#f7f9fd;color:#52627a}
     letter-spacing: 0.5px;
   }
 
-  .brand-copy .tagline {
+  .brand-copyf .tagline {
     font-size: 11px;
   }
 
@@ -556,6 +615,810 @@ th{background:#f7f9fd;color:#52627a}
   }
 }
 
+
+
+
+
+
+/* SIGMA POINT premium dashboard */
+.page-title {
+  color: #142b50;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+#page-dashboard > .grid .card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e9f4;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 7px 24px rgba(20, 43, 80, 0.07);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-dashboard > .grid .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(20, 43, 80, 0.12);
+}
+
+#page-dashboard .stat {
+  color: #c49a32;
+  font-size: clamp(26px, 3vw, 34px);
+  overflow-wrap: anywhere;
+}
+
+#page-dashboard > .card {
+  border-top: 3px solid #c49a32;
+}
+
+.navbtn {
+  border-radius: 10px;
+  padding: 12px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navbtn.active,
+.navbtn:hover {
+  background: #fff6df;
+  color: #142b50;
+}
+
+button {
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  filter: brightness(1.04);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(196, 154, 50, 0.35);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .auth-wrap {
+    margin: 18px auto;
+    padding: 12px;
+  }
+
+  .auth-card {
+    padding: 20px;
+  }
+
+  .page-title {
+    margin-bottom: 15px;
+  }
+
+  .card {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .row {
+    align-items: stretch;
+  }
+
+  .row > button {
+    max-width: 100%;
+  }
+
+  .table-wrap {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+/* SIGMA POINT dashboard welcome banner */
+.dashboard-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 28px;
+  color: white;
+  background: linear-gradient(120deg, #0b1d3a, #1c477d);
+  border: 1px solid #c49a32;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(20, 43, 80, 0.14);
+}
+
+.dashboard-label {
+  color: #ffdc8b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.dashboard-welcome h2 {
+  margin: 12px 0 8px;
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+.dashboard-welcome p {
+  margin: 0;
+  color: #e0eaff;
+}
+
+.dashboard-cap {
+  font-size: 54px;
+  flex-shrink: 0;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.quick-actions button {
+  min-height: 54px;
+  background: white;
+  color: #142b50;
+  border: 1px solid #e0e7f1;
+  border-bottom: 3px solid #c49a32;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(20, 43, 80, 0.05);
+}
+
+.quick-actions button:hover {
+  background: #fff8e8;
+}
+
+@media (max-width: 520px) {
+  .dashboard-welcome {
+    padding: 20px;
+  }
+
+  .dashboard-cap {
+    font-size: 38px;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== SIGMA POINT PREMIUM DASHBOARD ===== */
+
+.dashboard-welcome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+  margin: 24px 0;
+  padding: 34px;
+  min-height: 175px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(196, 154, 50, 0.25), transparent 30%),
+    linear-gradient(125deg, #08172e 0%, #142f56 55%, #204c78 100%);
+  border: 1px solid rgba(196, 154, 50, 0.8);
+  border-radius: 22px;
+  box-shadow: 0 14px 35px rgba(8, 23, 46, 0.16);
+}
+
+.dashboard-welcome::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: 65px;
+  top: -115px;
+  border: 1px solid rgba(255, 220, 139, 0.25);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dashboard-label {
+  display: inline-block;
+  color: #ffdc8b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  line-height: 1.8;
+}
+
+.dashboard-welcome h2 {
+  margin: 12px 0 10px;
+  color: #ffffff;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.dashboard-welcome p {
+  margin: 0;
+  color: #dce8f8;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.dashboard-cap {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 94px;
+  height: 94px;
+  color: #ffdc8b;
+  font-size: 48px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 220, 139, 0.45);
+  border-radius: 24px;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.04);
+}
+
+/* Quick action cards */
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0 28px;
+}
+
+.quick-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 62px;
+  padding: 14px 16px;
+  color: #142b50;
+  background: #ffffff;
+  border: 1px solid #e3e9f2;
+  border-bottom: 3px solid #c49a32;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 5px 18px rgba(20, 43, 80, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.quick-actions button:hover {
+  transform: translateY(-3px);
+  background: #fffaf0;
+  box-shadow: 0 10px 24px rgba(20, 43, 80, 0.12);
+}
+
+/* Statistics area */
+
+#stats {
+  gap: 16px;
+  margin-top: 18px;
+}
+
+#stats .card,
+#stats > div {
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#stats .card:hover,
+#stats > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(20, 43, 80, 0.09);
+}
+
+/* Dashboard welcome card */
+
+#page-dashboard > .card:last-child {
+  padding: 24px;
+  border: 1px solid #e5eaf2;
+  border-radius: 18px;
+  box-shadow: 0 6px 22px rgba(20, 43, 80, 0.05);
+}
+
+#page-dashboard > .card:last-child h3 {
+  color: #142b50;
+  margin-top: 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 700px) {
+  .dashboard-welcome {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .dashboard-cap {
+    width: 68px;
+    height: 68px;
+    font-size: 36px;
+    border-radius: 18px;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .quick-actions button {
+    min-height: 54px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dashboard-welcome {
+    gap: 12px;
+    padding: 20px 15px;
+  }
+
+  .dashboard-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 22px;
+  }
+
+  .dashboard-welcome p {
+    font-size: 12px;
+  }
+
+  .dashboard-cap {
+    width: 52px;
+    height: 52px;
+    font-size: 28px;
+  }
+}
+
+/* SIGMA POINT - Premium Quick Action Buttons */
+
+.quick-actions button {
+  background: linear-gradient(135deg, #0b1d3a, #1c477d);
+  color: #ffffff;
+  border: 1px solid #c49a32;
+  border-bottom: 3px solid #c49a32;
+  border-radius: 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(11, 29, 58, 0.18);
+  transition: all 0.25s ease;
+}
+
+.quick-actions button:hover {
+  background: linear-gradient(135deg, #c49a32, #e4bd59);
+  color: #0b1d3a;
+  border-color: #0b1d3a;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(11, 29, 58, 0.22);
+}
+
+.quick-actions button:focus-visible {
+  outline: 3px solid #c49a32;
+  outline-offset: 3px;
+}
+
+/* SIGMA POINT - Active Sidebar Menu */
+
+.sidebar button,
+.sidebar a,
+nav button,
+nav a {
+  transition: background 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Click/selected menu highlight */
+.sidebar button.active,
+.sidebar a.active,
+nav button.active,
+nav a.active,
+.sidebar button[aria-current="page"],
+.sidebar a[aria-current="page"],
+nav button[aria-current="page"],
+nav a[aria-current="page"] {
+  background: linear-gradient(135deg, #0b1d3a, #1c477d) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #c49a32 !important;
+  box-shadow: 0 5px 14px rgba(11, 29, 58, 0.15);
+  font-weight: 800;
+}
+
+/* Mouse le jaane par highlight */
+.sidebar button:hover,
+.sidebar a:hover,
+nav button:hover,
+nav a:hover {
+  background: #fff4d6;
+  color: #0b1d3a;
+  border-left-color: #c49a32;
+}
+
+/* Keyboard se select karne par */
+.sidebar button:focus-visible,
+.sidebar a:focus-visible,
+nav button:focus-visible,
+nav a:focus-visible {
+  outline: 2px solid #c49a32;
+  outline-offset: 2px;
+}
+
+/* SIGMA POINT - Permanent Active Sidebar Highlight */
+
+.navbtn {
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.navbtn.active {
+  background: linear-gradient(135deg, #0b1d3a, #1c477d) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #c49a32 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 5px 14px rgba(11, 29, 58, 0.18);
+}
+
+.navbtn:hover:not(.active) {
+  background: #fff4d6 !important;
+  color: #0b1d3a !important;
+  border-left: 4px solid #c49a32;
+}
+
+.navbtn.active:hover {
+  background: linear-gradient(135deg, #142f56, #28578a) !important;
+  color: #ffffff !important;
+}
+
+/* ===== SIGMA POINT STUDENT MANAGEMENT ===== */
+
+#page-students > .page-title {
+  color: #10284b;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  margin-bottom: 22px;
+  letter-spacing: -0.5px;
+}
+
+#page-students .card {
+  padding: 24px;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #e3e9f2;
+  border-radius: 18px;
+  box-shadow: 0 6px 22px rgba(16, 40, 75, 0.06);
+}
+
+#page-students .card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #10284b;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+#page-students .split {
+  gap: 18px;
+}
+
+#page-students .field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34445c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#page-students input,
+#page-students select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 45px;
+  padding: 11px 13px;
+  color: #172b49;
+  background: #fbfcff;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-students input:focus,
+#page-students select:focus {
+  border-color: #c49a32;
+  box-shadow: 0 0 0 3px rgba(196, 154, 50, 0.15);
+}
+
+#page-students #addStudent {
+  margin-top: 18px;
+  padding: 12px 22px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0b1d3a, #1c477d);
+  border: 1px solid #c49a32;
+  border-radius: 10px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-students #addStudent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(11, 29, 58, 0.18);
+}
+
+#page-students .hint {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+#page-students .student-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+#page-students .student-count {
+  margin: 12px 0;
+  color: #52627a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#page-students .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e3e9f2;
+  border-radius: 12px;
+}
+
+#page-students table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+#page-students thead {
+  color: #ffffff;
+  background: #10284b;
+}
+
+#page-students th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  border-bottom: 2px solid #c49a32;
+}
+
+#page-students td {
+  padding: 13px 16px;
+  color: #34445c;
+  font-size: 13px;
+  border-bottom: 1px solid #edf1f6;
+}
+
+#page-students tbody tr:nth-child(even) {
+  background: #f8faff;
+}
+
+#page-students tbody tr:hover {
+  background: #fff8e8;
+}
+
+#page-students tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 600px) {
+  #page-students .card {
+    padding: 17px;
+    border-radius: 14px;
+  }
+
+  #page-students .student-tools {
+    grid-template-columns: 1fr;
+  }
+
+  #page-students th,
+  #page-students td {
+    padding: 11px 12px;
+  }
+
+  #page-students #addStudent {
+    width: 100%;
+  }
+}
+
+/* ===== SIGMA POINT PREMIUM RESULTS PAGE ===== */
+
+#page-results > .page-title {
+  color: #10284b;
+  font-size: clamp(25px, 3vw, 32px);
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+#page-results .card {
+  padding: 24px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid #e1e8f2;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16, 40, 75, 0.06);
+}
+
+#page-results .card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #10284b;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+#page-results .field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34445c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#page-results input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 45px;
+  padding: 11px 13px;
+  color: #172b49;
+  background: #fbfcff;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  outline: none;
+}
+
+#page-results input:focus {
+  border-color: #c49a32;
+  box-shadow: 0 0 0 3px rgba(196, 154, 50, 0.15);
+}
+
+#page-results button {
+  padding: 11px 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0b1d3a, #1c477d);
+  border: 1px solid #c49a32;
+  border-radius: 10px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-results button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 17px rgba(11, 29, 58, 0.18);
+}
+
+#page-results .hint {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+#page-results .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+#page-results table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+#page-results thead {
+  color: #ffffff;
+  background: #10284b;
+}
+
+#page-results th {
+  padding: 14px 15px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  border-bottom: 3px solid #c49a32;
+}
+
+#page-results td {
+  padding: 13px 15px;
+  color: #34445c;
+  font-size: 13px;
+  border-bottom: 1px solid #edf1f6;
+}
+
+#page-results tbody tr:nth-child(even) {
+  background: #f7f9fd;
+}
+
+#page-results tbody tr:hover {
+  background: #fff8e8;
+}
+
+#page-results tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 600px) {
+  #page-results .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  #page-results th,
+  #page-results td {
+    padding: 11px;
+  }
+
+  #page-results button {
+    max-width: 100%;
+  }
+}
+
+/* SIGMA POINT - Premium Navigation */
+#nav {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c49a32 #142b50;
+  padding: 8px;
+  gap: 8px;
+}
+
+#nav button,
+#nav a {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border: 1px solid rgba(196, 154, 50, 0.22);
+  border-radius: 10px;
+  padding: 11px 14px;
+  transition: all 0.2s ease;
+}
+
+#nav button:hover,
+#nav a:hover {
+  background: linear-gradient(135deg, #c49a32, #e5bd59);
+  color: #07162f;
+  border-color: #e5bd59;
+  transform: translateY(-1px);
+}
+
+#nav button:focus-visible,
+#nav a:focus-visible {
+  outline: 2px solid #e5bd59;
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  #nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #nav button,
+  #nav a {
+    white-space: nowrap;
+  }
+}
+
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
@@ -564,7 +1427,7 @@ th{background:#f7f9fd;color:#52627a}
 
 <header class="top">
   <div class="brand-wrap">
-    <div class="brand-logo" aria-label="Champion Classes logo">
+    <div class="brand-logo" aria-label="SIGMA POINT logo">
       <svg viewBox="0 0 100 100" role="img" aria-label="Graduation cap logo">
         <defs>
           <linearGradient id="ccGold" x1="0" y1="0" x2="1" y2="1">
@@ -580,7 +1443,7 @@ th{background:#f7f9fd;color:#52627a}
       </svg>
     </div>
     <div class="brand-copy">
-      <div class="brand">CHAMPION <span>CLASSES</span></div>
+      <div class="brand">SIGMA <span>POINT</span></div>
       <div class="tagline">Learn Today, Lead Tomorrow</div>
       <div class="brand-subtitle">Coaching Management Portal</div>
     </div>
@@ -630,8 +1493,22 @@ th{background:#f7f9fd;color:#52627a}
     <section class="section active" id="page-dashboard">
       <h1 class="page-title">Dashboard Overview</h1>
       <div class="grid" id="stats"></div>
+      <div class="dashboard-welcome">
+  <div>
+    <span class="dashboard-label">SIGMA POINT · LEARNING PORTAL</span>
+    <h2>Welcome to Your Dashboard</h2>
+    <p>Learn Today, Lead Tomorrow.</p>
+  </div>
+  <div class="dashboard-cap" aria-hidden="true">🎓</div>
+</div>
+
+<div class="quick-actions">
+  <button type="button" onclick="showPage('tests')">📝 View Tests</button>
+  <button type="button" onclick="showPage('results')">🏆 View Results</button>
+  <button type="button" onclick="showPage('notices')">📢 View Notices</button>
+</div>
       <div class="card" style="margin-top:18px">
-        <h3>Welcome to CHAMPION CLASSES</h3>
+        <h3>Welcome to SIGMA POINT</h3>
         <p class="muted">Manage students, attendance, tests, results and fees from the sidebar.</p>
       </div>
     </section>
@@ -784,11 +1661,11 @@ th{background:#f7f9fd;color:#52627a}
   </main>
 </div>
 
-<div class="footer">CHAMPION CLASSES · Coaching Management Portal</div>
+<div class="footer">SIGMA POINT · Coaching Management Portal</div>
 
 <script>
     
-  
+
 function downloadResultPDF(result) {
   try {
     if (!result) {
@@ -802,34 +1679,179 @@ function downloadResultPDF(result) {
     }
 
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
+    const pdf = new jsPDF("p", "mm", "a4");
 
-    const score = result.score ?? result.marks ?? 0;
-    const total = result.total ?? result.totalMarks ?? 0;
-    const percentage =
+    const navy = [18, 35, 67];
+    const gold = [212, 175, 55];
+    const white = [255, 255, 255];
+    const dark = [45, 52, 65];
+    const light = [245, 247, 251];
+
+    const score = Number(result.score ?? result.marks ?? 0);
+    const total = Number(result.total ?? result.totalMarks ?? 0);
+    const rawPercentage =
       result.percentage ?? (total > 0 ? (score / total) * 100 : 0);
+    const percentage = Number(rawPercentage) || 0;
 
-    pdf.setFontSize(20);
-    pdf.text("CHAMPION CLASSES", 20, 20);
+    const studentName = String(result.studentName || "Student");
+    const className = String(result.className || "Not specified");
+    const testTitle = String(result.testTitle || "Test Result");
 
-    pdf.setFontSize(14);
-    pdf.text("Test Result", 20, 35);
+    // Navy header
+    pdf.setFillColor(...navy);
+    pdf.rect(0, 0, 210, 52, "F");
 
+    // Gold accent
+    pdf.setFillColor(...gold);
+    pdf.rect(0, 52, 210, 3, "F");
+
+    // Brand
+    pdf.setTextColor(...gold);
+    pdf.setFont("helvetica", "bold");
     pdf.setFontSize(11);
-    pdf.text(`Student: ${result.studentName || "Student"}`, 20, 50);
-    pdf.text(`Class: ${result.className || "Not specified"}`, 20, 60);
-    pdf.text(`Test: ${result.testTitle || "Test Result"}`, 20, 70);
-    pdf.text(`Marks: ${score} / ${total}`, 20, 80);
-    pdf.text(`Percentage: ${Number(percentage).toFixed(2)}%`, 20, 90);
-    pdf.text("Status: Published", 20, 100);
+    pdf.text("S I G M A   P O I N T", 105, 16, {
+      align: "center"
+    });
 
-    pdf.save("Champion-Classes-Result.pdf");
+    pdf.setTextColor(...white);
+    pdf.setFontSize(23);
+    pdf.text("STUDENT RESULT", 105, 30, {
+      align: "center"
+    });
+
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    pdf.text("ACADEMIC PERFORMANCE REPORT", 105, 40, {
+      align: "center"
+    });
+
+    // Student information card
+    pdf.setFillColor(...light);
+    pdf.roundedRect(15, 66, 180, 48, 4, 4, "F");
+
+    pdf.setTextColor(...navy);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text("STUDENT DETAILS", 23, 76);
+
+    pdf.setDrawColor(...gold);
+    pdf.setLineWidth(0.7);
+    pdf.line(23, 80, 187, 80);
+
+    pdf.setTextColor(...dark);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(11);
+
+    pdf.text("Student:", 23, 90);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(studentName.substring(0, 48), 55, 90);
+
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Class:", 23, 101);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(className.substring(0, 40), 55, 101);
+
+    // Test information
+    pdf.setTextColor(...navy);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.text("EXAMINATION DETAILS", 18, 129);
+
+    pdf.setDrawColor(...gold);
+    pdf.line(18, 133, 192, 133);
+
+    pdf.setTextColor(...dark);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(11);
+    pdf.text("Test / Examination:", 20, 144);
+    pdf.text(testTitle.substring(0, 65), 72, 144);
+
+    pdf.text("Result Status:", 20, 155);
+    pdf.setTextColor(25, 125, 75);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("PUBLISHED", 72, 155);
+
+    // Marks panel
+    pdf.setFillColor(...navy);
+    pdf.roundedRect(15, 170, 180, 48, 4, 4, "F");
+
+    pdf.setTextColor(...gold);
+    pdf.setFontSize(11);
+    pdf.text("MARKS OBTAINED", 105, 181, {
+      align: "center"
+    });
+
+    pdf.setTextColor(...white);
+    pdf.setFontSize(23);
+    pdf.text(`${score} / ${total}`, 105, 194, {
+      align: "center"
+    });
+
+    pdf.setTextColor(...gold);
+    pdf.setFontSize(12);
+    pdf.text(`Percentage: ${percentage.toFixed(2)}%`, 105, 208, {
+      align: "center"
+    });
+
+    // Footer
+    pdf.setTextColor(...navy);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.text("SIGMA POINT", 105, 239, {
+      align: "center"
+    });
+
+    pdf.setTextColor(100, 105, 115);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(9);
+    pdf.text("Learn Today, Lead Tomorrow", 105, 246, {
+      align: "center"
+    });
+
+    pdf.setDrawColor(...gold);
+    pdf.line(35, 252, 175, 252);
+
+    pdf.setFontSize(8);
+    pdf.text(
+      "Computer-generated result report",
+      105,
+      260,
+      { align: "center" }
+    );
+
+    // Stylish typed signature
+    pdf.setTextColor(18, 35, 67);
+    pdf.setFont("times", "italic");
+    pdf.setFontSize(17);
+    pdf.text("MD DANISH ALAM", 190, 247, {
+      align: "right"
+    });
+
+    // Gold signature underline
+    pdf.setDrawColor(212, 175, 55);
+    pdf.setLineWidth(0.6);
+    pdf.line(145, 250, 190, 250);
+
+    // Signatory designation
+    pdf.setTextColor(100, 105, 115);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(7);
+    pdf.text("AUTHORIZED SIGNATORY", 190, 255, {
+      align: "right"
+    });
+
+    // Safe filename
+    const safeName = studentName
+      .replace(/[^a-z0-9_-]/gi, "_")
+      .substring(0, 40);
+
+    pdf.save(`SIGMA-POINT-Result-${safeName}.pdf`);
   } catch (error) {
     console.error("PDF error:", error);
     alert("PDF download nahi hui. Browser Console check karo.");
   }
 }
-  
+
 
 
 async function deleteTest(testId) {
