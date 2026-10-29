@@ -10,11 +10,71 @@ const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const path = require("path");
-
+const multer = require("multer");
+const crypto = require("crypto");
 const app = express();
+
+const NOTES_DIR = path.join(__dirname, "uploads", "notes");
+
+fs.mkdirSync(NOTES_DIR, { recursive: true });
+
+const noteUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, NOTES_DIR);
+    },
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      cb(null, crypto.randomUUID() + ext);
+    }
+  }),
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  },
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+
+    const valid =
+      (ext === ".pdf" && file.mimetype === "application/pdf") ||
+      ((ext === ".jpg" || ext === ".jpeg") &&
+        file.mimetype === "image/jpeg");
+
+    if (!valid) {
+      return cb(new Error("Sirf PDF ya JPG/JPEG file upload karein."));
+    }
+
+    cb(null, true);
+  }
+});
+
+function handleNoteUpload(req, res, next) {
+  noteUpload.single("file")(req, res, (error) => {
+    if (error) {
+      const message =
+        error.code === "LIMIT_FILE_SIZE"
+          ? "File ka size 10 MB se kam hona chahiye."
+          : error.message;
+
+      return res.status(400).json({ error: message });
+    }
+
+    next();
+  });
+}
+
 const PORT = Number(process.env.PORT || 3000);
 const DATA_FILE = path.join(__dirname, "data.json");
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix);
+  }
+});
+const upload = multer({ storage: storage });
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -90,6 +150,7 @@ function validEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+
 let db = {
   users: [],
   students: [],
@@ -99,7 +160,8 @@ let db = {
   results: [],
   fees: [],
   notices: [],
-  otps: []
+  otps: [],
+  notes: []
 };
 
 async function loadDB() {
@@ -119,26 +181,46 @@ async function loadDB() {
     db = result.rows[0].data;
 
     for (const key of [
-      "users", "students", "attendance", "tests",
-      "submissions", "results", "fees", "notices", "otps"
+      "users",
+      "students",
+      "attendance",
+      "tests",
+      "submissions",
+      "results",
+      "fees",
+      "notices",
+      "otps",
+      "notes"
     ]) {
-      if (!Array.isArray(db[key])) db[key] = [];
+      if (!Array.isArray(db[key])) {
+        db[key] = [];
+      }
     }
 
     console.log("Application data PostgreSQL se load ho gaya.");
     return;
   }
 
-  // PostgreSQL mein record nahi hai, to existing data.json se import karo.
+  // PostgreSQL mein record nahi hai, to data.json se import karo.
   const initialData = fs.existsSync(DATA_FILE)
     ? JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))
     : db;
 
   for (const key of [
-    "users", "students", "attendance", "tests",
-    "submissions", "results", "fees", "notices", "otps"
+    "users",
+    "students",
+    "attendance",
+    "tests",
+    "submissions",
+    "results",
+    "fees",
+    "notices",
+    "otps",
+    "notes"
   ]) {
-    if (!Array.isArray(initialData[key])) initialData[key] = [];
+    if (!Array.isArray(initialData[key])) {
+      initialData[key] = [];
+    }
   }
 
   await pool.query(
@@ -153,8 +235,14 @@ async function loadDB() {
   );
 
   db = saved.rows[0].data;
+
+  if (!Array.isArray(db.notes)) {
+    db.notes = [];
+  }
+
   console.log("Application data PostgreSQL se initialize ho gaya.");
 }
+
 
 async function saveDB() {
   await pool.query(
@@ -581,15 +669,28 @@ app.get("/api/attendance/overview", requireLogin, allowRoles("admin", "teacher")
   res.json({ overview });
 });
 
-// TESTS: teacher submits JSON and publishes to a particular class.
+// TESTS: teacher submits, student takes, teacher/admin publishes results.
+
 app.get("/api/tests", requireLogin, (req, res) => {
-  const tests = db.tests.filter(t =>
-    req.user.role !== "student" ||
-    (t.published && t.className === req.user.className)
-  ).map(t => ({
-    ...t,
-    questions: t.questions.map(({ answer, ...question }) => question)
-  }));
+  const tests = db.tests
+    .filter(test =>
+      req.user.role !== "student" ||
+      (test.published &&
+       test.className === req.user.className)
+    )
+    .map(test => {
+      if (req.user.role === "student") {
+        return {
+          ...test,
+          questions: test.questions.map(
+            ({ answer, solution, ...question }) => question
+          )
+        };
+      }
+
+      // Admin aur teacher ko Answer Key aur solutions milenge
+      return test;
+    });
 
   res.json({ tests });
 });
@@ -631,11 +732,12 @@ app.post("/api/tests", requireLogin, allowRoles("admin", "teacher"), async (req,
       title,
       className,
       questions: questions.map(q => ({
-        id: makeId("q"),
-        text: clean(q.text, 500),
-        options: q.options.map(option => clean(option, 250)),
-        answer: clean(q.answer, 250)
-      })),
+  id: makeId("q"),
+  text: clean(q.text, 500),
+  options: q.options.map(option => clean(option, 250)),
+  answer: clean(q.answer, 250),
+  solution: clean(q.solution || "", 3000)
+})),
       published: false,
       createdBy: req.user.id,
       createdAt: new Date().toISOString(),
@@ -723,7 +825,9 @@ app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), async (re
     );
 
     if (!test) {
-      return res.status(404).json({ error: "Test available nahi hai." });
+      return res.status(404).json({
+        error: "Test available nahi hai."
+      });
     }
 
     if (db.submissions.some(s =>
@@ -756,6 +860,14 @@ app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), async (re
       className: test.className,
       score,
       total: test.questions.length,
+      answers: Object.fromEntries(
+        test.questions.map(q => [
+          q.id,
+          typeof answers[q.id] === "string"
+            ? answers[q.id]
+            : ""
+        ])
+      ),
       submittedAt: new Date().toISOString(),
       published: false
     });
@@ -767,19 +879,56 @@ app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), async (re
     });
   } catch (error) {
     console.error("Submit test error:", error);
-    res.status(500).json({ error: "Test submit nahi ho saka." });
+    res.status(500).json({
+      error: "Test submit nahi ho saka."
+    });
   }
 });
 
 
 // RESULTS: student can only see published results.
+
 app.get("/api/results", requireLogin, (req, res) => {
-  const results = db.results.filter(r =>
-    req.user.role !== "student" || r.studentUserId === req.user.id
-  );
+  const results = db.results
+    .filter(r =>
+      req.user.role !== "student" ||
+      (r.studentUserId === req.user.id && r.published === true)
+    )
+    .map(result => {
+      if (req.user.role !== "student") {
+        return result;
+      }
+
+      const submission = db.submissions.find(s =>
+        s.id === result.submissionId &&
+        s.studentUserId === req.user.id &&
+        s.published === true
+      );
+
+      const test = db.tests.find(t =>
+        t.id === result.testId
+      );
+
+      if (!submission || !test) {
+        return result;
+      }
+
+      return {
+        ...result,
+        review: test.questions.map(q => ({
+          id: q.id,
+          text: q.text,
+          options: q.options,
+          selectedAnswer: submission.answers?.[q.id] || "",
+          correctAnswer: q.answer,
+          solution: q.solution || ""
+        }))
+      };
+    });
 
   res.json({ results });
 });
+
 
 app.get("/api/results/overview", requireLogin, allowRoles("admin", "teacher"), (req, res) => {
   const overview = db.submissions.map(s => ({
@@ -943,6 +1092,184 @@ app.post("/api/notices", requireLogin, allowRoles("admin", "teacher"), async (re
 
 
 // Keep this 404 handler AFTER all API routes.
+
+/* ============== SIGMA POINT NOTES API ============== */
+
+// Notes list: students ko sirf apni class ke notes dikhenge
+app.get("/api/notes", requireLogin, (req, res) => {
+  if (!["admin", "teacher", "student"].includes(req.user.role)) {
+    return res.status(403).json({ error: "Access denied." });
+  }
+
+  const notes = Array.isArray(db.notes) ? db.notes : [];
+
+  const visibleNotes = ["admin", "teacher"].includes(req.user.role)
+    ? notes
+    : notes.filter(note => note.className === req.user.className);
+
+  res.json({ notes: visibleNotes });
+});
+
+
+// Admin only: PDF/JPG notes upload
+app.post(
+  "/api/notes",
+  requireLogin,
+  allowRoles("admin"),
+  handleNoteUpload,
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          error: "PDF ya JPG file select karein."
+        });
+      }
+
+      const title = clean(req.body.title, 120);
+      const subject = clean(req.body.subject, 80);
+      const className = clean(req.body.className, 60);
+
+      if (!title || !subject || !className) {
+        await fs.promises.unlink(req.file.path).catch(() => {});
+        return res.status(400).json({
+          error: "Title, subject aur class required hain."
+        });
+      }
+
+      if (!Array.isArray(db.notes)) {
+        db.notes = [];
+      }
+
+      const note = {
+        id: makeId("note"),
+        title,
+        subject,
+        className,
+        filename: req.file.filename,
+        originalName: path.basename(req.file.originalname),
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        createdAt: new Date().toISOString(),
+        createdBy: req.user.id
+      };
+
+      db.notes.unshift(note);
+
+      try {
+        await saveDB();
+      } catch (error) {
+        db.notes = db.notes.filter(item => item.id !== note.id);
+        await fs.promises.unlink(req.file.path).catch(() => {});
+        throw error;
+      }
+
+      return res.status(201).json({
+        message: "Notes upload ho gaye.",
+        note
+      });
+    } catch (error) {
+      console.error("Notes upload error:", error);
+      return res.status(500).json({
+        error: "Notes save nahi ho sake."
+      });
+    }
+  }
+);
+
+
+// Notes file open karna
+app.get("/api/notes/:id/file", requireLogin, (req, res) => {
+  const notes = Array.isArray(db.notes) ? db.notes : [];
+  const note = notes.find(item => item.id === req.params.id);
+
+  if (!note) {
+    return res.status(404).json({ error: "Notes nahi mile." });
+  }
+
+  const isStaff = ["admin", "teacher"].includes(req.user.role);
+  const isSameClass = note.className === req.user.className;
+
+  if (!isStaff && !isSameClass) {
+    return res.status(403).json({
+      error: "Is class ke notes ka access nahi hai."
+    });
+  }
+
+  const filePath = path.join(
+    NOTES_DIR,
+    path.basename(note.filename)
+  );
+
+  res.sendFile(
+    filePath,
+    {
+      headers: {
+        "Content-Type": note.mimeType,
+        "Content-Disposition":
+          `inline; filename="${path.basename(note.originalName)}"`
+      }
+    },
+    error => {
+      if (error && !res.headersSent) {
+        res.status(error.statusCode || 404).json({
+          error: "Notes file nahi mil rahi."
+        });
+      }
+    }
+  );
+});
+
+
+// Admin only: notes delete
+app.delete(
+  "/api/notes/:id",
+  requireLogin,
+  allowRoles("admin"),
+  async (req, res) => {
+    const notes = Array.isArray(db.notes) ? db.notes : [];
+    const index = notes.findIndex(
+      item => item.id === req.params.id
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ error: "Notes nahi mile." });
+    }
+
+    const note = notes[index];
+
+    try {
+      notes.splice(index, 1);
+
+      try {
+        await saveDB();
+      } catch (error) {
+        notes.splice(index, 0, note);
+        throw error;
+      }
+
+      const filePath = path.join(
+        NOTES_DIR,
+        path.basename(note.filename)
+      );
+
+      await fs.promises.unlink(filePath).catch(error => {
+        if (error.code !== "ENOENT") {
+          console.error("Notes file delete error:", error);
+        }
+      });
+
+      return res.json({ message: "Notes delete ho gaye." });
+    } catch (error) {
+      console.error("Notes delete error:", error);
+      return res.status(500).json({
+        error: "Notes delete nahi ho sake."
+      });
+    }
+  }
+);
+
+/* ============== END NOTES API ============== */
+
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "API endpoint not found." });
 });
