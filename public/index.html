@@ -1585,19 +1585,65 @@ nav a:focus-visible {
         </div>
         <div class="field">
           <label>Questions JSON</label>
-          <textarea id="questionsJSON" rows="12" spellcheck="false">[
+       
+           <textarea id="questionsJSON" rows="20" spellcheck="false">[
   {
-    "text": "Which language runs in a web browser?",
-    "options": ["Python", "JavaScript", "C", "SQL"],
-    "answer": "JavaScript"
+    "text": "HTML ka full form kya hai?",
+    "options": [
+      "Hyper Text Markup Language",
+      "High Text Machine Language",
+      "Home Tool Markup Language",
+      "Hyperlinks Text Management Language"
+    ],
+    "answer": "Hyper Text Markup Language",
+    "solution": "HTML ka full form Hyper Text Markup Language hai. Iska use web page ki structure banane ke liye hota hai."
   },
   {
-    "text": "HTML is used to create what?",
-    "options": ["Web page structure", "Database server", "Operating system", "Router"],
-    "answer": "Web page structure"
+    "text": "Web browser mein kaunsi programming language chalti hai?",
+    "options": [
+      "Python",
+      "JavaScript",
+      "C",
+      "SQL"
+    ],
+    "answer": "JavaScript",
+    "solution": "JavaScript browser mein chalti hai aur web pages ko interactive banati hai."
+  },
+  {
+    "text": "CSS ka use kis liye hota hai?",
+    "options": [
+      "Database banane ke liye",
+      "Web page ko style karne ke liye",
+      "Server ko restart karne ke liye",
+      "File delete karne ke liye"
+    ],
+    "answer": "Web page ko style karne ke liye",
+    "solution": "CSS ka full form Cascading Style Sheets hai. Iska use colours, fonts, spacing aur layout set karne ke liye hota hai."
+  },
+  {
+    "text": "2 + 5 ka answer kya hai?",
+    "options": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "answer": "7",
+    "solution": "2 + 5 = 7. Addition mein dono numbers ko joda jata hai."
+  },
+  {
+    "text": "Computer ka brain kise kaha jata hai?",
+    "options": [
+      "Monitor",
+      "Keyboard",
+      "CPU",
+      "Mouse"
+    ],
+    "answer": "CPU",
+    "solution": "CPU ka full form Central Processing Unit hai. Yeh instructions process karta hai, isliye ise computer ka brain kaha jata hai."
   }
 ]</textarea>
-          <p class="hint">Each question needs text, options and an answer that exactly matches one option.</p>
+         <p class="hint">Each question needs text, options, an answer matching one option, and an optional detailed solution.</p>
         </div>
         <button id="createTest">Save as Draft</button>
         <div id="testAdminList"></div>
@@ -1645,6 +1691,7 @@ nav a:focus-visible {
           <tbody id="feesRows"></tbody>
         </table></div>
       </div>
+
     </section>
 
     <section class="section" id="page-notices">
@@ -1657,6 +1704,49 @@ nav a:focus-visible {
       </div>
       <div id="noticesList"></div>
     </section>
+
+    <!-- SIGMA POINT NOTES SECTION -->
+    <section class="section" id="page-notes">
+      <h1 class="page-title">📚 Study Notes</h1>
+
+      <div class="card admin-only">
+        <h3>Upload New Notes</h3>
+
+        <div class="field">
+          <label>Notes Title</label>
+          <input id="noteTitle" type="text" placeholder="Example: Chapter 1 Notes">
+        </div>
+
+        <div class="field">
+          <label>Subject</label>
+          <input id="noteSubject" type="text" placeholder="Example: Mathematics">
+        </div>
+
+        <div class="field">
+          <label>Class</label>
+          <select id="noteClass">
+            <option value="">Select class</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>PDF or JPG File (Maximum 10 MB)</label>
+          <input
+            id="noteFile"
+            type="file"
+            accept=".pdf,.jpg,.jpeg,application/pdf,image/jpeg"
+          >
+        </div>
+
+        <button id="uploadNoteBtn" type="button" onclick="uploadNote()">
+          Upload Notes
+        </button>
+        <p id="noteMessage" class="muted"></p>
+      </div>
+
+      <div id="notesList"></div>
+    </section>
+    <!-- END NOTES SECTION -->
 
   </main>
 </div>
@@ -1942,7 +2032,7 @@ function setupNavigation() {
   }
 
   items.push(["notices", "📢 Notices"]);
-
+items.push(["notes", "📚 Notes"]);
   $("nav").innerHTML = items.map(([page, title]) =>
     `<button class="navbtn ${page === "dashboard" ? "active" : ""}"
       data-page="${page}">${title}</button>`
@@ -2017,6 +2107,7 @@ async function loadPage(page) {
   if (page === "results") await loadResults();
   if (page === "fees") await loadFees();
   if (page === "notices") await loadNotices();
+  if (page === "notes") await loadNotes();
 }
 
 // STUDENTS
@@ -2265,11 +2356,37 @@ $("loadAttOverview").onclick = () =>
 async function loadTests() {
   const data = await api("/api/tests");
   const tests = data.tests;
+  const resultsData = await api("/api/results");
+const publishedResults = resultsData.results || [];
 
   $("testAdminList").innerHTML = roleIsStaff()
     ? tests.map(test => `
       <div class="notice">
         <b>${escapeHTML(test.title)}</b> · ${escapeHTML(test.className)}
+        
+        ${roleIsStaff() ? `
+          <details style="margin-top:12px">
+            <summary style="cursor:pointer;font-weight:bold">
+              🔑 View Answer Key & Solutions
+            </summary>
+
+            ${test.questions.map((q, i) => `
+              <div class="question" style="margin-top:10px;padding:12px">
+                <b>${i + 1}. ${escapeHTML(q.text)}</b>
+                <p>
+                  <strong>Correct Answer:</strong>
+                  ${escapeHTML(q.answer || "Answer missing")}
+                </p>
+                <p>
+                  <strong>Solution:</strong>
+                  ${escapeHTML(q.solution || "Solution not added")}
+                </p>
+              </div>
+            `).join("")}
+          </details>
+        ` : ""}
+
+
         · ${test.questions.length} questions
         <span class="badge">${test.published ? "Published" : "Draft"}</span>
         <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
@@ -2389,10 +2506,14 @@ async function submitTest(event, testId) {
 
 // RESULTS
 
+
 async function loadResults() {
   const data = await api("/api/results");
+  const results = data.results || [];
 
-  $("resultsRows").innerHTML = data.results.map((result, index) => `
+  window.studentResults = results;
+
+  $("resultsRows").innerHTML = results.map((result, index) => `
     <tr>
       <td>${escapeHTML(result.testTitle)}</td>
       <td>${escapeHTML(result.studentName)}</td>
@@ -2407,11 +2528,43 @@ async function loadResults() {
         </button>
       </td>
     </tr>
+
+    ${currentUser.role === "student" && Array.isArray(result.review)
+      ? `
+        <tr>
+          <td colspan="7">
+            <details>
+              <summary style="cursor:pointer;font-weight:bold;padding:10px">
+                📘 Review Answers — ${escapeHTML(result.testTitle)}
+              </summary>
+
+              ${result.review.map((q, qIndex) => `
+                <div class="question" style="margin:12px 0;padding:14px;border:1px solid #e0e7f1;border-radius:10px">
+                  <b>${qIndex + 1}. ${escapeHTML(q.text)}</b>
+
+                  <p style="margin:10px 0;color:#64748b">
+                    Your Answer:
+                    <strong>${escapeHTML(q.selectedAnswer || "Not answered")}</strong>
+                  </p>
+
+                  <p style="margin:10px 0;color:#13835c">
+                    Correct Answer:
+                    <strong>${escapeHTML(q.correctAnswer)}</strong>
+                  </p>
+
+                  <p style="margin:10px 0">
+                    <strong>Explanation:</strong>
+                    ${escapeHTML(q.solution || "Is question ke liye detailed solution available nahi hai.")}
+                  </p>
+                </div>
+              `).join("")}
+            </details>
+          </td>
+        </tr>
+      `
+      : ""}
   `).join("") ||
     `<tr><td colspan="7">No published results.</td></tr>`;
-
-  // PDF function ko result data available karana
-  window.studentResults = data.results;
 
   if (roleIsStaff()) {
     const overview = await api("/api/results/overview");
@@ -2429,7 +2582,7 @@ async function loadResults() {
           </tr>
         </thead>
         <tbody>
-          ${overview.overview.map(item => `
+          ${(overview.overview || []).map(item => `
             <tr>
               <td>
                 ${escapeHTML(item.testTitle)}
@@ -2531,6 +2684,186 @@ $("addNotice").onclick = async () => {
     alert(error.message);
   }
 };
+
+/* ============== SIGMA POINT NOTES FRONTEND ============== */
+
+async function loadNotes() {
+  const list = $("notesList");
+  const messageBox = $("noteMessage");
+
+  try {
+    // Class options sirf admin ke liye load karo
+    if (currentUser.role === "admin") {
+      const classSelect = $("noteClass");
+      const previousClass = classSelect.value;
+
+      const studentData = await api("/api/students");
+      const classes = [...new Set(
+        (studentData.students || [])
+          .map(student => String(student.className || "").trim())
+          .filter(Boolean)
+      )].sort();
+
+      classSelect.innerHTML =
+        `<option value="">Select class</option>` +
+        classes.map(className =>
+          `<option value="${escapeHTML(className)}">${escapeHTML(className)}</option>`
+        ).join("");
+
+      if (classes.includes(previousClass)) {
+        classSelect.value = previousClass;
+      }
+    }
+
+    const data = await api("/api/notes");
+    const notes = data.notes || [];
+
+    list.innerHTML = notes.map(note => `
+      <div class="card" style="margin-bottom:14px;">
+        <h3>${escapeHTML(note.title)}</h3>
+        <p>
+          <b>Subject:</b> ${escapeHTML(note.subject)}
+          &nbsp; | &nbsp;
+          <b>Class:</b> ${escapeHTML(note.className)}
+        </p>
+        <p class="muted">
+          Uploaded: ${
+            note.createdAt
+              ? new Date(note.createdAt).toLocaleString()
+              : "Date unavailable"
+          }
+        </p>
+        <a
+          href="/api/notes/${encodeURIComponent(note.id)}/file"
+          target="_blank"
+          rel="noopener noreferrer"
+        >📖 Open / View Notes</a>
+
+        <a
+          href="/api/notes/${encodeURIComponent(note.id)}/file"
+          download="${escapeHTML(note.originalName || note.title)}"
+          style="margin-left:12px;"
+        >⬇ Download</a>
+
+        ${currentUser.role === "admin" ? `
+          <button
+            type="button"
+            style="margin-left:12px;"
+            onclick="deleteNote('${encodeURIComponent(note.id)}')"
+          >🗑 Delete</button>
+        ` : ""}
+      </div>
+    `).join("") || `<p class="muted">Abhi koi notes upload nahi hue hain.</p>`;
+
+  } catch (error) {
+    list.innerHTML = `<p class="muted">Notes load nahi hue: ${escapeHTML(error.message)}</p>`;
+  }
+}
+
+
+async function uploadNote() {
+  const button = $("uploadNoteBtn");
+  const messageBox = $("noteMessage");
+  const file = $("noteFile").files[0];
+
+  if (!file) {
+    messageBox.textContent = "Pehle PDF ya JPG file select karo.";
+    return;
+  }
+
+  const title = $("noteTitle").value.trim();
+  const subject = $("noteSubject").value.trim();
+  const className = $("noteClass").value;
+
+  if (!title || !subject || !className) {
+    messageBox.textContent = "Title, subject aur class bharna zaroori hai.";
+    return;
+  }
+
+  const allowedType =
+    file.type === "application/pdf" ||
+    file.type === "image/jpeg";
+
+  const allowedExtension = /\.(pdf|jpg|jpeg)$/i.test(file.name);
+
+  if (!allowedType || !allowedExtension) {
+    messageBox.textContent = "Sirf PDF ya JPG/JPEG file upload karo.";
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    messageBox.textContent = "File ka size 10 MB se kam ya barabar hona chahiye.";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("subject", subject);
+  formData.append("className", className);
+  formData.append("file", file);
+
+  button.disabled = true;
+  button.textContent = "Uploading...";
+  messageBox.textContent = "";
+
+  try {
+    const response = await fetch("/api/notes", {
+      method: "POST",
+      body: formData,
+      credentials: "same-origin"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Notes upload nahi hue.");
+    }
+
+    $("noteTitle").value = "";
+    $("noteSubject").value = "";
+    $("noteFile").value = "";
+
+    messageBox.textContent = "Notes successfully upload ho gaye!";
+    await loadNotes();
+
+  } catch (error) {
+    messageBox.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Upload Notes";
+  }
+}
+
+
+async function deleteNote(id) {
+  if (!confirm("Kya tum sach mein ye notes delete karna chahte ho?")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "/api/notes/" + decodeURIComponent(id),
+      {
+        method: "DELETE",
+        credentials: "same-origin"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Notes delete nahi hue.");
+    }
+
+    alert("Notes delete ho gaye.");
+    await loadNotes();
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+/* ============== END NOTES FRONTEND ============== */
 
 // LOGIN WITH PASSWORD
 
