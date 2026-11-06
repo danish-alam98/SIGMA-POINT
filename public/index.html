@@ -1541,59 +1541,26 @@ nav a:focus-visible {
     }
 }
 
-/* SIGMA POINT - COLORFUL DASHBOARD STATS */
+/* SIGMA POINT - BLUE DASHBOARD CARDS */
 
 #page-dashboard #stats > .card {
-    color: #fff !important;
+    background: rgba(20, 75, 150, 0.65) !important;
+    border: 1px solid rgba(120, 175, 255, 0.7);
+    border-top: 4px solid #4da3ff;
     border-radius: 16px;
-    padding: 22px;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    color: #ffffff !important;
 }
 
-/* Students - Blue */
-#page-dashboard #stats > .card:nth-child(1) {
-    background: rgba(25, 105, 220, 0.48) !important;
-    border: 1px solid rgba(100, 170, 255, 0.8);
-    border-top: 4px solid #55aaff;
-}
-
-/* Available Tests - Purple */
-#page-dashboard #stats > .card:nth-child(2) {
-    background: rgba(125, 65, 190, 0.48) !important;
-    border: 1px solid rgba(190, 140, 255, 0.8);
-    border-top: 4px solid #c18aff;
-}
-
-/* Results - Green */
-#page-dashboard #stats > .card:nth-child(3) {
-    background: rgba(15, 140, 95, 0.48) !important;
-    border: 1px solid rgba(100, 235, 170, 0.8);
-    border-top: 4px solid #54e6a0;
-}
-
-/* Attendance - Orange */
-#page-dashboard #stats > .card:nth-child(4) {
-    background: rgba(205, 105, 25, 0.48) !important;
-    border: 1px solid rgba(255, 185, 100, 0.8);
-    border-top: 4px solid #ffae50;
-}
-
-/* Fees Due - Gold */
-#page-dashboard #stats > .card:nth-child(5) {
-    background: rgba(180, 145, 25, 0.48) !important;
-    border: 1px solid rgba(255, 220, 100, 0.8);
-    border-top: 4px solid #ffdc55;
-}
-
-/* Text and Numbers */
+/* Headings */
 #page-dashboard #stats .muted {
     color: #ffffff !important;
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: 800;
+    font-size: 15px;
 }
 
+/* Numbers */
 #page-dashboard #stats .stat {
     color: #ffffff !important;
     background: transparent !important;
@@ -1602,10 +1569,10 @@ nav a:focus-visible {
     margin-top: 10px;
 }
 
-/* Hover Effect */
+/* Hover */
 #page-dashboard #stats > .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    background: rgba(30, 100, 190, 0.8) !important;
+    transform: translateY(-4px);
 }
 
 </style>
