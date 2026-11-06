@@ -1419,6 +1419,128 @@ nav a:focus-visible {
   }
 }
 
+/* SIGMA POINT LOGIN BACKGROUND */
+
+#loginScreen.auth-wrap {
+  max-width: none;
+  width: 100%;
+  min-height: calc(100vh - 116px);
+  margin: 0;
+  padding: 35px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(rgba(7,22,47,.30), rgba(7,22,47,.45)),
+    url("/public/login-study.jpg") center center / cover no-repeat;
+}
+
+#loginScreen .auth-card {
+  width: 100%;
+  max-width: 470px;
+  background: rgba(255,255,255,.20);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 20px;
+  padding: 27px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+}
+
+#loginScreen .auth-card h1,
+#loginScreen .auth-card label,
+#loginScreen .auth-card .muted,
+#loginScreen .auth-card .hint {
+  color: #fff;
+}
+
+#loginScreen .auth-card input,
+#loginScreen .auth-card select {
+  background: rgba(255,255,255,.88);
+  border-radius: 9px;
+}
+
+@media(max-width:720px) {
+  #loginScreen.auth-wrap {
+    min-height: calc(100vh - 116px);
+    padding: 22px 12px;
+  }
+}
+
+/* SIGMA POINT DASHBOARD - STUDY BACKGROUND */
+
+#page-dashboard.active {
+    min-height: calc(100vh - 30px);
+    padding: 24px;
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            rgba(7, 22, 47, 0.30),
+            rgba(7, 22, 47, 0.42)
+        ),
+        url("login-study.jpg") center center / cover no-repeat fixed;
+}
+
+/* Dashboard heading */
+#page-dashboard .page-title {
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+
+/* Transparent statistic cards */
+#page-dashboard #stats > * {
+    background: rgba(255,255,255,.20) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.45);
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+    color: #ffffff;
+}
+
+/* Welcome banner */
+#page-dashboard .dashboard-welcome {
+    background: rgba(7,22,47,.45) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,204,89,.65);
+}
+
+/* Welcome text */
+#page-dashboard .dashboard-welcome h2,
+#page-dashboard .dashboard-welcome p,
+#page-dashboard .dashboard-label {
+    color: #ffffff;
+}
+
+/* Quick action buttons */
+#page-dashboard .quick-actions button {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Bottom welcome card */
+#page-dashboard > .card {
+    background: rgba(255,255,255,.20) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.45);
+    color: #ffffff;
+}
+
+#page-dashboard > .card h3,
+#page-dashboard > .card p {
+    color: #ffffff;
+}
+
+/* Mobile */
+@media(max-width:720px) {
+    #page-dashboard.active {
+        padding: 14px;
+        background-attachment: scroll;
+    }
+}
+
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
