@@ -1541,6 +1541,73 @@ nav a:focus-visible {
     }
 }
 
+/* SIGMA POINT - COLORFUL DASHBOARD STATS */
+
+#page-dashboard #stats > .card {
+    color: #fff !important;
+    border-radius: 16px;
+    padding: 22px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Students - Blue */
+#page-dashboard #stats > .card:nth-child(1) {
+    background: rgba(25, 105, 220, 0.48) !important;
+    border: 1px solid rgba(100, 170, 255, 0.8);
+    border-top: 4px solid #55aaff;
+}
+
+/* Available Tests - Purple */
+#page-dashboard #stats > .card:nth-child(2) {
+    background: rgba(125, 65, 190, 0.48) !important;
+    border: 1px solid rgba(190, 140, 255, 0.8);
+    border-top: 4px solid #c18aff;
+}
+
+/* Results - Green */
+#page-dashboard #stats > .card:nth-child(3) {
+    background: rgba(15, 140, 95, 0.48) !important;
+    border: 1px solid rgba(100, 235, 170, 0.8);
+    border-top: 4px solid #54e6a0;
+}
+
+/* Attendance - Orange */
+#page-dashboard #stats > .card:nth-child(4) {
+    background: rgba(205, 105, 25, 0.48) !important;
+    border: 1px solid rgba(255, 185, 100, 0.8);
+    border-top: 4px solid #ffae50;
+}
+
+/* Fees Due - Gold */
+#page-dashboard #stats > .card:nth-child(5) {
+    background: rgba(180, 145, 25, 0.48) !important;
+    border: 1px solid rgba(255, 220, 100, 0.8);
+    border-top: 4px solid #ffdc55;
+}
+
+/* Text and Numbers */
+#page-dashboard #stats .muted {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+#page-dashboard #stats .stat {
+    color: #ffffff !important;
+    background: transparent !important;
+    font-size: 38px;
+    font-weight: 900;
+    margin-top: 10px;
+}
+
+/* Hover Effect */
+#page-dashboard #stats > .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
