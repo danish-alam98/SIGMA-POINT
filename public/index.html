@@ -1476,7 +1476,7 @@ nav a:focus-visible {
 
     background:
         linear-gradient(
-            rgba(7, 22, 47, 0.30),
+            #2a71eb4d,
             rgba(7, 22, 47, 0.42)
         ),
         url("login-study.jpg") center center / cover no-repeat fixed;
@@ -1541,39 +1541,77 @@ nav a:focus-visible {
     }
 }
 
-/* SIGMA POINT - BLUE DASHBOARD CARDS */
+
+/* SIGMA POINT - 5 DIFFERENT COLOR CARDS */
 
 #page-dashboard #stats > .card {
-    background: rgba(20, 75, 150, 0.65) !important;
-    border: 1px solid rgba(120, 175, 255, 0.7);
-    border-top: 4px solid #4da3ff;
+    color: #ffffff !important;
     border-radius: 16px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    color: #ffffff !important;
+    padding: 22px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.18);
 }
 
-/* Headings */
-#page-dashboard #stats .muted {
-    color: #ffffff !important;
-    font-weight: 800;
-    font-size: 15px;
+/* 1. Students - Blue */
+#page-dashboard #stats > .card:nth-child(1) {
+    background: rgba(20, 105, 210, 0.78) !important;
+    border: 1px solid #65b5ff;
+    border-top: 4px solid #65b5ff;
 }
 
-/* Numbers */
+/* 2. Available Tests - Purple */
+#page-dashboard #stats > .card:nth-child(2) {
+    background: rgba(115, 65, 190, 0.78) !important;
+    border: 1px solid #c49aff;
+    border-top: 4px solid #c49aff;
+}
+
+/* 3. Results - Green */
+#page-dashboard #stats > .card:nth-child(3) {
+    background: rgba(15, 135, 85, 0.78) !important;
+    border: 1px solid #69e6a7;
+    border-top: 4px solid #69e6a7;
+}
+
+/* 4. Attendance - Orange */
+#page-dashboard #stats > .card:nth-child(4) {
+    background: rgba(205, 105, 25, 0.78) !important;
+    border: 1px solid #ffc078;
+    border-top: 4px solid #ffc078;
+}
+
+/* 5. Fees Due - Gold */
+#page-dashboard #stats > .card:nth-child(5) {
+    background: rgba(165, 125, 15, 0.82) !important;
+    border: 1px solid #ffe17a;
+    border-top: 4px solid #ffe17a;
+}
+
+/* All headings and numbers */
+#page-dashboard #stats .muted,
 #page-dashboard #stats .stat {
     color: #ffffff !important;
+}
+
+#page-dashboard #stats .muted {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+#page-dashboard #stats .stat {
     background: transparent !important;
     font-size: 38px;
     font-weight: 900;
     margin-top: 10px;
 }
 
-/* Hover */
+/* Hover effect */
 #page-dashboard #stats > .card:hover {
-    background: rgba(30, 100, 190, 0.8) !important;
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.3);
 }
+
 
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
