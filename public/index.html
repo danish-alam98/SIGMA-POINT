@@ -1431,8 +1431,14 @@ nav a:focus-visible {
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(rgba(7,22,47,.30), rgba(7,22,47,.45)),
-    url("/login-study.jpg") center center / cover no-repeat;
+   
+linear-gradient(
+    rgba(7, 22, 47, 0.08),
+    rgba(7, 22, 47, 0.12)
+),
+url("/login-study.jpg") center center / cover no-repeat;
+
+  
 }
 
 #loginScreen .auth-card {
@@ -1612,7 +1618,179 @@ nav a:focus-visible {
     box-shadow: 0 12px 28px rgba(0,0,0,0.3);
 }
 
+/* SIGMA POINT - PREMIUM WELCOME SECTION */
 
+#page-dashboard .dashboard-welcome {
+    background: rgba(7, 22, 47, 0.72) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 204, 89, 0.65);
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+}
+
+#page-dashboard .dashboard-welcome h2 {
+    color: #ffcc59 !important;
+    font-weight: 800;
+}
+
+#page-dashboard .dashboard-welcome p {
+    color: #ffffff !important;
+}
+
+/* QUICK ACTIONS */
+
+#page-dashboard .quick-actions button {
+    background: rgba(20, 75, 145, 0.72) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 204, 89, 0.65) !important;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-weight: 700;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.25s ease;
+}
+
+#page-dashboard .quick-actions button:hover {
+    background: rgba(196, 154, 50, 0.9) !important;
+    color: #07162f !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* BOTTOM WELCOME CARD - WHITE GOLD DESIGN */
+
+#page-dashboard > .card[style*="margin-top"] {
+    background: rgba(7, 22, 47, 0.72) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 204, 89, 0.7) !important;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+#page-dashboard > .card[style*="margin-top"] h3 {
+    color: #ffcc59 !important;
+    font-weight: 800;
+}
+
+#page-dashboard > .card[style*="margin-top"] p {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+
+/* CLEAN LOGIN BACKGROUND - REMOVE EXTRA BORDERS */
+
+/* Header ki golden bottom line remove */
+.top {
+    border-bottom: none !important;
+}
+
+/* Background area clean */
+#loginScreen.auth-wrap {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Login card ka border safe rakho */
+#loginScreen .auth-card {
+    border: 1px solid rgba(255,255,255,.55) !important;
+}
+
+
+/* REMOVE LOGIN CARD BOX */
+
+#loginScreen .auth-card {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+/* TRANSPARENT LOGIN FORM */
+
+#loginScreen .auth-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Email and Password input boxes */
+#loginScreen input {
+    background: rgba(255,255,255,0.18) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+/* Input placeholder */
+#loginScreen input::placeholder {
+    color: #ffffff !important;
+}
+
+/* Login heading */
+#loginScreen h1,
+#loginScreen h2 {
+    color: #ffcc59 !important;
+}
+
+/* Labels */
+#loginScreen label {
+    color: #ffffff !important;
+}
+/* TRANSPARENT LOGIN FORM */
+
+#loginScreen .auth-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Email and Passwod input boxes */
+#loginScreen input {
+    background: rgba(255,255,255,0.18) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+/* Input placeholder */
+#loginScreen input::placeholder {
+    color: #ffffff !important;
+}
+
+/* Login heading */
+#loginScreen h1,
+#loginScreen h2 {
+    color: #ffcc59 !important;
+}
+
+/* Labels */
+#loginScreen label {
+    color: #ffffff !important;
+}
+/* LOGIN TYPE DROPDOWN TRANSPARENT */
+
+#loginScreen select {
+    background: rgba(255,255,255,0.18) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    box-shadow: none !important;
+}
+
+#loginScreen select option {
+    background: #142b50 !important;
+    color: #ffffff !important;
+}
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
