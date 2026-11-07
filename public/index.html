@@ -3348,13 +3348,61 @@ $("logoutBtn").onclick = async () => {
     
   }
 };
-// Restore an existing session after page refresh.
+// SIGMA POINT: Logout after 2 minutes in background
+const BACKGROUND_LIMIT = 2 * 60 * 1000;
+const BACKGROUND_KEY = "sigmaPointBackgroundTime";
+
+async function expireBackgroundSession() {
+  try {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "same-origin"
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+
+  localStorage.removeItem(BACKGROUND_KEY);
+}
+
+// App background mein jaaye
+document.addEventListener("visibilitychange", async () => {
+  if (document.hidden) {
+    localStorage.setItem(BACKGROUND_KEY, Date.now().toString());
+  } else {
+    const hiddenAt = Number(localStorage.getItem(BACKGROUND_KEY) || 0);
+
+    if (hiddenAt && Date.now() - hiddenAt >= BACKGROUND_LIMIT) {
+      await expireBackgroundSession();
+      window.location.reload();
+      return;
+    }
+
+    localStorage.removeItem(BACKGROUND_KEY);
+  }
+});
+
+// App completely close hone par background time save karo
+window.addEventListener("pagehide", () => {
+  localStorage.setItem(BACKGROUND_KEY, Date.now().toString());
+});
+
+// App dobara khulne par session check karo
 (async () => {
+  const hiddenAt = Number(localStorage.getItem(BACKGROUND_KEY) || 0);
+
+  if (hiddenAt && Date.now() - hiddenAt >= BACKGROUND_LIMIT) {
+    await expireBackgroundSession();
+    return;
+  }
+
+  localStorage.removeItem(BACKGROUND_KEY);
+
   try {
     const data = await api("/api/me");
     await openPortal(data.user);
   } catch (error) {
-    // Not logged in yet; login screen stays visible.
+    // Login screen visible rahegi
   }
 })();
 </script>
