@@ -1421,59 +1421,6 @@ nav a:focus-visible {
   }
 }
 
-/* SIGMA POINT LOGIN BACKGROUND */
-
-#loginScreen.auth-wrap {
-  max-width: none;
-  width: 100%;
-  min-height: calc(100vh - 116px);
-  margin: 0;
-  padding: 35px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-   
-linear-gradient(
-    rgba(7, 22, 47, 0.08),
-    rgba(7, 22, 47, 0.12)
-),
-url("/login-study.jpg") center center / cover no-repeat;
-
-  
-}
-
-#loginScreen .auth-card {
-  width: 100%;
-  max-width: 470px;
-  background: rgba(255,255,255,.20);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,.55);
-  border-radius: 20px;
-  padding: 27px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.25);
-}
-
-#loginScreen .auth-card h1,
-#loginScreen .auth-card label,
-#loginScreen .auth-card .muted,
-#loginScreen .auth-card .hint {
-  color: #fff;
-}
-
-#loginScreen .auth-card input,
-#loginScreen .auth-card select {
-  background: rgba(255,255,255,.88);
-  border-radius: 9px;
-}
-
-@media(max-width:720px) {
-  #loginScreen.auth-wrap {
-    min-height: calc(100vh - 116px);
-    padding: 22px 12px;
-  }
-}
 
 /* SIGMA POINT DASHBOARD - STUDY BACKGROUND */
 
@@ -1703,159 +1650,107 @@ url("/login-study.jpg") center center / cover no-repeat;
     border: 1px solid rgba(255,255,255,.55) !important;
 }
 
+/* SIGMA POINT - CLEAN LOGIN DESIGN */
 
-/* REMOVE LOGIN CARD BOX */
-
-#loginScreen .auth-card {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+/* Login background */
+#loginScreen.auth-wrap {
+    max-width: none;
+    width: 100%;
+    min-height: calc(100vh - 116px);
+    margin: 0;
+    padding: 35px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none !important;
+    outline: none !important;
     box-shadow: none !important;
-    border-radius: 0 !important;
+    background:
+        linear-gradient(rgba(7,22,47,0.08), rgba(7,22,47,0.12)),
+        url("/login-study.jpg") center center / cover no-repeat;
 }
-/* TRANSPARENT LOGIN FORM */
 
+/* Transparent login card */
 #loginScreen .auth-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* Email and Password input boxes */
-#loginScreen input {
-    background: rgba(255,255,255,0.18) !important;
-    border: 1px solid rgba(255,255,255,0.65) !important;
-    box-shadow: none !important;
-    color: #ffffff !important;
-}
-
-#loginScreen input::placeholder {
-    color: #000000 !important;
-    opacity: 1;
-}
-/* Login heading */
-#loginScreen h1,
-#loginScreen h2 {
-    color: #ffcc59 !important;
-}
-
-/* Labels */
-#loginScreen label {
-    color: #ffffff !important;
-}
-/* TRANSPARENT LOGIN FORM */
-
-#loginScreen .auth-card {
+    width: 100%;
+    max-width: 470px;
+    padding: 27px;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-}
-
-/* Email and Passwod input boxes */
-#loginScreen input {
-    background: rgba(255,255,255,0.18) !important;
-    border: 1px solid rgba(255,255,255,0.65) !important;
-    box-shadow: none !important;
-    color: #ffffff !important;
-}
-
-/* Input placeholder */
-#loginScreen input::placeholder {
-    color: #ffffff !important;
 }
 
 /* Login heading */
-#loginScreen h1,
-#loginScreen h2 {
+#loginScreen .auth-card h1,
+#loginScreen .auth-card h2 {
     color: #ffcc59 !important;
+    font-weight: 900 !important;
 }
 
-/* Labels */
-#loginScreen label {
+/* Login labels and instructions */
+#loginScreen .auth-card p,
+#loginScreen .auth-card label,
+#loginScreen .auth-card .muted,
+#loginScreen .auth-card .hint {
     color: #ffffff !important;
-}
-/* LOGIN TYPE DROPDOWN TRANSPARENT */
-
-#loginScreen select {
-    background: rgba(255,255,255,0.18) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.65) !important;
-    box-shadow: none !important;
-}
-
-#loginScreen select option {
-    background: #142b50 !important;
-    color: #ffffff !important;
-}
-/* LOGIN TEXT BLACK COLOR */
-
-#loginScreen .muted,
-#loginScreen .hint,
-#loginScreen label,
-#loginScreen p {
-    color: #000000 !important;
-}
-
-/* FORCE BLACK LOGIN PLACEHOLDER */
-
-#loginScreen input#email::placeholder,
-#loginScreen input#password::placeholder {
-    color: #000000 !important;
-    opacity: 1 !important;
-    -webkit-text-fill-color: #000000 !important;
-}
-
-#loginScreen input#email::-webkit-input-placeholder,
-#loginScreen input#password::-webkit-input-placeholder {
-    color: #000000 !important;
-    opacity: 1 !important;
-}
-#loginScreen input#email::placeholder,
-#loginScreen input#password::placeholder {
-    color: #000000 !important;
-    opacity: 1 !important;
-    font-weight: 800 !important;
-    -webkit-text-fill-color: #000000 !important;
-    text-shadow: 0 0 0 #000000 !important;
-}
-/* LOGIN TYPE DARK BLACK AND BOLD */
-
-#loginScreen select#role {
-    color: #000000 !important;
     font-weight: 800 !important;
 }
 
-#loginScreen select#role option {
-    color: #000000 !important;
+/* Email and Password */
+
+#loginScreen #email,
+#loginScreen #password {
+    width: 100%;
     background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    font-weight: 900 !important;
+    border: 2px solid #c49a32 !important;
+}
+#loginScreen #email::placeholder,
+#loginScreen #password::placeholder {
+    color: #142b50 !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+}
+
+/* Login type dropdown */
+#loginScreen #role {
+    width: 100%;
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    font-weight: 800 !important;
+    border: 2px solid #c49a32 !important;
+}
+
+#loginScreen #role option {
+    background: #ffffff !important;
+    color: #000000 !important;
     font-weight: 800 !important;
 }
 
-/* LOGIN LABELS DARK BLACK AND EXTRA BOLD */
+/* Login button */
+#loginScreen button {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+}
 
-#loginScreen .field label {
-    color: #000000 !important;
-    font-weight: 900 !important;
-    font-size: 16px !important;
-}
-/* LOGIN DESCRIPTION DARK BLACK AND BOLD */
+/* Mobile login design */
+@media(max-width:720px) {
+    #loginScreen.auth-wrap {
+        min-height: calc(100vh - 116px);
+        padding: 22px 12px;
+    }
 
-#loginScreen .auth-card > p.muted {
-    color: #000000 !important;
-    font-weight: 900 !important;
-    font-size: 15px !important;
-    text-shadow: 0 0 0 #000000 !important;
+    #loginScreen .auth-card {
+        padding: 20px;
+    }
 }
-#loginScreen .hint {
-    color: #000000 !important;
-    font-weight: 900 !important;
-    font-size: 15px !important;
-}
+
+
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </head>
