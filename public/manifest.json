@@ -1,0 +1,24 @@
+
+{
+  "name": "SIGMA POINT",
+  "short_name": "SIGMA POINT",
+  "description": "SIGMA POINT Coaching Management Portal",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#142b50",
+  "theme_color": "#142b50",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

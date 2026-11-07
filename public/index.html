@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#142b50">
+<link rel="manifest" href="/manifest.json">
 <title>SIGMA POINT</title>
 <style>
 :root{--navy:#142b50;--blue:#c49a32;--bg:#f3f6fc;--ink:#1e2b42;--muted:#68758b;--line:#e0e7f1;--white:#fff;--green:#13835c;--red:#b52e42}
@@ -3320,5 +3322,19 @@ $("logoutBtn").onclick = async () => {
 
 </div>
 </div>
+<script>
+// SIGMA POINT PWA Service Worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then((registration) => {
+        console.log("SIGMA POINT App Ready!", registration.scope);
+      })
+      .catch((error) => {
+        console.error("Service Worker Error:", error);
+      });
+  });
+}
+</script>
 </body>
 </html>
