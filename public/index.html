@@ -1732,11 +1732,10 @@ url("/login-study.jpg") center center / cover no-repeat;
     color: #ffffff !important;
 }
 
-/* Input placeholder */
 #loginScreen input::placeholder {
-    color: #ffffff !important;
+    color: #000000 !important;
+    opacity: 1;
 }
-
 /* Login heading */
 #loginScreen h1,
 #loginScreen h2 {
@@ -1792,6 +1791,70 @@ url("/login-study.jpg") center center / cover no-repeat;
 #loginScreen select option {
     background: #142b50 !important;
     color: #ffffff !important;
+}
+/* LOGIN TEXT BLACK COLOR */
+
+#loginScreen .muted,
+#loginScreen .hint,
+#loginScreen label,
+#loginScreen p {
+    color: #000000 !important;
+}
+
+/* FORCE BLACK LOGIN PLACEHOLDER */
+
+#loginScreen input#email::placeholder,
+#loginScreen input#password::placeholder {
+    color: #000000 !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+#loginScreen input#email::-webkit-input-placeholder,
+#loginScreen input#password::-webkit-input-placeholder {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+#loginScreen input#email::placeholder,
+#loginScreen input#password::placeholder {
+    color: #000000 !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+    -webkit-text-fill-color: #000000 !important;
+    text-shadow: 0 0 0 #000000 !important;
+}
+/* LOGIN TYPE DARK BLACK AND BOLD */
+
+#loginScreen select#role {
+    color: #000000 !important;
+    font-weight: 800 !important;
+}
+
+#loginScreen select#role option {
+    color: #000000 !important;
+    background: #ffffff !important;
+    font-weight: 800 !important;
+}
+
+/* LOGIN LABELS DARK BLACK AND EXTRA BOLD */
+
+#loginScreen .field label {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    font-size: 16px !important;
+}
+/* LOGIN DESCRIPTION DARK BLACK AND BOLD */
+
+#loginScreen .auth-card > p.muted {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    font-size: 15px !important;
+    text-shadow: 0 0 0 #000000 !important;
+}
+#loginScreen .hint {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    font-size: 15px !important;
 }
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -1855,7 +1918,7 @@ url("/login-study.jpg") center center / cover no-repeat;
 <button id="requestOtp" type="button" style="width:100%">Login</button>
 
 <p id="loginMessage" class="message"></p>
-<p class="hint">Apne registered email aur password se login karein. Student accounts Admin banata hai.</p>
+<p class="hint">Please log in using your registered email and password. Student accounts are created by the Admin.</p>
   </div>
 </div>
 
