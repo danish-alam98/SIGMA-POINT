@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.onrender.sigma_point.twa",
+        "sha256_cert_fingerprints": ["AB:08:7C:CD:A9:3F:C8:34:9B:D8:14:76:BF:8E:DE:AF:2F:B3:CF:5B:0E:04:CF:72:CF:F9:1D:88:BF:7C:36:00"]
+      }
+    }]
