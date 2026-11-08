@@ -1749,10 +1749,611 @@ nav a:focus-visible {
         padding: 20px;
     }
 }
+/* SIGMA POINT ANALYTICS GRAPHS */
+.analytics-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 22px;
+}
+
+.analytics-card {
+  background: linear-gradient(145deg, #ffffff, #f4f7fc);
+  border: 1px solid #dce5f1;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(15, 35, 65, 0.07);
+  min-width: 0;
+}
+
+.analytics-card h3 {
+  color: #10284b;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.analytics-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.analytics-stat {
+  flex: 1;
+  min-width: 90px;
+  padding: 12px;
+  background: #edf3fb;
+  border-radius: 11px;
+}
+
+.analytics-stat strong {
+  display: block;
+  color: #10284b;
+  font-size: 23px;
+  font-weight: 850;
+}
+
+.analytics-stat span {
+  color: #68758b;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.analytics-bar-row {
+  display: grid;
+  grid-template-columns: minmax(65px, 100px) 1fr 38px;
+  align-items: center;
+  gap: 9px;
+  margin: 12px 0;
+  font-size: 12px;
+  color: #34445c;
+}
+
+.analytics-track {
+  height: 11px;
+  background: #e5ebf4;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.analytics-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #173e73, #c49a32);
+  border-radius: 20px;
+  transition: width .4s ease;
+}
+
+.analytics-empty {
+  color: #68758b;
+  font-size: 13px;
+  padding: 12px 0;
+}
+
+@media (max-width: 700px) {
+  .analytics-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-card {
+    padding: 15px;
+  }
+}
+
+/* SIGMA POINT - PREMIUM ANALYTICS THEME */
+/* Dashboard intentionally excluded */
+
+#page-students,
+#page-attendance,
+#page-attendance-overview,
+#page-tests,
+#page-results,
+#page-fees,
+#page-notices,
+#page-notes {
+  color: #eaf2ff;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(0, 153, 255, .15), transparent 38%),
+    radial-gradient(ellipse at 90% 20%, rgba(139, 92, 246, .13), transparent 35%),
+    linear-gradient(145deg, #071329, #0b1d3b 55%, #101b3b);
+  border: 1px solid rgba(91, 156, 255, .18);
+  border-radius: 20px;
+  padding: 25px;
+  min-height: 500px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, .22);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.page-title {
+  color: #f2f7ff;
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: .3px;
+  margin-bottom: 22px;
+  text-shadow: 0 0 20px rgba(37, 160, 255, .28);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.card,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-card {
+  color: #eaf2ff;
+  background: linear-gradient(145deg, rgba(19, 43, 79, .96), rgba(12, 27, 55, .97));
+  border: 1px solid rgba(83, 153, 255, .25);
+  border-radius: 17px;
+  padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .22), inset 0 1px rgba(255,255,255,.035);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.card:hover,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(45, 180, 255, .65);
+  box-shadow: 0 12px 32px rgba(0, 130, 255, .13);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.card h3,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-card h3 {
+  color: #f4f8ff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.muted,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.hint,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-empty {
+  color: #9db2d2;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-panel {
+  gap: 17px;
+  margin-bottom: 20px;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-stat {
+  background: linear-gradient(135deg, rgba(0, 153, 255, .16), rgba(139, 92, 246, .13));
+  border: 1px solid rgba(83, 153, 255, .22);
+  border-radius: 13px;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-stat strong {
+  color: #55c8ff;
+  text-shadow: 0 0 15px rgba(0, 180, 255, .3);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-stat span {
+  color: #b7c9e5;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-bar-row {
+  color: #d9e8ff;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-track {
+  background: #172e50;
+  border: 1px solid rgba(120, 170, 230, .12);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.analytics-fill {
+  background: linear-gradient(90deg, #00c6ff, #3978ff, #a855f7);
+  box-shadow: 0 0 13px rgba(0, 174, 255, .45);
+  animation: sigmaBarGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes sigmaBarGlow {
+  from { filter: brightness(.9); }
+  to { filter: brightness(1.35); }
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+input,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+select,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+textarea {
+  color: #edf5ff;
+  background: #0a1931;
+  border: 1px solid #29476e;
+  border-radius: 10px;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+input:focus,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+select:focus,
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+textarea:focus {
+  border-color: #22baff;
+  box-shadow: 0 0 0 3px rgba(34, 186, 255, .13);
+  outline: none;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+label {
+  color: #bcd0ed;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+button {
+  color: #fff;
+  background: linear-gradient(110deg, #087fdb, #5146e5);
+  border: 1px solid rgba(110, 190, 255, .35);
+  border-radius: 10px;
+  font-weight: 750;
+  box-shadow: 0 5px 18px rgba(0, 119, 255, .2);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 153, 255, .35);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+.table-wrap {
+  border: 1px solid rgba(83, 153, 255, .2);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+table {
+  color: #dceaff;
+  background: #0b1b35;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+thead {
+  background: linear-gradient(90deg, #123968, #26366e);
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+th {
+  color: #75d5ff;
+}
+
+:is(#page-students, #page-attendance, #page-attendance-overview,
+#page-tests, #page-results, #page-fees, #page-notices, #page-notes)
+td {
+  border-color: rgba(100, 150, 210, .16);
+}
+
+@media (max-width: 700px) {
+  #page-students,
+  #page-attendance,
+  #page-attendance-overview,
+  #page-tests,
+  #page-results,
+  #page-fees,
+  #page-notices,
+  #page-notes {
+    padding: 15px;
+    border-radius: 13px;
+  }
+}
+
+
+/* SIGMA POINT - Animated Neon Analytics */
+#page-students .analytics-panel,
+#page-attendance .analytics-panel,
+#page-attendance-overview .analytics-panel,
+#page-tests .analytics-panel,
+#page-results .analytics-panel,
+#page-fees .analytics-panel,
+#page-notices .analytics-panel,
+#page-notes .analytics-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.sigma-graph-card {
+  width: 100%;
+  padding: 25px !important;
+  color: #eaf3ff !important;
+  background:
+    radial-gradient(ellipse at 90% 0%, rgba(0, 195, 255, .13), transparent 42%),
+    linear-gradient(145deg, #101d3a, #091329 75%) !important;
+  border: 1px solid rgba(70, 160, 255, .28) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .28),
+              inset 0 1px 0 rgba(255,255,255,.06) !important;
+  overflow: hidden;
+}
+
+.sigma-graph-heading,
+.sigma-chart-title,
+.sigma-bar-label,
+.sigma-graph-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.sigma-eyebrow {
+  color: #00d4ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.sigma-graph-heading h3 {
+  color: #f4f8ff !important;
+  font-size: 22px;
+  margin: 7px 0 0;
+}
+
+.sigma-live-dot {
+  color: #55f2bb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.sigma-live-dot::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #35edac;
+  box-shadow: 0 0 12px #35edac;
+  animation: sigmaPulse 1.5s infinite;
+}
+
+.analytics-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 13px;
+  margin: 23px 0;
+}
+
+.sigma-stat {
+  padding: 17px !important;
+  min-width: 0;
+  border: 1px solid rgba(100, 160, 255, .2);
+  border-radius: 14px;
+  background: rgba(255,255,255,.045);
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+
+.sigma-stat:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 212, 255, .65);
+  box-shadow: 0 8px 24px rgba(0, 180, 255, .13);
+}
+
+.sigma-stat strong {
+  display: block;
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 800;
+}
+
+.sigma-stat span {
+  display: block;
+  margin-top: 6px;
+  color: #a9bbd9 !important;
+  font-size: 12px;
+}
+
+.sigma-stat-0 { border-top: 3px solid #00d4ff; }
+.sigma-stat-1 { border-top: 3px solid #a855f7; }
+.sigma-stat-2 { border-top: 3px solid #00e0a4; }
+.sigma-stat-3 { border-top: 3px solid #ff9c52; }
+
+.sigma-chart-title {
+  padding: 15px 0;
+  margin-top: 5px;
+  border-top: 1px solid rgba(150,180,230,.15);
+  color: #dceaff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sigma-chart-title span:last-child {
+  color: #00d4ff;
+  font-size: 11px;
+}
+
+.sigma-bars {
+  display: grid;
+  gap: 19px;
+  padding: 12px 0;
+}
+
+.sigma-bar-label {
+  margin-bottom: 8px;
+  color: #c4d3ec;
+  font-size: 12px;
+}
+
+.sigma-bar-label strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.sigma-bar-track {
+  width: 100%;
+  height: 11px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(255,255,255,.09);
+}
+
+.sigma-bar-fill {
+  width: 0;
+  height: 100%;
+  border-radius: 20px;
+  background: var(--bar-color);
+  box-shadow: 0 0 14px rgba(0, 195, 255, .35);
+  animation: sigmaGrow 1.1s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.sigma-bar-item:hover .sigma-bar-track {
+  box-shadow: 0 0 14px rgba(0, 195, 255, .25);
+}
+
+.sigma-graph-footer {
+  padding-top: 15px;
+  margin-top: 13px;
+  border-top: 1px solid rgba(150,180,230,.13);
+  color: #8298bb;
+  font-size: 10px;
+}
+
+.sigma-graph-footer i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #00e0a4;
+  box-shadow: 0 0 9px #00e0a4;
+}
+
+@keyframes sigmaGrow {
+  from { width: 0; }
+  to { width: var(--bar-width); }
+}
+
+@keyframes sigmaPulse {
+  50% { opacity: .35; transform: scale(.8); }
+}
+
+@media (max-width: 600px) {
+  .sigma-graph-card { padding: 17px !important; }
+  .sigma-graph-heading h3 { font-size: 18px; }
+  .sigma-stat strong { font-size: 21px !important; }
+}
+
+/* SIGMA POINT - TEST TEXT VISIBILITY FIX */
+#page-tests .test-card,
+#page-tests .test-card * {
+  color: #1e2b42 !important;
+}
+
+#page-tests .test-card {
+  background: #ffffff !important;
+}
+
+#page-tests .test-card .badge {
+  background: #eaf0ff !important;
+  color: #142b50 !important;
+}
+
+#page-tests .test-card input[type="radio"] {
+  accent-color: #2563eb;
+}
+
+/* FIX: PUBLISHED TEST CARD VISIBILITY */
+#testAdminList {
+  color: #1e2b42 !important;
+}
+
+#testAdminList h3,
+#testAdminList p,
+#testAdminList span,
+#testAdminList strong,
+#testAdminList summary,
+#testAdminList small,
+#testAdminList div {
+  color: #1e2b42 !important;
+  opacity: 1 !important;
+}
+
+#testAdminList button {
+  opacity: 1 !important;
+}
+
+/* SIGMA POINT - STUDENT TABLE VISIBILITY FIX */
+#page-students .table-wrap tbody td {
+  color: #eaf2ff !important;
+  opacity: 1 !important;
+  font-weight: 500;
+}
+
+#page-students .table-wrap thead th {
+  color: #142b50 !important;
+  font-weight: 700;
+}
+
+#page-students .student-count {
+  color: #b9d8ff !important;
+  opacity: 1 !important;
+}
+
+/* STUDENT LIST - SAME DARK ROW COLOR */
+#page-students .table-wrap tbody tr,
+#page-students .table-wrap tbody tr:nth-child(odd),
+#page-students .table-wrap tbody tr:nth-child(even) {
+  background: #0b1d38 !important;
+}
+
+#page-students .table-wrap tbody td {
+  background: #0b1d38 !important;
+  color: #eaf2ff !important;
+  opacity: 1 !important;
+}
+
+#page-students .table-wrap tbody tr:hover td {
+  background: #17345c !important;
+}
 
 
 </style>
 <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
@@ -1839,7 +2440,8 @@ nav a:focus-visible {
   <aside id="nav"></aside>
   <main>
 
-    <section class="section active" id="page-dashboard">
+    
+<section class="section active" id="page-dashboard">
       <h1 class="page-title">Dashboard Overview</h1>
       <div class="grid" id="stats"></div>
       <div class="dashboard-welcome">
@@ -1862,59 +2464,105 @@ nav a:focus-visible {
       </div>
     </section>
 
-    <section class="section" id="page-students">
-      <h1 class="page-title">Student Management</h1>
-      <div class="card admin-only">
-        <h3>Create Student Account</h3>
-        <div class="split">
-          <div class="field"><label>Student name</label><input id="sName"></div>
-          <div class="field"><label>Student email</label><input id="sEmail" type="email"></div>
-          <div class="field"><label>Class</label><input id="sClass" placeholder="Class 10"></div>
-          <div class="field"><label>Password (6+ characters)</label><input id="sPassword" type="password"></div>
-        </div>
-        <button id="addStudent">Create Student</button>
-        <p class="hint">Student ko login email aur password privately dena.</p>
+
+<section class="section" id="page-students">
+  <h1 class="page-title">Student Management</h1>
+  <div id="studentsGraph" class="analytics-panel"></div>
+
+  <div class="card admin-only">
+    <h3>Create Student Account</h3>
+
+    <div class="split">
+      <div class="field">
+        <label>Student name</label>
+        <input id="sName" required>
       </div>
-      <div class="card">
-        <h3>Student List</h3>
-        
-<div class="student-tools">
-  <input
-    id="studentSearch"
-    type="search"
-    placeholder="Search name, email or Student ID..."
-    aria-label="Search students"
-  >
 
-  <select id="studentClassFilter" aria-label="Filter students by class">
-    <option value="">All Classes</option>
-  </select>
-</div>
-
-<p id="studentCount" class="student-count">All students</p>
-
-        <div class="table-wrap"><table>
-          <thead><tr><th>Name</th><th>Student ID</th><th>Email</th><th>Class</th><th>Action</th></tr></thead>
-          <tbody id="studentsRows"></tbody>
-        </table></div>
+      <div class="field">
+        <label>Student email</label>
+        <input id="sEmail" type="email" required>
       </div>
-    </section>
 
-    <section class="section" id="page-attendance">
-      <h1 class="page-title">Date-wise Attendance</h1>
-      <div class="card">
-        <div class="row">
-          <div class="field"><label>Attendance date</label><input type="date" id="attDate"></div>
-          <button id="loadAttendance">Load Students</button>
-          <button id="saveAttendance">Save Attendance</button>
-        </div>
-        <div id="attendanceEditor"></div>
-        <p id="attMessage" class="message"></p>
+      <div class="field">
+        <label>Class</label>
+        <input id="sClass" placeholder="Class 10" required>
       </div>
-    </section>
+
+      <div class="field">
+        <label>Password (6+ characters)</label>
+        <input id="sPassword" type="password" required>
+      </div>
+
+      <div class="field">
+        <label>Monthly Fee (₹)</label>
+        <input id="sMonthlyFee" type="number" min="0" step="0.01" placeholder="500" required>
+      </div>
+
+      <div class="field">
+        <label>Total Course Fee (₹)</label>
+        <input id="sCourseFee" type="number" min="0" step="0.01" placeholder="5000" required>
+      </div>
+    </div>
+
+    <button id="addStudent">Create Student</button>
+    <p class="hint">Student ko login email aur password privately dena.</p>
+  </div>
+
+  <div class="card">
+    <h3>Student List</h3>
+
+    <div class="student-tools">
+      <input id="studentSearch" type="search"
+        placeholder="Search name, email or Student ID..."
+        aria-label="Search students">
+
+      <select id="studentClassFilter" aria-label="Filter students by class">
+        <option value="">All Classes</option>
+      </select>
+    </div>
+
+    <p id="studentCount" class="student-count">All students</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Student ID</th>
+            <th>Email</th>
+            <th>Class</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="studentsRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="page-attendance">
+  <h1 class="page-title">Date-wise Attendance</h1>
+  <div id="attendanceGraph" class="analytics-panel"></div>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="attDate">Attendance Date</label>
+        <input id="attDate" type="date">
+      </div>
+      <button id="loadAttendance" type="button">Load Attendance</button>
+    </div>
+
+    <div id="attendanceEditor"></div>
+    <button id="saveAttendance" type="button">Save Attendance</button>
+    <p id="attMessage" class="message"></p>
+  </div>
+</section>
 
     <section class="section" id="page-attendance-overview">
-      <h1 class="page-title">Attendance Overview</h1>
+      
+    <div id="attendanceOverviewGraph" class="analytics-panel"></div>
+<h1 class="page-title">Attendance Overview</h1>
       <div class="card">
         <button id="loadAttOverview">Refresh Overview</button>
         <div class="table-wrap"><table>
@@ -1926,6 +2574,8 @@ nav a:focus-visible {
 
     <section class="section" id="page-tests">
       <h1 class="page-title">MCQ Tests</h1>
+      <div id="testsGraph" class="analytics-panel"></div>
+
       <div class="card staff-only">
         <h3>Create Class-wise MCQ Test</h3>
         <div class="split">
@@ -2004,6 +2654,7 @@ nav a:focus-visible {
 
     <section class="section" id="page-results">
       <h1 class="page-title">Results Overview</h1>
+      <div id="resultsGraph" class="analytics-panel"></div>
       <div class="card staff-only">
         <h3>Publish Results</h3>
         <div class="split">
@@ -2024,7 +2675,24 @@ nav a:focus-visible {
     </section>
 
     <section class="section" id="page-fees">
+      <div class="card student-only" id="studentOnlinePayment">
+  <h3>Online Fee Payment</h3>
+  <p id="studentFeeInfo">Loading fee details...</p>
+
+  <div class="field">
+    <label>Payment Amount (₹)</label>
+    <input id="onlineFeeAmount" type="number" min="1" step="0.01" placeholder="Enter amount">
+  </div>
+
+  <div class="field">
+    <label>Month / Purpose</label>
+    <input id="onlineFeeMonth" placeholder="November tuition">
+  </div>
+
+  <button id="payOnlineFee" type="button">Pay Now</button>
+</div>
       <h1 class="page-title">Cashier / Fee Collection</h1>
+      <div id="feesGraph" class="analytics-panel"></div>
       <div class="card cashier-only">
         <div class="split">
           <div class="field"><label>Student ID</label><input id="feeStudentId" placeholder="CC-..."></div>
@@ -2045,6 +2713,7 @@ nav a:focus-visible {
 
     <section class="section" id="page-notices">
       <h1 class="page-title">Notices</h1>
+      <div id="noticesGraph" class="analytics-panel"></div>
       <div class="card staff-only">
         <div class="field"><label>Notice title</label><input id="noticeTitle"></div>
         <div class="field"><label>Message</label><textarea id="noticeBody" rows="3"></textarea></div>
@@ -2057,6 +2726,7 @@ nav a:focus-visible {
     <!-- SIGMA POINT NOTES SECTION -->
     <section class="section" id="page-notes">
       <h1 class="page-title">📚 Study Notes</h1>
+      <div id="notesGraph" class="analytics-panel"></div>
 
       <div class="card admin-only">
         <h3>Upload New Notes</h3>
@@ -2291,6 +2961,172 @@ function downloadResultPDF(result) {
   }
 }
 
+// SIGMA POINT FEE PAYMENT RECEIPT PDF
+function downloadFeeReceipt(fee) {
+  try {
+    if (!fee) {
+      alert("Fee receipt details nahi mili.");
+      return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert("PDF library load nahi hui.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const navy = [18, 35, 67];
+    const gold = [212, 175, 55];
+    const white = [255, 255, 255];
+    const dark = [45, 52, 65];
+    const light = [245, 247, 251];
+
+    const studentName = String(fee.studentName || "Student");
+    const className = String(fee.className || "Not specified");
+    const receiptNo = String(fee.receiptNo || "N/A");
+    const amount = Number(fee.amount || 0);
+    const month = String(fee.month || "Fee payment");
+    const date = fee.createdAt
+      ? new Date(fee.createdAt).toLocaleDateString("en-IN")
+      : "N/A";
+
+    // Navy header
+    pdf.setFillColor(...navy);
+    pdf.rect(0, 0, 210, 52, "F");
+
+    pdf.setFillColor(...gold);
+    pdf.rect(0, 52, 210, 3, "F");
+
+    // Brand heading
+    pdf.setTextColor(...gold);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.text("S I G M A   P O I N T", 105, 16, {
+      align: "center"
+    });
+
+    pdf.setTextColor(...white);
+    pdf.setFontSize(22);
+    pdf.text("FEE PAYMENT RECEIPT", 105, 31, {
+      align: "center"
+    });
+
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(9);
+    pdf.text("OFFICIAL PAYMENT CONFIRMATION", 105, 41, {
+      align: "center"
+    });
+
+    // Receipt number and date
+    pdf.setTextColor(...navy);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text("Receipt No: " + receiptNo.substring(0, 35), 18, 68);
+    pdf.text("Date: " + date, 192, 68, {
+      align: "right"
+    });
+
+    // Student details card
+    pdf.setFillColor(...light);
+    pdf.roundedRect(15, 80, 180, 48, 4, 4, "F");
+
+    pdf.setTextColor(...navy);
+    pdf.setFontSize(11);
+    pdf.text("STUDENT DETAILS", 23, 91);
+
+    pdf.setDrawColor(...gold);
+    pdf.line(23, 96, 187, 96);
+
+    pdf.setTextColor(...dark);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    pdf.text("Student Name:", 23, 107);
+    pdf.text("Class:", 23, 119);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text(studentName.substring(0, 55), 58, 107);
+    pdf.text(className.substring(0, 45), 58, 119);
+
+    // Payment details
+    pdf.setTextColor(...navy);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.text("PAYMENT DETAILS", 18, 148);
+
+    pdf.setDrawColor(...gold);
+    pdf.line(18, 153, 192, 153);
+
+    pdf.setTextColor(...dark);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+
+    pdf.text("Purpose / Month:", 20, 166);
+    pdf.text(month.substring(0, 65), 65, 166);
+
+    pdf.text("Payment Method:", 20, 179);
+    pdf.text(String(fee.paymentMethod || fee.collectedBy || "Online").toUpperCase(), 65, 179);
+
+    pdf.text("Payment ID:", 20, 192);
+    pdf.text(String(fee.paymentId || "N/A").substring(0, 55), 65, 192);
+
+    // Amount panel
+    pdf.setFillColor(...navy);
+    pdf.roundedRect(15, 207, 180, 30, 4, 4, "F");
+
+    pdf.setTextColor(...gold);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text("TOTAL AMOUNT PAID", 105, 218, {
+      align: "center"
+    });
+
+    pdf.setTextColor(...white);
+    pdf.setFontSize(18);
+    pdf.text("INR " + amount.toFixed(2), 105, 230, {
+      align: "center"
+    });
+
+    // Status
+    pdf.setTextColor(25, 125, 75);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(11);
+    pdf.text("PAYMENT STATUS: PAID", 105, 249, {
+      align: "center"
+    });
+
+    // Footer
+    pdf.setTextColor(...navy);
+    pdf.setFontSize(12);
+    pdf.text("SIGMA POINT", 105, 263, {
+      align: "center"
+    });
+
+    pdf.setTextColor(100, 105, 115);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(9);
+    pdf.text("Learn Today, Lead Tomorrow", 105, 270, {
+      align: "center"
+    });
+
+    pdf.setFontSize(8);
+    pdf.text("This is a computer-generated payment receipt.", 105, 278, {
+      align: "center"
+    });
+
+    const safeName = studentName
+      .replace(/[^a-z0-9_-]/gi, "_")
+      .substring(0, 40);
+
+    pdf.save("SIGMA-POINT-Fee-Receipt-" + safeName + ".pdf");
+
+  } catch (error) {
+    console.error("Fee receipt PDF error:", error);
+    alert("Fee receipt PDF download nahi hui.");
+  }
+}
+
 
 
 async function deleteTest(testId) {
@@ -2405,8 +3241,12 @@ items.push(["notes", "📚 Notes"]);
       !["admin", "cashier"].includes(currentUser.role)
     );
   });
-}
 
+    document.querySelectorAll(".student-only").forEach(element => {
+    element.classList.toggle("hidden", currentUser.role !== "student");
+  });
+}
+ 
 
 async function openPortal(user) {
   currentUser = user;
@@ -2430,6 +3270,79 @@ function showPage(page) {
   );
 
   loadPage(page).catch(error => alert(error.message));
+}
+
+
+function renderAnalytics(id, title, stats, items) {
+  const container = $(id);
+  if (!container) return;
+
+  const total = items.reduce((sum, item) => sum + Number(item.value || 0), 0);
+  const maxValue = Math.max(1, ...items.map(item => Number(item.value || 0)));
+
+  const colors = [
+    "linear-gradient(90deg,#00d4ff,#2878ff)",
+    "linear-gradient(90deg,#a855f7,#ec4899)",
+    "linear-gradient(90deg,#00e0a4,#00a6a6)",
+    "linear-gradient(90deg,#ffb347,#ff6b35)",
+    "linear-gradient(90deg,#6385ff,#a855f7)"
+  ];
+
+  container.innerHTML = `
+    <div class="analytics-card sigma-graph-card">
+      <div class="sigma-graph-heading">
+        <div>
+          <span class="sigma-eyebrow">SIGMA POINT ANALYTICS</span>
+          <h3>${escapeHTML(title)}</h3>
+        </div>
+        <span class="sigma-live-dot">LIVE DATA</span>
+      </div>
+
+      <div class="analytics-stats">
+        ${stats.map((stat, index) => `
+          <div class="analytics-stat sigma-stat sigma-stat-${index % 4}">
+            <strong>${escapeHTML(String(stat.value))}</strong>
+            <span>${escapeHTML(stat.label)}</span>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="sigma-chart-title">
+        <span>Performance Breakdown</span>
+        <span>${total.toLocaleString("en-IN")} TOTAL</span>
+      </div>
+
+      <div class="sigma-bars">
+        ${items.length ? items.map((item, index) => {
+          const value = Number(item.value || 0);
+          const percent = Math.max(0, Math.min(100, value / maxValue * 100));
+
+          return `
+            <div class="sigma-bar-item" title="${escapeHTML(item.label)}: ${value}">
+              <div class="sigma-bar-label">
+                <span>${escapeHTML(item.label)}</span>
+                <strong>${value.toLocaleString("en-IN")}</strong>
+              </div>
+              <div class="sigma-bar-track">
+                <div class="sigma-bar-fill"
+                  style="--bar-width:${percent}%;--bar-color:${colors[index % colors.length]}">
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("") : `
+          <div class="analytics-empty">
+            Abhi graph ke liye data available nahi hai.
+          </div>
+        `}
+      </div>
+
+      <div class="sigma-graph-footer">
+        <span><i></i> Database statistics</span>
+        <span>Updated when page loads</span>
+      </div>
+    </div>
+  `;
 }
 
 async function loadPage(page) {
@@ -2463,81 +3376,81 @@ async function loadPage(page) {
 
 async function loadStudents() {
   const data = await api("/api/students");
-  studentsCache = data.students;
+  studentsCache = Array.isArray(data.students) ? data.students : [];
 
-  const searchText = ($("studentSearch")?.value || "").trim().toLowerCase();
+  const classCounts = {};
+
+  studentsCache.forEach(student => {
+    const className = String(student.className || "Other").trim() || "Other";
+    classCounts[className] = (classCounts[className] || 0) + 1;
+  });
+console.log("STUDENT GRAPH DATA:", classCounts, studentsCache.length);
+  renderAnalytics(
+    "studentsGraph",
+    "Students by Class",
+    [{ label: "Total Students", value: studentsCache.length }],
+    Object.entries(classCounts).map(([label, value]) => ({ label, value }))
+  );
+
+  const search = ($("studentSearch")?.value || "").trim().toLowerCase();
   const selectedClass = $("studentClassFilter")?.value || "";
 
-  const filteredStudents = studentsCache.filter(student => {
-    const matchesSearch = [
-      student.name,
-      student.studentCode,
-      student.email,
-      student.className
-    ].some(value =>
-      String(value || "").toLowerCase().includes(searchText)
-    );
-
-    const matchesClass =
-      !selectedClass || student.className === selectedClass;
-
-    return matchesSearch && matchesClass;
-  });
-
-  // Class filter ke options update karo
   const classFilter = $("studentClassFilter");
+  const currentClass = selectedClass;
+
   if (classFilter) {
-    const previousClass = classFilter.value;
     const classes = [...new Set(
-      studentsCache.map(student => student.className).filter(Boolean)
+      studentsCache.map(s => s.className).filter(Boolean)
     )].sort();
 
     classFilter.innerHTML =
       '<option value="">All Classes</option>' +
-      classes.map(className =>
-        `<option value="${escapeHTML(className)}">${escapeHTML(className)}</option>`
+      classes.map(c =>
+        `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`
       ).join("");
 
-    classFilter.value = classes.includes(previousClass) ? previousClass : "";
+    classFilter.value = classes.includes(currentClass) ? currentClass : "";
   }
 
-  // Current filter ke hisaab se students dobara calculate karo
-  const finalStudents = studentsCache.filter(student => {
+  const filtered = studentsCache.filter(student => {
     const matchesSearch = [
       student.name,
-      student.studentCode,
       student.email,
+      student.studentCode,
       student.className
     ].some(value =>
-      String(value || "").toLowerCase().includes(
-        ($("studentSearch")?.value || "").trim().toLowerCase()
-      )
+      String(value || "").toLowerCase().includes(search)
     );
 
-    const selected = $("studentClassFilter")?.value || "";
-    return matchesSearch && (!selected || student.className === selected);
+    const matchesClass =
+      !classFilter?.value || student.className === classFilter.value;
+
+    return matchesSearch && matchesClass;
   });
 
-  if ($("studentCount")) {
-    $("studentCount").textContent =
-      `Showing ${finalStudents.length} of ${studentsCache.length} students`;
-  }
-
-  $("studentsRows").innerHTML = finalStudents.map(student => `
-    <tr>
-      <td>${escapeHTML(student.name)}</td>
-      <td>${escapeHTML(student.studentCode)}</td>
-      <td>${escapeHTML(student.email)}</td>
-      <td>${escapeHTML(student.className)}</td>
-      
-      <td>
-        ${currentUser.role === "admin" ? `
-          <button type="button" onclick="editStudent('${student.id}')">Edit</button>
-          <button type="button" class="danger" onclick="deleteStudent('${student.id}')">Delete</button>
-        ` : ""}
-      </td>
-    </tr>
-  `).join("") || `<tr><td colspan="5">No matching students found.</td></tr>`;
+  $("studentCount").textContent =
+    `Showing ${filtered.length} of ${studentsCache.length} students`;
+$("studentsRows").innerHTML = filtered.map(student => `
+  <tr>
+    <td>${escapeHTML(student.name || "")}</td>
+    <td>${escapeHTML(student.studentCode || "")}</td>
+    <td>${escapeHTML(student.email || "")}</td>
+    <td>${escapeHTML(student.className || "")}</td>
+    <td>
+      ${student.active === false ? '<span style="color:#ff8b8b;font-weight:700;">Inactive</span>' : '<span style="color:#72e6a0;font-weight:700;">Active</span>'}
+      <br>
+      <button type="button" onclick="editStudent('${student.id}')">
+        Edit
+      </button>
+      <button type="button" onclick="changeStudentStatus('${student.id}')">
+        ${student.active === false ? "Activate" : "Deactivate"}
+      </button>
+    </td>
+  </tr>
+`).join("") || `
+  <tr><td colspan="5">No students found.</td></tr>
+`;
+ 
 }
 
 $("studentSearch")?.addEventListener("input", () => loadStudents());
@@ -2545,7 +3458,34 @@ $("studentClassFilter")?.addEventListener("change", () => loadStudents());
 
 
 
+async function changeStudentStatus(id) {
+  const student = studentsCache.find(s => s.id === id);
 
+  if (!student) {
+    alert("Student nahi mila.");
+    return;
+  }
+
+  const active = student.active === false;
+
+  const message = active
+    ? "Kya aap is student account ko dobara activate karna chahte hain?"
+    : "Kya aap is student ko deactivate karna chahte hain? Iska login band hoga, lekin attendance, fees aur results safe rahenge.";
+
+  if (!confirm(message)) return;
+
+  try {
+    const data = await api(`/api/students/${encodeURIComponent(id)}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ active })
+    });
+
+    alert(data.message || "Student status update ho gaya.");
+    await loadStudents();
+  } catch (error) {
+    alert(error.message || "Student status update nahi hua.");
+  }
+}
 
 async function editStudent(id) {
   const student = studentsCache.find(s => s.id === id);
@@ -2560,6 +3500,8 @@ async function editStudent(id) {
   $("editStudentEmail").value = student.email || "";
   $("editStudentClass").value = student.className || "";
   $("editStudentCode").value = student.studentCode || "";
+  $("editStudentMonthlyFee").value = student.monthlyFee ?? 0;
+$("editStudentCourseFee").value = student.totalCourseFee ?? 0;
 
   $("editStudentModal").style.display = "flex";
 }
@@ -2570,13 +3512,12 @@ function closeEditStudentModal() {
 
 
 
+document.addEventListener("DOMContentLoaded", function () {
+  const editStudentForm = $("editStudentForm");
 
-const editStudentForm = $("editStudentForm");
-console.log("EDIT FORM ELEMENT:", editStudentForm);
+  if (!editStudentForm) return;
 
-if (editStudentForm) {
   editStudentForm.addEventListener("submit", async function (event) {
-    console.log("EDIT FORM SUBMIT CHAL RAHA HAI");
     event.preventDefault();
 
     const id = $("editStudentId").value;
@@ -2585,11 +3526,12 @@ if (editStudentForm) {
       name: $("editStudentName").value.trim(),
       email: $("editStudentEmail").value.trim(),
       className: $("editStudentClass").value.trim(),
-      studentCode: $("editStudentCode").value.trim()
+      studentCode: $("editStudentCode").value.trim(),
+      monthlyFee: $("editStudentMonthlyFee").value,
+      totalCourseFee: $("editStudentCourseFee").value
     };
 
     try {
-      console.log("Form se bheja ja raha data:", studentData);
       const result = await api(
         "/api/students/" + encodeURIComponent(id),
         {
@@ -2598,50 +3540,78 @@ if (editStudentForm) {
         }
       );
 
-      console.log("Server response:", result);
-console.log("Updated student name:", result.student?.name);
       await loadStudents();
       closeEditStudentModal();
 
       alert("Student details update ho gayi!");
     } catch (error) {
-      console.error("Student update error:", error);
       alert(error.message || "Student update nahi ho saka.");
     }
   });
-}
-
+});
 
 $("addStudent").onclick = async () => {
   try {
     const data = await api("/api/students", {
       method: "POST",
       body: JSON.stringify({
-        name: $("sName").value,
-        email: $("sEmail").value,
-        className: $("sClass").value,
-        password: $("sPassword").value
+        name: $("sName").value.trim(),
+        email: $("sEmail").value.trim(),
+        className: $("sClass").value.trim(),
+        password: $("sPassword").value,
+        monthlyFee: $("sMonthlyFee").value,
+        totalCourseFee: $("sCourseFee").value
       })
     });
 
     alert("Student created. Student ID: " + data.student.studentCode);
 
-    ["sName", "sEmail", "sClass", "sPassword"].forEach(id => $(id).value = "");
+    [
+      "sName",
+      "sEmail",
+      "sClass",
+      "sPassword",
+      "sMonthlyFee",
+      "sCourseFee"
+    ].forEach(id => $(id).value = "");
+
     await loadStudents();
+
   } catch (error) {
     alert(error.message);
   }
 };
 
-// DATE-WISE ATTENDANCE
-$("attDate").value = new Date().toLocaleDateString("en-CA");
 
+// DATE-WISE ATTENDANCE
+const attendanceDateInput = $("attDate");
+if (attendanceDateInput) {
+  attendanceDateInput.value = new Date().toLocaleDateString("en-CA");
+}
 async function loadAttendanceEditor() {
   await loadStudents();
 
   const date = $("attDate").value;
   const data = await api("/api/attendance?date=" + encodeURIComponent(date));
   const existing = new Map(data.attendance.map(item => [item.studentId, item.status]));
+  const attendanceCounts = {
+  Present: 0,
+  Absent: 0,
+  Late: 0
+};
+
+data.attendance.forEach(item => {
+  if (attendanceCounts[item.status] !== undefined) {
+    attendanceCounts[item.status]++;
+  }
+});
+
+renderAnalytics(
+  "attendanceGraph",
+  "Attendance Summary",
+  [{ label: "Total Marked", value: data.attendance.length }],
+  Object.entries(attendanceCounts).map(([label, value]) => ({ label, value }))
+);
 
   $("attendanceEditor").innerHTML = studentsCache.map(student => `
     <div class="row" style="padding:12px 0;border-bottom:1px solid #e0e7f1">
@@ -2658,11 +3628,15 @@ async function loadAttendanceEditor() {
     </div>
   `).join("") || "<p class='muted'>Admin se pehle students add karwayein.</p>";
 }
+const loadAttendanceBtn = $("loadAttendance");
+if (loadAttendanceBtn) {
+  loadAttendanceBtn.onclick = () =>
+    loadAttendanceEditor().catch(error => message("attMessage", error.message, true));
+}
 
-$("loadAttendance").onclick = () =>
-  loadAttendanceEditor().catch(error => message("attMessage", error.message, true));
-
-$("saveAttendance").onclick = async () => {
+const saveAttendanceBtn = $("saveAttendance");
+if (saveAttendanceBtn) {
+  saveAttendanceBtn.onclick = async () => {
   try {
     const records = [...$("attendanceEditor").querySelectorAll("select[data-student]")]
       .map(select => ({
@@ -2676,14 +3650,42 @@ $("saveAttendance").onclick = async () => {
     });
 
     message("attMessage", data.message);
-  } catch (error) {
+   } catch (error) {
     message("attMessage", error.message, true);
   }
-};
+  };
+}
 
 async function loadAttendanceOverview() {
   const data = await api("/api/attendance/overview");
+const overview = data.overview || [];
 
+const totalPresent = overview.reduce(
+  (sum, student) => sum + Number(student.presentDays || 0), 0
+);
+
+const totalAbsent = overview.reduce(
+  (sum, student) => sum + Number(student.absentDays || 0), 0
+);
+
+const averagePercentage = overview.length
+  ? Math.round(
+      overview.reduce((sum, student) => sum + Number(student.percentage || 0), 0) / overview.length
+    )
+  : 0;
+
+renderAnalytics(
+  "attendanceOverviewGraph",
+  "Overall Attendance Overview",
+  [
+    { label: "Students", value: overview.length },
+    { label: "Average Attendance", value: averagePercentage + "%" }
+  ],
+  [
+    { label: "Present Days", value: totalPresent },
+    { label: "Absent Days", value: totalAbsent }
+  ]
+);
   $("attOverviewRows").innerHTML = data.overview.map(student => `
     <tr>
       <td>${escapeHTML(student.name)}</td>
@@ -2705,6 +3707,21 @@ $("loadAttOverview").onclick = () =>
 async function loadTests() {
   const data = await api("/api/tests");
   const tests = data.tests;
+  const publishedCount = tests.filter(test => test.published).length;
+const draftCount = tests.length - publishedCount;
+
+renderAnalytics(
+  "testsGraph",
+  "MCQ Tests Overview",
+  [
+    { label: "Total Tests", value: tests.length },
+    { label: "Published", value: publishedCount }
+  ],
+  [
+    { label: "Published", value: publishedCount },
+    { label: "Draft", alue: draftCount }
+  ]
+);
   const resultsData = await api("/api/results");
 const publishedResults = resultsData.results || [];
 
@@ -2860,6 +3877,30 @@ async function loadResults() {
   const data = await api("/api/results");
   const results = data.results || [];
 
+const averagePercentage = results.length
+  ? Math.round(
+      results.reduce((sum, result) => sum + Number(result.percentage || 0), 0) / results.length
+    )
+  : 0;
+
+const passedResults = results.filter(
+  result => Number(result.percentage || 0) >= 40
+).length;
+
+const below40 = results.length - passedResults;
+
+renderAnalytics(
+  "resultsGraph",
+  "Results Performance Overview",
+  [
+    { label: "Total Results", value: results.length },
+    { label: "Average Score", value: averagePercentage + "%" }
+  ],
+  [
+    { label: "40% and Above", value: passedResults },
+    { label: "Below 40%", value: below40 }
+  ]
+);
   window.studentResults = results;
 
   $("resultsRows").innerHTML = results.map((result, index) => `
@@ -2969,7 +4010,45 @@ $("publishResults").onclick = async () => {
 
 // FEES
 async function loadFees() {
+    if (currentUser && currentUser.role === "student") {
+    try {
+      const info = await api("/api/payments/info");
+
+      $("studentFeeInfo").textContent =
+        "Student: " + info.studentName +
+        " | ID: " + info.studentCode +
+        " | Class: " + info.className +
+        " | Monthly Fee: ₹" + Number(info.monthlyFee).toLocaleString("en-IN");
+
+      $("onlineFeeAmount").value =
+        Number(info.monthlyFee) > 0 ? Number(info.monthlyFee) : "";
+    } catch (error) {
+      $("studentFeeInfo").textContent = error.message;
+    }
+  }
   const data = await api("/api/fees");
+  const fees = data.fees || [];
+
+const totalAmount = fees.reduce(
+  (sum, fee) => sum + Number(fee.amount || 0), 0
+);
+
+const monthCounts = {};
+
+fees.forEach(fee => {
+  const month = String(fee.month || "Other").trim() || "Other";
+  monthCounts[month] = (monthCounts[month] || 0) + Number(fee.amount || 0);
+});
+
+renderAnalytics(
+  "feesGraph",
+  "Fees & Receipts Overview",
+  [
+    { label: "Total Receipts", value: fees.length },
+    { label: "Total Collected", value: "₹" + totalAmount.toLocaleString("en-IN") }
+  ],
+  Object.entries(monthCounts).map(([label, value]) => ({ label, value }))
+);
 
   $("feesRows").innerHTML = data.fees.map(fee => `
     <tr>
@@ -3000,10 +4079,82 @@ $("collectFee").onclick = async () => {
     alert(error.message);
   }
 };
+// RAZORPAY ONLINE FEE PAYMENT
+$("payOnlineFee").onclick = async () => {
+  try {
+    const amount = Number($("onlineFeeAmount").value);
+    const month = $("onlineFeeMonth").value.trim() || "Fee payment";
 
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Valid payment amount enter karo.");
+      return;
+    }
+
+    const data = await api("/api/payments/create-order", {
+      method: "POST",
+      body: JSON.stringify({ amount, month })
+    });
+
+    const options = {
+      key: data.keyId,
+      amount: data.amount,
+      currency: data.currency,
+      name: "SIGMA POINT",
+      description: month,
+      order_id: data.orderId,
+      prefill: {
+        name: data.studentName,
+        email: data.studentEmail
+      },
+      theme: {
+        color: "#142b50"
+      },
+      handler: async function (response) {
+        try {
+          const result = await api("/api/payments/verify", {
+            method: "POST",
+            body: JSON.stringify(response)
+          });
+
+          alert("Payment successful! Receipt: " + result.fee.receiptNo);
+          downloadFeeReceipt(result.fee);
+          await loadFees();
+        } catch (error) {
+          alert("Payment verify error: " + error.message);
+        }
+      },
+      modal: {
+        ondismiss: function () {
+          console.log("Payment window closed.");
+        }
+      }
+    };
+
+    const checkout = new Razorpay(options);
+    checkout.open();
+
+  } catch (error) {
+    alert(error.message);
+  }
+};
 // NOTICES
 async function loadNotices() {
   const data = await api("/api/notices");
+  const notices = data.notices || [];
+
+const classCounts = {};
+
+notices.forEach(notice => {
+  const className = String(notice.className || "Other").trim() || "Other";
+  classCounts[className] = (classCounts[className] || 0) + 1;
+});
+
+renderAnalytics(
+  "noticesGraph",
+  "Notices Overview",
+  [{ label: "Total Notices", value: notices.length }],
+  Object.entries(classCounts).map(([label, value]) => ({ label, value }))
+);
 
   $("noticesList").innerHTML = data.notices.map(notice => `
     <div class="notice">
@@ -3066,6 +4217,19 @@ async function loadNotes() {
 
     const data = await api("/api/notes");
     const notes = data.notes || [];
+    const subjectCounts = {};
+
+notes.forEach(note => {
+  const subject = String(note.subject || "Other").trim() || "Other";
+  subjectCounts[subject] = (subjectCounts[subject] || 0) + 1;
+});
+
+renderAnalytics(
+  "notesGraph",
+  "Study Notes Overview",
+  [{ label: "Total Notes", value: notes.length }],
+  Object.entries(subjectCounts).map(([label, value]) => ({ label, value }))
+);
 
     list.innerHTML = notes.map(note => `
       <div class="card" style="margin-bottom:14px;">
@@ -3337,6 +4501,13 @@ window.addEventListener("pagehide", () => {
 
       <label for="editStudentCode">Student ID</label>
       <input id="editStudentCode" type="text" required>
+      
+<label for="editStudentMonthlyFee">Monthly Fee (₹)</label>
+<input id="editStudentMonthlyFee" type="number" min="0" step="0.01" required>
+
+<label for="editStudentCourseFee">Total Course Fee (₹)</label>
+<input id="editStudentCourseFee" type="number" min="0" step="0.01" required>
+
 
       <button type="submit">Save Changes</button>
       <button type="button" onclick="closeEditStudentModal()">Cancel</button>

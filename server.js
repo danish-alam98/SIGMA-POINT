@@ -3,6 +3,7 @@
 require("dotenv").config();
 const { Pool } = require("pg");
 const { Resend } = require("resend");
+const Razorpay = require("razorpay");
 const express = require("express");
 const session = require("express-session");
 const helmet = require("helmet");
@@ -13,6 +14,10 @@ const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
 const app = express();
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 const NOTES_DIR = path.join(__dirname, "uploads", "notes");
 
@@ -161,7 +166,8 @@ let db = {
   fees: [],
   notices: [],
   otps: [],
-  notes: []
+  notes: [],
+  paymentOrders: []
 };
 
 async function loadDB() {
@@ -190,7 +196,8 @@ async function loadDB() {
       "fees",
       "notices",
       "otps",
-      "notes"
+           "notes",
+      "paymentOrders"
     ]) {
       if (!Array.isArray(db[key])) {
         db[key] = [];
@@ -274,9 +281,10 @@ function safeUser(user) {
   };
 }
 
+
 function requireLogin(req, res, next) {
   if (!req.session.userId) {
-    return res.status(401).json({ error: "Please log in first." });
+    return res.status(401).json({ error: "Please login first." });
   }
 
   const user = db.users.find(u => u.id === req.session.userId);
@@ -285,9 +293,16 @@ function requireLogin(req, res, next) {
     return res.status(401).json({ error: "Account not found. Log in again." });
   }
 
+  if (user.role === "student" && user.active === false) {
+    return res.status(403).json({
+      error: "Your student account is inactive. Please contact Admin."
+    });
+  }
+
   req.user = user;
   next();
 }
+
 
 function allowRoles(...roles) {
   return (req, res, next) => {
@@ -427,6 +442,11 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
         error: "Email, password ya login type galat hai."
       });
     }
+    if (user.role === "student" && user.active === false) {
+  return res.status(403).json({
+    error: "Your student account is inactive. Please contact Admin."
+  });
+}
 
     req.session.regenerate(error => {
       if (error) {
@@ -465,7 +485,6 @@ app.post("/api/auth/logout", (req, res) => {
   });
 });
 
-// DASHBOARD COUNTS
 app.get("/api/dashboard", requireLogin, (req, res) => {
   const role = req.user.role;
   const studentId = req.user.id;
@@ -496,22 +515,45 @@ app.get("/api/students", requireLogin, allowRoles("admin", "teacher", "cashier")
   res.json({ students: db.students });
 });
 
+
+
 app.post("/api/students", requireLogin, allowRoles("admin"), async (req, res) => {
   const name = clean(req.body.name);
   const email = clean(req.body.email, 160).toLowerCase();
   const className = clean(req.body.className, 60);
   const password = String(req.body.password || "");
 
-  if (!name || !validEmail(email) || !className || password.length < 6) {
+  const monthlyFee = Number(req.body.monthlyFee);
+  const totalCourseFee = Number(req.body.totalCourseFee);
+
+  // Validate student details and fees
+  if (
+    !name ||
+    !validEmail(email) ||
+    !className ||
+    password.length < 6 ||
+    req.body.monthlyFee === undefined ||
+    req.body.monthlyFee === "" ||
+    !Number.isFinite(monthlyFee) ||
+    monthlyFee < 0 ||
+    req.body.totalCourseFee === undefined ||
+    req.body.totalCourseFee === "" ||
+    !Number.isFinite(totalCourseFee) ||
+    totalCourseFee < 0
+  ) {
     return res.status(400).json({
-      error: "Name, valid email, class aur password (minimum 6 characters) required."
+      error: "Student details, valid password, monthly fee aur total course fee required hain."
     });
   }
 
+  // Check duplicate email
   if (findUser(email)) {
-    return res.status(409).json({ error: "Is email ka account already exists." });
+    return res.status(409).json({
+      error: "Is email ka account already exists."
+    });
   }
 
+  // Create user account
   const user = {
     id: makeId("user"),
     name,
@@ -521,29 +563,35 @@ app.post("/api/students", requireLogin, allowRoles("admin"), async (req, res) =>
     className
   };
 
+  // Create student record
   const student = {
     id: makeId("student"),
     userId: user.id,
     name,
     email,
     className,
+    monthlyFee,
+    totalCourseFee,
     studentCode: "CC-" + Date.now().toString().slice(-7),
     createdAt: new Date().toISOString()
   };
 
-  db.users.push(user);
-  db.students.push(student);
-  saveDB();
+db.users.push(user);
+db.students.push(student);
 
-  res.status(201).json({ student });
+saveDB();
+
+res.status(201).json({ student });
 });
 
-
+// UPDATE STUDENT: Admin can edit student details and fees.
 app.put("/api/students/:id", requireLogin, allowRoles("admin"), async (req, res) => {
   const student = db.students.find(s => s.id === req.params.id);
 
   if (!student) {
-    return res.status(404).json({ error: "Student nahi mila." });
+    return res.status(404).json({
+      error: "Student nahi mila."
+    });
   }
 
   const name = clean(req.body.name);
@@ -551,9 +599,25 @@ app.put("/api/students/:id", requireLogin, allowRoles("admin"), async (req, res)
   const className = clean(req.body.className, 60);
   const studentCode = clean(req.body.studentCode, 40);
 
-  if (!name || !validEmail(email) || !className || !studentCode) {
+  const monthlyFee = Number(req.body.monthlyFee);
+  const totalCourseFee = Number(req.body.totalCourseFee);
+
+  if (
+    !name ||
+    !validEmail(email) ||
+    !className ||
+    !studentCode ||
+    req.body.monthlyFee === undefined ||
+    req.body.monthlyFee === "" ||
+    !Number.isFinite(monthlyFee) ||
+    monthlyFee < 0 ||
+    req.body.totalCourseFee === undefined ||
+    req.body.totalCourseFee === "" ||
+    !Number.isFinite(totalCourseFee) ||
+    totalCourseFee < 0
+  ) {
     return res.status(400).json({
-      error: "Name, valid email, class aur Student ID required hain."
+      error: "Student details aur valid fees required hain."
     });
   }
 
@@ -589,6 +653,8 @@ app.put("/api/students/:id", requireLogin, allowRoles("admin"), async (req, res)
   student.email = email;
   student.className = className;
   student.studentCode = studentCode;
+  student.monthlyFee = monthlyFee;
+  student.totalCourseFee = totalCourseFee;
 
   user.name = name;
   user.email = email;
@@ -596,11 +662,51 @@ app.put("/api/students/:id", requireLogin, allowRoles("admin"), async (req, res)
 
   saveDB();
 
-  res.json({ ok: true, student });
+  res.json({
+    ok: true,
+    student
+  });
 });
 
 
-// ATTENDANCE: date-wise marking; one status per student/date.
+// ACTIVATE / DEACTIVATE STUDENT: Admin only.
+app.patch("/api/students/:id/status", requireLogin, allowRoles("admin"), async (req, res) => {
+  const student = db.students.find(s => s.id === req.params.id);
+
+  if (!student) {
+    return res.status(404).json({
+      error: "Student nahi mila."
+    });
+  }
+
+  const user = db.users.find(u => u.id === student.userId);
+
+  if (!user) {
+    return res.status(404).json({
+      error: "Student ka login account nahi mila."
+    });
+  }
+
+  const active = req.body.active;
+
+  if (typeof active !== "boolean") {
+    return res.status(400).json({
+      error: "Valid status required hai."
+    });
+  }
+
+  student.active = active;
+  user.active = active;
+
+  await saveDB();
+
+  res.json({
+    ok: true,
+    message: active ? "Student account activated." : "Student account deactivated.",
+    student
+  });
+});
+
 app.get("/api/attendance", requireLogin, (req, res) => {
   const date = clean(req.query.date, 10);
 
@@ -1001,6 +1107,161 @@ app.post("/api/results/publish", requireLogin, allowRoles("admin", "teacher"), a
   }
 });
 
+// STUDENT: Create Razorpay payment order.
+app.post("/api/payments/create-order", requireLogin, allowRoles("student"), async (req, res) => {
+  try {
+    const student = db.students.find(s => s.userId === req.user.id);
+    const amount = Number(req.body.amount);
+    const amountPaise = Math.round(amount * 100);
+    const month = clean(req.body.month, 60) || "Fee payment";
+
+    if (!student) {
+      return res.status(404).json({ error: "Student record nahi mila." });
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0 ||
+        !Number.isSafeInteger(amountPaise) || amountPaise <= 0) {
+      return res.status(400).json({ error: "Valid payment amount required." });
+    }
+
+    const order = await razorpay.orders.create({
+      amount: amountPaise,
+      currency: "INR",
+      receipt: "SP-" + Date.now(),
+      notes: {
+        studentUserId: req.user.id,
+        studentId: student.id,
+        month
+      }
+    });
+
+    db.paymentOrders.push({
+      orderId: order.id,
+      studentUserId: req.user.id,
+      studentId: student.id,
+      amount: amount,
+      month,
+      status: "created",
+      createdAt: new Date().toISOString()
+    });
+
+    await saveDB();
+
+    res.status(201).json({
+      keyId: process.env.RAZORPAY_KEY_ID,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      studentName: student.name,
+      studentEmail: student.email
+    });
+  } catch (error) {
+    console.error("Payment order error:", error);
+    res.status(500).json({ error: "Payment order create nahi ho saka." });
+  }
+});
+
+
+// STUDENT: Verify payment and save fee receipt.
+app.post("/api/payments/verify", requireLogin, allowRoles("student"), async (req, res) => {
+  try {
+    const orderId = clean(req.body.razorpay_order_id, 100);
+    const paymentId = clean(req.body.razorpay_payment_id, 100);
+    const signature = clean(req.body.razorpay_signature, 200);
+
+    const orderRecord = db.paymentOrders.find(o =>
+      o.orderId === orderId &&
+      o.studentUserId === req.user.id
+    );
+
+    if (!orderRecord || !paymentId || !signature) {
+      return res.status(400).json({ error: "Invalid payment details." });
+    }
+
+    if (orderRecord.status === "paid") {
+      const existingFee = db.fees.find(f => f.orderId === orderId);
+      return res.json({ ok: true, fee: existingFee });
+    }
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(orderId + "|" + paymentId)
+      .digest("hex");
+
+    const expectedBuffer = Buffer.from(expectedSignature, "hex");
+    const receivedBuffer = Buffer.from(signature, "hex");
+
+    if (
+      expectedBuffer.length !== receivedBuffer.length ||
+      !crypto.timingSafeEqual(expectedBuffer, receivedBuffer)
+    ) {
+      return res.status(400).json({ error: "Payment signature invalid." });
+    }
+
+    const payment = await razorpay.payments.fetch(paymentId);
+
+    if (
+      payment.order_id !== orderId ||
+      payment.status !== "captured" ||
+      payment.amount !== Math.round(orderRecord.amount * 100) ||
+      payment.currency !== "INR"
+    ) {
+      return res.status(400).json({ error: "Payment captured verify nahi hua." });
+    }
+
+    const student = db.students.find(s => s.id === orderRecord.studentId);
+
+    if (!student || student.userId !== req.user.id) {
+      return res.status(400).json({ error: "Student record invalid." });
+    }
+
+    const fee = {
+      id: makeId("fee"),
+      receiptNo: "SP-R-" + Date.now(),
+      studentId: student.id,
+      studentUserId: student.userId,
+      studentName: student.name,
+      className: student.className,
+      amount: orderRecord.amount,
+      month: orderRecord.month,
+      status: "Paid",
+      collectedBy: "razorpay",
+      paymentId,
+      orderId,
+      paymentMethod: payment.method || "online",
+      createdAt: new Date().toISOString()
+    };
+
+    db.fees.push(fee);
+    orderRecord.status = "paid";
+    orderRecord.paymentId = paymentId;
+    orderRecord.paidAt = new Date().toISOString();
+
+    await saveDB();
+
+    res.json({ ok: true, fee });
+  } catch (error) {
+    console.error("Payment verification error:", error);
+    res.status(500).json({ error: "Payment verify nahi ho saka." });
+  }
+});
+// STUDENT: Get own fee information.
+app.get("/api/payments/info", requireLogin, allowRoles("student"), (req, res) => {
+  const student = db.students.find(s => s.userId === req.user.id);
+
+  if (!student) {
+    return res.status(404).json({
+      error: "Student record nahi mila."
+    });
+  }
+
+  res.json({
+    studentName: student.name,
+    studentCode: student.studentCode,
+    className: student.className,
+    monthlyFee: Number(student.monthlyFee || 0)
+  });
+});
 
 // CASHIER: payment entry and receipts.
 app.get("/api/fees", requireLogin, allowRoles("admin", "cashier", "student"), (req, res) => {
