@@ -2465,6 +2465,33 @@ td {
     </section>
 
 
+<section class="section" id="page-college-profile">
+  <h1 class="page-title">College Profile</h1>
+  <p class="muted">Apne institution ki official details yahan manage karein.</p>
+  <div class="card" style="max-width:980px">
+    <h3>Institution Information</h3>
+    <form id="collegeProfileForm" onsubmit="saveCollegeProfile(event)">
+      <div class="split">
+        <div class="field"><label for="collegeName">College / Institution Name *</label><input id="collegeName" maxlength="160" required placeholder="Enter official college name"></div>
+        <div class="field"><label for="collegeShortName">Short Name</label><input id="collegeShortName" maxlength="60" placeholder="Short name"></div>
+        <div class="field"><label for="collegePhone">Official Phone</label><input id="collegePhone" maxlength="25" type="tel" placeholder="Contact number"></div>
+        <div class="field"><label for="collegeEmail">Official Email</label><input id="collegeEmail" maxlength="160" type="email" placeholder="college@example.com"></div>
+        <div class="field"><label for="collegeWebsite">Website</label><input id="collegeWebsite" maxlength="200" type="url" placeholder="https://example.com"></div>
+        <div class="field"><label for="collegeAffiliation">Affiliation / University</label><input id="collegeAffiliation" maxlength="160" placeholder="University / Board"></div>
+        <div class="field"><label for="collegeRegistration">Registration / AISHE Code</label><input id="collegeRegistration" maxlength="100" placeholder="Registration number"></div>
+        <div class="field"><label for="collegePrincipal">Principal / Director Name</label><input id="collegePrincipal" maxlength="120" placeholder="Principal name"></div>
+        <div class="field"><label for="collegeSession">Current Academic Session</label><input id="collegeSession" maxlength="30" placeholder="2026-27"></div>
+        <div class="field"><label for="collegeCity">City</label><input id="collegeCity" maxlength="80"></div>
+        <div class="field"><label for="collegeState">State</label><input id="collegeState" maxlength="80"></div>
+        <div class="field"><label for="collegePinCode">PIN Code</label><input id="collegePinCode" maxlength="12" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label for="collegeAddress">Full Address</label><textarea id="collegeAddress" rows="3" maxlength="300" placeholder="Institution full postal address"></textarea></div>
+      <button id="saveCollegeProfileButton" type="submit">Save College Profile</button>
+      <p id="collegeProfileMessage" class="message" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
 <section class="section" id="page-students">
   <h1 class="page-title">Student Management</h1>
   <div id="studentsGraph" class="analytics-panel"></div>
@@ -3200,6 +3227,10 @@ function roleIsStaff() {
 function setupNavigation() {
   const items = [["dashboard", "🏠 Dashboard"]];
 
+  if (currentUser.role === "admin") {
+    items.push(["college-profile", "🏛️ College Profile"]);
+  }
+
   if (["admin", "teacher", "cashier"].includes(currentUser.role)) {
     items.push(["students", "👥 Students"]);
   }
@@ -3346,6 +3377,8 @@ function renderAnalytics(id, title, stats, items) {
 }
 
 async function loadPage(page) {
+  if (page === "college-profile") await loadCollegeProfile();
+
   if (page === "dashboard") {
     const data = await api("/api/dashboard");
     const titles = {
@@ -3370,6 +3403,58 @@ async function loadPage(page) {
   if (page === "fees") await loadFees();
   if (page === "notices") await loadNotices();
   if (page === "notes") await loadNotes();
+}
+
+// COLLEGE PROFILE
+const collegeProfileFields = {
+  collegeName: "collegeName",
+  shortName: "collegeShortName",
+  address: "collegeAddress",
+  city: "collegeCity",
+  state: "collegeState",
+  pinCode: "collegePinCode",
+  phone: "collegePhone",
+  email: "collegeEmail",
+  website: "collegeWebsite",
+  affiliation: "collegeAffiliation",
+  registrationNumber: "collegeRegistration",
+  principalName: "collegePrincipal",
+  academicSession: "collegeSession"
+};
+
+async function loadCollegeProfile() {
+  if (currentUser?.role !== "admin") return;
+  const data = await api("/api/college-profile");
+  const profile = data.profile || {};
+  Object.entries(collegeProfileFields).forEach(([key, id]) => {
+    const field = $(id);
+    if (field) field.value = profile[key] || "";
+  });
+  message("collegeProfileMessage", "College details loaded.");
+}
+
+async function saveCollegeProfile(event) {
+  event?.preventDefault();
+  const button = $("saveCollegeProfileButton");
+  const profile = {};
+  Object.entries(collegeProfileFields).forEach(([key, id]) => {
+    profile[key] = $(id)?.value?.trim() || "";
+  });
+
+  button.disabled = true;
+  button.textContent = "Saving...";
+  try {
+    const result = await api("/api/college-profile", {
+      method: "PUT",
+      body: JSON.stringify(profile)
+    });
+    message("collegeProfileMessage", result.message || "College Profile saved.");
+  } catch (error) {
+    message("collegeProfileMessage", error.message, true);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save College Profile";
+  }
 }
 
 // STUDENTS

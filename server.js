@@ -179,75 +179,54 @@ async function loadDB() {
     )
   `);
 
-  const result = await pool.query(
+  const existing = await pool.query(
     "SELECT data FROM champion_app_state WHERE id = 1"
   );
 
-  if (result.rows.length > 0) {
-    db = result.rows[0].data;
+  if (existing.rows.length > 0) {
+    db = existing.rows[0].data || {};
+  } else {
+    // Sirf tab legacy JSON import karo jab PostgreSQL mein abhi record na ho.
+    const initialData = fs.existsSync(DATA_FILE)
+      ? JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))
+      : db;
 
     for (const key of [
-      "users",
-      "students",
-      "attendance",
-      "tests",
-      "submissions",
-      "results",
-      "fees",
-      "notices",
-      "otps",
-           "notes",
-      "paymentOrders"
+      "users", "students", "attendance", "tests", "submissions",
+      "results", "fees", "notices", "otps", "notes", "paymentOrders"
     ]) {
-      if (!Array.isArray(db[key])) {
-        db[key] = [];
-      }
+      if (!Array.isArray(initialData[key])) initialData[key] = [];
     }
 
-    console.log("Application data PostgreSQL se load ho gaya.");
-    return;
-  }
+    if (!initialData.collegeProfile || typeof initialData.collegeProfile !== "object") {
+      initialData.collegeProfile = {};
+    }
 
-  // PostgreSQL mein record nahi hai, to data.json se import karo.
-  const initialData = fs.existsSync(DATA_FILE)
-    ? JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))
-    : db;
+    await pool.query(
+      `INSERT INTO champion_app_state (id, data)
+       VALUES (1, $1::jsonb)
+       ON CONFLICT (id) DO NOTHING`,
+      [JSON.stringify(initialData)]
+    );
+
+    const saved = await pool.query(
+      "SELECT data FROM champion_app_state WHERE id = 1"
+    );
+    db = saved.rows[0]?.data || initialData;
+  }
 
   for (const key of [
-    "users",
-    "students",
-    "attendance",
-    "tests",
-    "submissions",
-    "results",
-    "fees",
-    "notices",
-    "otps",
-    "notes"
+    "users", "students", "attendance", "tests", "submissions",
+    "results", "fees", "notices", "otps", "notes", "paymentOrders"
   ]) {
-    if (!Array.isArray(initialData[key])) {
-      initialData[key] = [];
-    }
+    if (!Array.isArray(db[key])) db[key] = [];
   }
 
-  await pool.query(
-    `INSERT INTO champion_app_state (id, data)
-     VALUES (1, $1::jsonb)
-     ON CONFLICT (id) DO NOTHING`,
-    [JSON.stringify(initialData)]
-  );
-
-  const saved = await pool.query(
-    "SELECT data FROM champion_app_state WHERE id = 1"
-  );
-
-  db = saved.rows[0].data;
-
-  if (!Array.isArray(db.notes)) {
-    db.notes = [];
+  if (!db.collegeProfile || typeof db.collegeProfile !== "object" || Array.isArray(db.collegeProfile)) {
+    db.collegeProfile = {};
   }
 
-  console.log("Application data PostgreSQL se initialize ho gaya.");
+  console.log("Application data PostgreSQL se load ho gaya.");
 }
 
 
@@ -1352,6 +1331,65 @@ app.post("/api/notices", requireLogin, allowRoles("admin", "teacher"), async (re
 });
 
 
+// COLLEGE PROFILE: one-college workspace; admin can manage institution details.
+const EMPTY_COLLEGE_PROFILE = {
+  collegeName: "",
+  shortName: "",
+  address: "",
+  city: "",
+  state: "",
+  pinCode: "",
+  phone: "",
+  email: "",
+  website: "",
+  affiliation: "",
+  registrationNumber: "",
+  principalName: "",
+  academicSession: ""
+};
+
+app.get("/api/college-profile", requireLogin, allowRoles("admin"), (req, res) => {
+  res.json({ profile: { ...EMPTY_COLLEGE_PROFILE, ...(db.collegeProfile || {}) } });
+});
+
+app.put("/api/college-profile", requireLogin, allowRoles("admin"), async (req, res) => {
+  try {
+    const body = req.body || {};
+    const profile = {
+      collegeName: clean(body.collegeName, 160),
+      shortName: clean(body.shortName, 60),
+      address: clean(body.address, 300),
+      city: clean(body.city, 80),
+      state: clean(body.state, 80),
+      pinCode: clean(body.pinCode, 12),
+      phone: clean(body.phone, 25),
+      email: clean(body.email, 160).toLowerCase(),
+      website: clean(body.website, 200),
+      affiliation: clean(body.affiliation, 160),
+      registrationNumber: clean(body.registrationNumber, 100),
+      principalName: clean(body.principalName, 120),
+      academicSession: clean(body.academicSession, 30)
+    };
+
+    if (!profile.collegeName) {
+      return res.status(400).json({ error: "College name required hai." });
+    }
+    if (profile.email && !validEmail(profile.email)) {
+      return res.status(400).json({ error: "Valid college email enter karein." });
+    }
+    if (profile.website && !/^https?:\/\//i.test(profile.website)) {
+      return res.status(400).json({ error: "Website http:// ya https:// se start honi chahiye." });
+    }
+
+    db.collegeProfile = profile;
+    await saveDB();
+    return res.json({ ok: true, profile, message: "College Profile save ho gaya." });
+  } catch (error) {
+    console.error("College profile save error:", error);
+    return res.status(500).json({ error: "College Profile save nahi ho saka." });
+  }
+});
+
 // Keep this 404 handler AFTER all API routes.
 
 /* ============== SIGMA POINT NOTES API ============== */
@@ -1544,10 +1582,7 @@ async function startServer() {
   try {
     // Step 1: PostgreSQL se application data load karo
     await loadDB();
-
-    // Step 2: Accounts initialize karo aur PostgreSQL mein save karo
-    await initializeAccounts();
-    await saveDB();
+    // Step 2: Existing accounts aur database data ko startup par untouched rakho.
 
     // Step 3: Sab ready hone ke baad server start karo
     app.listen(PORT, () => {
