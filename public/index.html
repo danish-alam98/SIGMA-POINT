@@ -2436,7 +2436,7 @@ td {
      style="display:inline-block; background:#142b50; color:white;
      padding:13px 25px; border-radius:10px; text-decoration:none;
      font-weight:700; border:1px solid #c49a32;">
-    ÃƒÂ¢Ã‚Â¬Ã¢â‚¬Â¡ Download App
+    &#8595; Download App
   </a>
 
   <p style="font-size:12px; color:#68758b; margin-top:8px;">
@@ -2457,17 +2457,17 @@ td {
       <div class="grid" id="stats"></div>
       <div class="dashboard-welcome">
   <div>
-    <span class="dashboard-label" id="dashboardCollegeLabel">SIGMA POINT Ãƒâ€šÃ‚Â· LEARNING PORTAL</span>
+    <span class="dashboard-label" id="dashboardCollegeLabel">SIGMA POINT &middot; LEARNING PORTAL</span>
     <h2>Welcome to Your Dashboard</h2>
     <p>Learn Today, Lead Tomorrow.</p>
   </div>
-  <div class="dashboard-cap" aria-hidden="true">ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Å“</div>
+  <div class="dashboard-cap" aria-hidden="true">&#127891;</div>
 </div>
 
 <div class="quick-actions">
-  <button type="button" onclick="showPage('tests')">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â View Tests</button>
-  <button type="button" onclick="showPage('results')">ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Â  View Results</button>
-  <button type="button" onclick="showPage('notices')">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¢ View Notices</button>
+  <button type="button" onclick="showPage('tests')">&#128221; Take Tests</button>
+  <button type="button" onclick="showPage('results')">&#128202; View Results</button>
+  <button type="button" onclick="showPage('notices')">&#128226; View Notices</button>
 </div>
       <div class="card" style="margin-top:18px">
         <h3 id="dashboardCollegeWelcome">Welcome to SIGMA POINT</h3>
@@ -2530,19 +2530,19 @@ td {
         <label>Password (6+ characters)</label>
         <input id="sPassword" type="password" required>
       </div>
+<div class="field">
+  <label>Monthly Fee (&#8377;)</label>
+  <input id="sMonthlyFee" type="number" min="0" step="0.01" placeholder="500" required>
+</div>
 
-      <div class="field">
-        <label>Monthly Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
-        <input id="sMonthlyFee" type="number" min="0" step="0.01" placeholder="500" required>
-      </div>
+<div class="field">
+  <label>Total Course Fee (&#8377;)</label>
+  <input id="sCourseFee" type="number" min="0" step="0.01" placeholder="5000" required>
+</div>
 
-      <div class="field">
-        <label>Total Course Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
-        <input id="sCourseFee" type="number" min="0" step="0.01" placeholder="5000" required>
-      </div>
+
     </div>
-
-    <button id="addStudent">Create Student</button>
+<button  id="addStudent">Create Student</button>
     <p class="hint">Student ko login email aur password privately dena.</p>
   </div>
 
@@ -2754,7 +2754,7 @@ td {
   <p id="studentFeeInfo">Loading fee details...</p>
 
   <div class="field">
-    <label>Payment Amount (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
+    <label>Payment Amount </label>
     <input id="onlineFeeAmount" type="number" min="1" step="0.01" placeholder="Enter amount">
   </div>
 
@@ -2770,7 +2770,7 @@ td {
       <div class="card cashier-only">
         <div class="split">
           <div class="field"><label>Student ID</label><input id="feeStudentId" placeholder="CC-..."></div>
-          <div class="field"><label>Amount (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label><input id="feeAmount" type="number" min="1"></div>
+          <div class="field"><label>Amount</label><input id="feeAmount" type="number" min="1"></div>
           <div class="field"><label>Month / purpose</label><input id="feeMonth" placeholder="October tuition"></div>
         </div>
         <button id="collectFee">Record Payment</button>
@@ -2797,9 +2797,10 @@ td {
       <div id="noticesList"></div>
     </section>
 
+   
     <!-- SIGMA POINT NOTES SECTION -->
-    <section class="section" id="page-notes">
-      <h1 class="page-title">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â¡ Study Notes</h1>
+<section class="section" id="page-notes">
+  <h1 class="page-title">Study Notes</h1>
       <div id="notesGraph" class="analytics-panel"></div>
 
       <div class="card staff-only">
@@ -2844,7 +2845,7 @@ td {
   </main>
 </div>
 
-<div class="footer">SIGMA POINT Ãƒâ€šÃ‚Â· Coaching Management Portal</div>
+<div class="footer">SIGMA POINT Coaching Management Portal</div>
 
 <script>
     
@@ -3358,7 +3359,7 @@ async function openPortal(user) {
   $("loginScreen").classList.add("hidden");
   $("portal").classList.remove("hidden");
   $("userLine").classList.remove("hidden");
-  $("userName").textContent = user.name + " Ãƒâ€šÃ‚Â· " + user.role;
+  $("userName").textContent = user.name + " \u00B7 " + user.role;
   setupNavigation();
   await loadPage("dashboard");
 }
@@ -3413,7 +3414,7 @@ function renderAnalytics(id, title, stats, items) {
       </div>
 
       <div class="sigma-chart-title">
-        <span>Performance Breakdown</span>
+        <span>Performance Breakdown</span> 
         <span>${total.toLocaleString("en-IN")} TOTAL</span>
       </div>
 
@@ -3824,7 +3825,7 @@ renderAnalytics(
   $("attendanceEditor").innerHTML = studentsCache.map(student => `
     <div class="row" style="padding:12px 0;border-bottom:1px solid #e0e7f1">
       <div><b>${escapeHTML(student.name)}</b>
-        <div class="muted">${escapeHTML(student.studentCode)} Ãƒâ€šÃ‚Â· ${escapeHTML(student.className)}</div>
+        <div class="muted">${escapeHTML(student.studentCode)}  ${escapeHTML(student.className)}</div>
       </div>
       <div>
         <select data-student="${student.id}">
@@ -3936,12 +3937,12 @@ const publishedResults = resultsData.results || [];
   $("testAdminList").innerHTML = roleIsStaff()
     ? tests.map(test => `
       <div class="notice">
-        <b>${escapeHTML(test.title)}</b> Ãƒâ€šÃ‚Â· ${escapeHTML(test.className)}
+        <b>${escapeHTML(test.title)}</b> ${escapeHTML(test.className)}
         
         ${roleIsStaff() ? `
           <details style="margin-top:12px">
             <summary style="cursor:pointer;font-weight:bold">
-              ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Ëœ View Answer Key & Solutions
+              View Answer Key & Solutions
             </summary>
 
             ${test.questions.map((q, i) => `
@@ -3960,8 +3961,7 @@ const publishedResults = resultsData.results || [];
           </details>
         ` : ""}
 
-
-        Ãƒâ€šÃ‚Â· ${test.questions.length} questions
+ ${test.questions.length} questions
         <span class="badge">${test.published ? "Published" : "Draft"}</span>
         <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
 
@@ -3982,7 +3982,7 @@ const publishedResults = resultsData.results || [];
   $("studentTests").innerHTML = visibleTests.map(test => `
     <div class="test-card">
       <h3>${escapeHTML(test.title)}</h3>
-      <p class="muted">${escapeHTML(test.className)} Ãƒâ€šÃ‚Â· ${test.questions.length} questions</p>
+      <p class="muted">${escapeHTML(test.className)} ${test.questions.length} questions</p>
       <form onsubmit="submitTest(event, '${test.id}')">
         ${test.questions.map((question, index) => `
           <div class="question">
@@ -4160,7 +4160,7 @@ renderAnalytics(
       <td>
         <button type="button"
           onclick="downloadResultPDF(window.studentResults[${index}])">
-          ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Å¾ Download PDF
+        Download PDF
         </button>
       </td>
     </tr>
@@ -4171,7 +4171,7 @@ renderAnalytics(
           <td colspan="7">
             <details>
               <summary style="cursor:pointer;font-weight:bold;padding:10px">
-                ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹Å“ Review Answers ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${escapeHTML(result.testTitle)}
+               ${escapeHTML(result.testTitle)}
               </summary>
 
               ${result.review.map((q, qIndex) => `
@@ -4206,7 +4206,7 @@ renderAnalytics(
     const overview = await api("/api/results/overview");
 
     $("submissionsRows").innerHTML = `
-      <h3>Student Submissions ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Teacher View</h3>
+      <h3>Student Submissions  Teacher View</h3>
       <div class="table-wrap"><table>
         <thead>
           <tr>
@@ -4265,7 +4265,7 @@ async function loadFees() {
         "Student: " + info.studentName +
         " | ID: " + info.studentCode +
         " | Class: " + info.className +
-        " | Monthly Fee: ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹" + Number(info.monthlyFee).toLocaleString("en-IN");
+        " | Monthly Fee: \u20B9 " + Number(info.monthlyFee).toLocaleString("en-IN");
 
       $("onlineFeeAmount").value =
         Number(info.monthlyFee) > 0 ? Number(info.monthlyFee) : "";
@@ -4292,7 +4292,7 @@ renderAnalytics(
   "Fees & Receipts Overview",
   [
     { label: "Total Receipts", value: fees.length },
-    { label: "Total Collected", value: "ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹" + totalAmount.toLocaleString("en-IN") }
+    { label: "Total Collected", value: "\u20B9" + totalAmount.toLocaleString("en-IN") }
   ],
   Object.entries(monthCounts).map(([label, value]) => ({ label, value }))
 );
@@ -4302,7 +4302,7 @@ renderAnalytics(
       <td>${escapeHTML(fee.receiptNo)}</td>
       <td>${escapeHTML(fee.studentName)}</td>
       <td>${escapeHTML(fee.className)}</td>
-      <td>ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹${fee.amount}</td>
+      <td>\u20B9${fee.amount}</td>
       <td>${escapeHTML(fee.month)}</td>
       <td>${new Date(fee.createdAt).toLocaleDateString()}</td>
     </tr>
@@ -4497,20 +4497,24 @@ renderAnalytics(
           href="/api/notes/${encodeURIComponent(note.id)}/file"
           target="_blank"
           rel="noopener noreferrer"
-        >ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬â€œ Open / View Notes</a>
+        >
+          Open / View Notes</a>
 
         <a
           href="/api/notes/${encodeURIComponent(note.id)}/file"
           download="${escapeHTML(note.originalName || note.title)}"
           style="margin-left:12px;"
-        >ÃƒÂ¢Ã‚Â¬Ã¢â‚¬Â¡ Download</a>
+        >
+          Download</a>
 
         ${currentUser.role === "admin" || (currentUser.role === "teacher" && note.createdBy === currentUser.id) ? `
           <button
             type="button"
             style="margin-left:12px;"
             onclick="deleteNote('${encodeURIComponent(note.id)}')"
-          >ÃƒÂ°Ã…Â¸Ã¢â‚¬â€Ã¢â‚¬Ëœ Delete</button>
+          >
+            Delete
+          </button>
         ` : ""}
       </div>
     `).join("") || `<p class="muted">Abhi koi notes upload nahi hue hain.</p>`;
@@ -4773,10 +4777,10 @@ window.addEventListener("pagehide", () => {
       <label for="editStudentCode">Student ID</label>
       <input id="editStudentCode" type="text" required>
       
-<label for="editStudentMonthlyFee">Monthly Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
+<label for="editStudentMonthlyFee">Monthly Fee </label>
 <input id="editStudentMonthlyFee" type="number" min="0" step="0.01" required>
 
-<label for="editStudentCourseFee">Total Course Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
+<label for="editStudentCourseFee">Total Course Fee </label>
 <input id="editStudentCourseFee" type="number" min="0" step="0.01" required>
 
 
