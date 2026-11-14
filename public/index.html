@@ -2376,7 +2376,7 @@ td {
       </svg>
     </div>
     <div class="brand-copy">
-      <div class="brand">SIGMA <span>POINT</span></div>
+      <div class="brand" id="collegeBrandName">SIGMA POINT</div>
       <div class="tagline">Learn Today, Lead Tomorrow</div>
       <div class="brand-subtitle">Coaching Management Portal</div>
     </div>
@@ -2409,7 +2409,17 @@ td {
     </div>
     <div class="field">
       <label>Password (minimum 6 characters)</label>
-      <input id="password" type="password" minlength="6" autocomplete="current-password" placeholder="Enter password">
+      <div style="position:relative; width:100%;">
+  <input id="password" type="password" minlength="6"
+    autocomplete="current-password"
+    placeholder="Enter password"
+    style="width:100%; padding-right:48px;">
+
+  <button id="togglePassword" type="button"
+    aria-label="Show password"
+    title="Show password"
+    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); width:36px; height:36px; display:flex; align-items:center; justify-content:center; border:0 !important; background:transparent !important; box-shadow:none !important; color:#142b50 !important; cursor:pointer; font-size:20px; padding:0; z-index:10;">&#x1F441;&#xFE0F;</button>
+</div>
     </div>
 <button id="requestOtp" type="button" style="width:100%">Login</button>
 
@@ -2425,7 +2435,7 @@ td {
      style="display:inline-block; background:#142b50; color:white;
      padding:13px 25px; border-radius:10px; text-decoration:none;
      font-weight:700; border:1px solid #c49a32;">
-    ⬇ Download App
+    ÃƒÂ¢Ã‚Â¬Ã¢â‚¬Â¡ Download App
   </a>
 
   <p style="font-size:12px; color:#68758b; margin-top:8px;">
@@ -2446,20 +2456,20 @@ td {
       <div class="grid" id="stats"></div>
       <div class="dashboard-welcome">
   <div>
-    <span class="dashboard-label">SIGMA POINT · LEARNING PORTAL</span>
+    <span class="dashboard-label" id="dashboardCollegeLabel">SIGMA POINT Ãƒâ€šÃ‚Â· LEARNING PORTAL</span>
     <h2>Welcome to Your Dashboard</h2>
     <p>Learn Today, Lead Tomorrow.</p>
   </div>
-  <div class="dashboard-cap" aria-hidden="true">🎓</div>
+  <div class="dashboard-cap" aria-hidden="true">ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Å“</div>
 </div>
 
 <div class="quick-actions">
-  <button type="button" onclick="showPage('tests')">📝 View Tests</button>
-  <button type="button" onclick="showPage('results')">🏆 View Results</button>
-  <button type="button" onclick="showPage('notices')">📢 View Notices</button>
+  <button type="button" onclick="showPage('tests')">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â View Tests</button>
+  <button type="button" onclick="showPage('results')">ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Â  View Results</button>
+  <button type="button" onclick="showPage('notices')">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¢ View Notices</button>
 </div>
       <div class="card" style="margin-top:18px">
-        <h3>Welcome to SIGMA POINT</h3>
+        <h3 id="dashboardCollegeWelcome">Welcome to SIGMA POINT</h3>
         <p class="muted">Manage students, attendance, tests, results and fees from the sidebar.</p>
       </div>
     </section>
@@ -2521,18 +2531,54 @@ td {
       </div>
 
       <div class="field">
-        <label>Monthly Fee (₹)</label>
+        <label>Monthly Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
         <input id="sMonthlyFee" type="number" min="0" step="0.01" placeholder="500" required>
       </div>
 
       <div class="field">
-        <label>Total Course Fee (₹)</label>
+        <label>Total Course Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
         <input id="sCourseFee" type="number" min="0" step="0.01" placeholder="5000" required>
       </div>
     </div>
 
     <button id="addStudent">Create Student</button>
     <p class="hint">Student ko login email aur password privately dena.</p>
+  </div>
+
+  <div class="card admin-only">
+    <h3>Teacher Management</h3>
+    <div class="split">
+      <div class="field">
+        <label>Teacher name</label>
+        <input id="teacherName" required>
+      </div>
+      <div class="field">
+        <label>Teacher email</label>
+        <input id="teacherEmail" type="email" required>
+      </div>
+      <div class="field">
+        <label>Password (6+ characters)</label>
+        <input id="teacherPassword" type="password" required>
+      </div>
+    </div>
+    <button id="createTeacher" type="button">Create Teacher</button>
+    <p class="hint">Teacher ko login email aur password privately dena.</p>
+  </div>
+
+  <div class="card admin-only">
+    <h3>Teacher List</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody id="teachersRows"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="card">
@@ -2707,7 +2753,7 @@ td {
   <p id="studentFeeInfo">Loading fee details...</p>
 
   <div class="field">
-    <label>Payment Amount (₹)</label>
+    <label>Payment Amount (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
     <input id="onlineFeeAmount" type="number" min="1" step="0.01" placeholder="Enter amount">
   </div>
 
@@ -2723,7 +2769,7 @@ td {
       <div class="card cashier-only">
         <div class="split">
           <div class="field"><label>Student ID</label><input id="feeStudentId" placeholder="CC-..."></div>
-          <div class="field"><label>Amount (₹)</label><input id="feeAmount" type="number" min="1"></div>
+          <div class="field"><label>Amount (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label><input id="feeAmount" type="number" min="1"></div>
           <div class="field"><label>Month / purpose</label><input id="feeMonth" placeholder="October tuition"></div>
         </div>
         <button id="collectFee">Record Payment</button>
@@ -2741,7 +2787,7 @@ td {
     <section class="section" id="page-notices">
       <h1 class="page-title">Notices</h1>
       <div id="noticesGraph" class="analytics-panel"></div>
-      <div class="card staff-only">
+      <div class="card admin-only">
         <div class="field"><label>Notice title</label><input id="noticeTitle"></div>
         <div class="field"><label>Message</label><textarea id="noticeBody" rows="3"></textarea></div>
         <div class="field"><label>Class or All</label><input id="noticeClass" value="All"></div>
@@ -2752,10 +2798,10 @@ td {
 
     <!-- SIGMA POINT NOTES SECTION -->
     <section class="section" id="page-notes">
-      <h1 class="page-title">📚 Study Notes</h1>
+      <h1 class="page-title">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â¡ Study Notes</h1>
       <div id="notesGraph" class="analytics-panel"></div>
 
-      <div class="card admin-only">
+      <div class="card staff-only">
         <h3>Upload New Notes</h3>
 
         <div class="field">
@@ -2797,7 +2843,7 @@ td {
   </main>
 </div>
 
-<div class="footer">SIGMA POINT · Coaching Management Portal</div>
+<div class="footer">SIGMA POINT Ãƒâ€šÃ‚Â· Coaching Management Portal</div>
 
 <script>
     
@@ -3182,6 +3228,7 @@ async function deleteTest(testId) {
 
 
 const $ = id => document.getElementById(id);
+let collegeProfile = {};
 let currentUser = null;
 let studentsCache = [];
 
@@ -3225,33 +3272,38 @@ function roleIsStaff() {
 
 
 function setupNavigation() {
-  const items = [["dashboard", "🏠 Dashboard"]];
+  const role = currentUser.role;
+  const items = [["dashboard", "\u{1F3E0} Dashboard"]];
 
-  if (currentUser.role === "admin") {
-    items.push(["college-profile", "🏛️ College Profile"]);
+  if (role === "admin") {
+    items.push(["college-profile", "\u{1F3DB} College Profile"]);
+    items.push(["students", "\u{1F465} Students"]);
+    items.push(["attendance", "\u{1F4C5} Attendance"]);
+    items.push(["attendance-overview", "\u{1F4CA} Attendance Overview"]);
+    items.push(["tests", "\u{1F4DD} MCQ Tests"]);
+    items.push(["results", "\u{1F393} Results"]);
+    items.push(["fees", "\u{1F4B3} Fees / Receipts"]);
+    items.push(["notices", "\u{1F4E2} Notices"]);
+    items.push(["notes", "\u{1F4DA} Notes"]);
+  } else if (role === "teacher") {
+    items.push(["attendance", "\u{1F4C5} Attendance"]);
+    items.push(["attendance-overview", "\u{1F4CA} Attendance Overview"]);
+    items.push(["tests", "\u{1F4DD} MCQ Tests"]);
+    items.push(["results", "\u{1F393} Results"]);
+    items.push(["notes", "\u{1F4DA} Notes"]);
+  } else if (role === "student") {
+    items.push(["attendance", "\u{1F4C5} My Attendance"]);
+    items.push(["tests", "\u{1F4DD} MCQ Tests"]);
+    items.push(["results", "\u{1F393} My Results"]);
+    items.push(["fees", "\u{1F4B3} Fees / Receipts"]);
+    items.push(["notices", "\u{1F4E2} Notices"]);
+    items.push(["notes", "\u{1F4DA} Notes"]);
+  } else if (role === "cashier") {
+    items.push(["fees", "\u{1F4B3} Fees / Receipts"]);
   }
 
-  if (["admin", "teacher", "cashier"].includes(currentUser.role)) {
-    items.push(["students", "👥 Students"]);
-  }
-
-  if (roleIsStaff()) {
-    items.push(["attendance", "📅 Attendance"]);
-    items.push(["attendance-overview", "📊 Attendance Overview"]);
-  }
-
-  items.push(["tests", "📝 MCQ Tests"]);
-  items.push(["results", "🎓 Results Overview"]);
-
-  if (["admin", "cashier", "student"].includes(currentUser.role)) {
-    items.push(["fees", "💳 Fees / Receipts"]);
-  }
-
-  items.push(["notices", "📢 Notices"]);
-items.push(["notes", "📚 Notes"]);
   $("nav").innerHTML = items.map(([page, title]) =>
-    `<button class="navbtn ${page === "dashboard" ? "active" : ""}"
-      data-page="${page}">${title}</button>`
+    '<button class="navbtn ' + (page === "dashboard" ? "active" : "") + '" data-page="' + page + '">' + title + '</button>'
   ).join("");
 
   document.querySelectorAll(".navbtn").forEach(button => {
@@ -3259,32 +3311,53 @@ items.push(["notes", "📚 Notes"]);
   });
 
   document.querySelectorAll(".admin-only").forEach(element => {
-    element.classList.toggle("hidden", currentUser.role !== "admin");
+    element.classList.toggle("hidden", role !== "admin");
   });
 
   document.querySelectorAll(".staff-only").forEach(element => {
-    element.classList.toggle("hidden", !roleIsStaff());
+    element.classList.toggle("hidden", !["admin", "teacher"].includes(role));
   });
 
   document.querySelectorAll(".cashier-only").forEach(element => {
-    element.classList.toggle(
-      "hidden",
-      !["admin", "cashier"].includes(currentUser.role)
-    );
+    element.classList.toggle("hidden", !["admin", "cashier"].includes(role));
   });
 
-    document.querySelectorAll(".student-only").forEach(element => {
-    element.classList.toggle("hidden", currentUser.role !== "student");
+  document.querySelectorAll(".student-only").forEach(element => {
+    element.classList.toggle("hidden", role !== "student");
   });
 }
- 
+
+async function loadPublicCollegeProfile() {
+  try {
+    const data = await api("/api/college-profile/public");
+    collegeProfile = data.profile || {};
+
+    const brandName = $("collegeBrandName");
+    if (brandName) brandName.textContent = "SIGMA POINT";
+
+    const dashboardLabel = $("dashboardCollegeLabel");
+    if (dashboardLabel) {
+      dashboardLabel.textContent = "SIGMA POINT ERP";
+    }
+
+    const dashboardWelcome = $("dashboardCollegeWelcome");
+    if (dashboardWelcome) {
+      dashboardWelcome.textContent =
+        "Welcome to " + (collegeProfile.collegeName || "SIGMA POINT");
+    }
+  } catch (error) {
+    console.warn("College profile load nahi hua:", error.message);
+    collegeProfile = {};
+  }
+}
 
 async function openPortal(user) {
   currentUser = user;
+  await loadPublicCollegeProfile();
   $("loginScreen").classList.add("hidden");
   $("portal").classList.remove("hidden");
   $("userLine").classList.remove("hidden");
-  $("userName").textContent = user.name + " · " + user.role;
+  $("userName").textContent = user.name + " Ãƒâ€šÃ‚Â· " + user.role;
   setupNavigation();
   await loadPage("dashboard");
 }
@@ -3395,7 +3468,10 @@ async function loadPage(page) {
     ).join("");
   }
 
-  if (page === "students") await loadStudents();
+  if (page === "students") {
+    await loadStudents();
+    if (currentUser?.role === "admin") await loadTeachers();
+  }
   if (page === "attendance") await loadAttendanceEditor();
   if (page === "attendance-overview") await loadAttendanceOverview();
   if (page === "tests") await loadTests();
@@ -3455,6 +3531,22 @@ async function saveCollegeProfile(event) {
     button.disabled = false;
     button.textContent = "Save College Profile";
   }
+}
+
+// TEACHERS
+async function loadTeachers() {
+  const data = await api("/api/teachers");
+  const teachers = Array.isArray(data.teachers) ? data.teachers : [];
+
+  $("teachersRows").innerHTML = teachers.length
+    ? teachers.map(teacher => `
+        <tr>
+          <td>${escapeHTML(teacher.name)}</td>
+          <td>${escapeHTML(teacher.email)}</td>
+          <td>Teacher</td>
+        </tr>
+      `).join("")
+    : '<tr><td colspan="3">Abhi koi Teacher account nahi hai.</td></tr>';
 }
 
 // STUDENTS
@@ -3673,6 +3765,36 @@ const attendanceDateInput = $("attDate");
 if (attendanceDateInput) {
   attendanceDateInput.value = new Date().toLocaleDateString("en-CA");
 }
+$("createTeacher").onclick = async () => {
+  const button = $("createTeacher");
+
+  button.disabled = true;
+  button.textContent = "Creating...";
+
+  try {
+    await api("/api/teachers", {
+      method: "POST",
+      body: JSON.stringify({
+        name: $("teacherName").value.trim(),
+        email: $("teacherEmail").value.trim(),
+        password: $("teacherPassword").value
+      })
+    });
+
+    $("teacherName").value = "";
+    $("teacherEmail").value = "";
+    $("teacherPassword").value = "";
+
+    await loadTeachers();
+    alert("Teacher account successfully create ho gaya.");
+  } catch (error) {
+    alert(error.message || "Teacher account create nahi ho saka.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Create Teacher";
+  }
+};
+
 async function loadAttendanceEditor() {
   await loadStudents();
 
@@ -3701,7 +3823,7 @@ renderAnalytics(
   $("attendanceEditor").innerHTML = studentsCache.map(student => `
     <div class="row" style="padding:12px 0;border-bottom:1px solid #e0e7f1">
       <div><b>${escapeHTML(student.name)}</b>
-        <div class="muted">${escapeHTML(student.studentCode)} · ${escapeHTML(student.className)}</div>
+        <div class="muted">${escapeHTML(student.studentCode)} Ãƒâ€šÃ‚Â· ${escapeHTML(student.className)}</div>
       </div>
       <div>
         <select data-student="${student.id}">
@@ -3813,12 +3935,12 @@ const publishedResults = resultsData.results || [];
   $("testAdminList").innerHTML = roleIsStaff()
     ? tests.map(test => `
       <div class="notice">
-        <b>${escapeHTML(test.title)}</b> · ${escapeHTML(test.className)}
+        <b>${escapeHTML(test.title)}</b> Ãƒâ€šÃ‚Â· ${escapeHTML(test.className)}
         
         ${roleIsStaff() ? `
           <details style="margin-top:12px">
             <summary style="cursor:pointer;font-weight:bold">
-              🔑 View Answer Key & Solutions
+              ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Ëœ View Answer Key & Solutions
             </summary>
 
             ${test.questions.map((q, i) => `
@@ -3838,7 +3960,7 @@ const publishedResults = resultsData.results || [];
         ` : ""}
 
 
-        · ${test.questions.length} questions
+        Ãƒâ€šÃ‚Â· ${test.questions.length} questions
         <span class="badge">${test.published ? "Published" : "Draft"}</span>
         <div class="muted">Test ID: ${escapeHTML(test.id)}</div>
 
@@ -3859,7 +3981,7 @@ const publishedResults = resultsData.results || [];
   $("studentTests").innerHTML = visibleTests.map(test => `
     <div class="test-card">
       <h3>${escapeHTML(test.title)}</h3>
-      <p class="muted">${escapeHTML(test.className)} · ${test.questions.length} questions</p>
+      <p class="muted">${escapeHTML(test.className)} Ãƒâ€šÃ‚Â· ${test.questions.length} questions</p>
       <form onsubmit="submitTest(event, '${test.id}')">
         ${test.questions.map((question, index) => `
           <div class="question">
@@ -3934,6 +4056,43 @@ $("createTest").onclick = async () => {
   }
 };
 
+function showSuccessPopup(title, detail, isError = false) {
+  const oldPopup = document.getElementById("sigmaSuccessPopup");
+  if (oldPopup) oldPopup.remove();
+
+  const overlay = document.createElement("div");
+  overlay.id = "sigmaSuccessPopup";
+  overlay.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(7,18,38,.72);display:flex;align-items:center;justify-content:center;padding:20px;";
+
+  const card = document.createElement("div");
+  card.style.cssText = "width:100%;max-width:390px;background:#fff;border-radius:20px;padding:30px 24px;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.3);";
+
+  const tick = document.createElement("div");
+  tick.textContent = isError ? "!" : "\u2713";
+  tick.style.cssText = "width:68px;height:68px;margin:0 auto 16px;border-radius:50%;background:" + (isError ? "#fde8e8" : "#e6f7ed") + ";color:" + (isError ? "#c62828" : "#16834a") + ";font-size:42px;font-weight:800;line-height:68px;";
+
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  heading.style.cssText = "color:" + (isError ? "#c62828" : "#142b50") + ";margin:0 0 10px;font-size:22px;";
+
+  const messageText = document.createElement("p");
+  messageText.textContent = detail;
+  messageText.style.cssText = "color:#536174;margin:0 0 22px;line-height:1.6;";
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.textContent = "Continue";
+  close.style.cssText = "background:#142b50;color:#fff;border:0;border-radius:10px;padding:12px 28px;font-weight:700;cursor:pointer;";
+  close.onclick = () => overlay.remove();
+
+  card.append(tick, heading, messageText, close);
+  overlay.appendChild(card);
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) overlay.remove();
+  });
+  document.body.appendChild(overlay);
+}
+
 async function submitTest(event, testId) {
   event.preventDefault();
 
@@ -3949,6 +4108,7 @@ async function submitTest(event, testId) {
     });
 
     message("testsMessage", data.message);
+    showSuccessPopup("Test Submitted Successfully!", "Your answers have been submitted successfully.");
     await loadTests();
   } catch (error) {
     message("testsMessage", error.message, true);
@@ -3999,7 +4159,7 @@ renderAnalytics(
       <td>
         <button type="button"
           onclick="downloadResultPDF(window.studentResults[${index}])">
-          📄 Download PDF
+          ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Å¾ Download PDF
         </button>
       </td>
     </tr>
@@ -4010,7 +4170,7 @@ renderAnalytics(
           <td colspan="7">
             <details>
               <summary style="cursor:pointer;font-weight:bold;padding:10px">
-                📘 Review Answers — ${escapeHTML(result.testTitle)}
+                ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹Å“ Review Answers ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${escapeHTML(result.testTitle)}
               </summary>
 
               ${result.review.map((q, qIndex) => `
@@ -4045,7 +4205,7 @@ renderAnalytics(
     const overview = await api("/api/results/overview");
 
     $("submissionsRows").innerHTML = `
-      <h3>Student Submissions — Teacher View</h3>
+      <h3>Student Submissions ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Teacher View</h3>
       <div class="table-wrap"><table>
         <thead>
           <tr>
@@ -4086,10 +4246,11 @@ $("publishResults").onclick = async () => {
       })
     });
 
-    alert(data.message);
+    if (data.ok !== true) throw new Error(data.message || "Results publish nahi ho sake.");
+    showSuccessPopup("Results Published Successfully!", data.message || "Students can now view their published results.");
     await loadResults();
   } catch (error) {
-    alert(error.message);
+    showSuccessPopup("Results Not Published", error.message || "Kuch technical problem aayi. Dobara try karein.", true);
   }
 };
 
@@ -4103,7 +4264,7 @@ async function loadFees() {
         "Student: " + info.studentName +
         " | ID: " + info.studentCode +
         " | Class: " + info.className +
-        " | Monthly Fee: ₹" + Number(info.monthlyFee).toLocaleString("en-IN");
+        " | Monthly Fee: ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹" + Number(info.monthlyFee).toLocaleString("en-IN");
 
       $("onlineFeeAmount").value =
         Number(info.monthlyFee) > 0 ? Number(info.monthlyFee) : "";
@@ -4130,7 +4291,7 @@ renderAnalytics(
   "Fees & Receipts Overview",
   [
     { label: "Total Receipts", value: fees.length },
-    { label: "Total Collected", value: "₹" + totalAmount.toLocaleString("en-IN") }
+    { label: "Total Collected", value: "ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹" + totalAmount.toLocaleString("en-IN") }
   ],
   Object.entries(monthCounts).map(([label, value]) => ({ label, value }))
 );
@@ -4140,7 +4301,7 @@ renderAnalytics(
       <td>${escapeHTML(fee.receiptNo)}</td>
       <td>${escapeHTML(fee.studentName)}</td>
       <td>${escapeHTML(fee.className)}</td>
-      <td>₹${fee.amount}</td>
+      <td>ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹${fee.amount}</td>
       <td>${escapeHTML(fee.month)}</td>
       <td>${new Date(fee.createdAt).toLocaleDateString()}</td>
     </tr>
@@ -4277,8 +4438,8 @@ async function loadNotes() {
   const messageBox = $("noteMessage");
 
   try {
-    // Class options sirf admin ke liye load karo
-    if (currentUser.role === "admin") {
+    // Class options admin aur teacher dono ke liye load karo
+    if (["admin", "teacher"].includes(currentUser.role)) {
       const classSelect = $("noteClass");
       const previousClass = classSelect.value;
 
@@ -4335,20 +4496,20 @@ renderAnalytics(
           href="/api/notes/${encodeURIComponent(note.id)}/file"
           target="_blank"
           rel="noopener noreferrer"
-        >📖 Open / View Notes</a>
+        >ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬â€œ Open / View Notes</a>
 
         <a
           href="/api/notes/${encodeURIComponent(note.id)}/file"
           download="${escapeHTML(note.originalName || note.title)}"
           style="margin-left:12px;"
-        >⬇ Download</a>
+        >ÃƒÂ¢Ã‚Â¬Ã¢â‚¬Â¡ Download</a>
 
-        ${currentUser.role === "admin" ? `
+        ${currentUser.role === "admin" || (currentUser.role === "teacher" && note.createdBy === currentUser.id) ? `
           <button
             type="button"
             style="margin-left:12px;"
             onclick="deleteNote('${encodeURIComponent(note.id)}')"
-          >🗑 Delete</button>
+          >ÃƒÂ°Ã…Â¸Ã¢â‚¬â€Ã¢â‚¬Ëœ Delete</button>
         ` : ""}
       </div>
     `).join("") || `<p class="muted">Abhi koi notes upload nahi hue hain.</p>`;
@@ -4498,6 +4659,30 @@ $("requestOtp").onclick = async () => {
   }
 };
 
+// Enter key se bhi existing Login handler chalega
+["email", "password"].forEach(id => {
+  $(id).addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      $("requestOtp").click();
+    }
+  });
+});
+// Password Show / Hide with eye blink
+$("togglePassword").addEventListener("click", () => {
+  const password = $("password");
+  password.type = password.type === "password" ? "text" : "password";
+
+  $("togglePassword").animate(
+    [
+      { opacity: 1 },
+      { opacity: 0.1 },
+      { opacity: 1 }
+    ],
+    { duration: 250, iterations: 1 }
+  );
+});
+
 $("logoutBtn").onclick = async () => {
   try {
     await api("/api/auth/logout", {
@@ -4587,10 +4772,10 @@ window.addEventListener("pagehide", () => {
       <label for="editStudentCode">Student ID</label>
       <input id="editStudentCode" type="text" required>
       
-<label for="editStudentMonthlyFee">Monthly Fee (₹)</label>
+<label for="editStudentMonthlyFee">Monthly Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
 <input id="editStudentMonthlyFee" type="number" min="0" step="0.01" required>
 
-<label for="editStudentCourseFee">Total Course Fee (₹)</label>
+<label for="editStudentCourseFee">Total Course Fee (ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹)</label>
 <input id="editStudentCourseFee" type="number" min="0" step="0.01" required>
 
 

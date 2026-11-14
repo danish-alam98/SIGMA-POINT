@@ -491,7 +491,10 @@ app.get("/api/dashboard", requireLogin, (req, res) => {
 
 // STUDENTS: Admin creates accounts.
 app.get("/api/students", requireLogin, allowRoles("admin", "teacher", "cashier"), (req, res) => {
-  res.json({ students: db.students });
+  const students = req.user.role === "teacher"
+    ? db.students.map(({ id, userId, name, className, studentCode }) => ({ id, userId, name, className, studentCode }))
+    : db.students;
+  res.json({ students });
 });
 
 
@@ -561,6 +564,53 @@ db.students.push(student);
 saveDB();
 
 res.status(201).json({ student });
+});
+
+// TEACHERS: Admin creates and lists teacher accounts.
+app.get("/api/teachers", requireLogin, allowRoles("admin"), (req, res) => {
+  const teachers = db.users
+    .filter(user => user.role === "teacher")
+    .map(({ id, name, email, role }) => ({ id, name, email, role }));
+
+  res.json({ teachers });
+});
+
+app.post("/api/teachers", requireLogin, allowRoles("admin"), async (req, res) => {
+  const name = clean(req.body.name);
+  const email = clean(req.body.email, 160).toLowerCase();
+  const password = String(req.body.password || "");
+
+  if (!name || !validEmail(email) || password.length < 6) {
+    return res.status(400).json({
+      error: "Teacher name, valid email aur minimum 6-character password required hain."
+    });
+  }
+
+  if (findUser(email)) {
+    return res.status(409).json({
+      error: "Is email ka account already exists."
+    });
+  }
+
+  const teacher = {
+    id: makeId("user"),
+    name,
+    email,
+    passwordHash: await bcrypt.hash(password, 12),
+    role: "teacher"
+  };
+
+  db.users.push(teacher);
+  saveDB();
+
+  res.status(201).json({
+    teacher: {
+      id: teacher.id,
+      name: teacher.name,
+      email: teacher.email,
+      role: teacher.role
+    }
+  });
 });
 
 // UPDATE STUDENT: Admin can edit student details and fees.
@@ -686,7 +736,7 @@ app.patch("/api/students/:id/status", requireLogin, allowRoles("admin"), async (
   });
 });
 
-app.get("/api/attendance", requireLogin, (req, res) => {
+app.get("/api/attendance", requireLogin, allowRoles("admin", "teacher", "student"), (req, res) => {
   const date = clean(req.query.date, 10);
 
   const rows = db.attendance.filter(a =>
@@ -756,12 +806,13 @@ app.get("/api/attendance/overview", requireLogin, allowRoles("admin", "teacher")
 
 // TESTS: teacher submits, student takes, teacher/admin publishes results.
 
-app.get("/api/tests", requireLogin, (req, res) => {
+app.get("/api/tests", requireLogin, allowRoles("admin", "teacher", "student"), (req, res) => {
   const tests = db.tests
     .filter(test =>
       req.user.role !== "student" ||
       (test.published &&
-       test.className === req.user.className)
+       test.className === req.user.className &&
+       !db.submissions.some(s => s.testId === test.id && s.studentUserId === req.user.id))
     )
     .map(test => {
       if (req.user.role === "student") {
@@ -973,7 +1024,7 @@ app.post("/api/tests/:id/submit", requireLogin, allowRoles("student"), async (re
 
 // RESULTS: student can only see published results.
 
-app.get("/api/results", requireLogin, (req, res) => {
+app.get("/api/results", requireLogin, allowRoles("admin", "teacher", "student"), (req, res) => {
   const results = db.results
     .filter(r =>
       req.user.role !== "student" ||
@@ -1038,19 +1089,30 @@ app.post("/api/results/publish", requireLogin, allowRoles("admin", "teacher"), a
     const testId = clean(req.body.testId, 100);
     const className = clean(req.body.className, 60);
 
+    const matchingSubmissions = db.submissions.filter(submission =>
+      (!testId || submission.testId === testId) &&
+      (!className || submission.className === className)
+    );
+
+    if (matchingSubmissions.length === 0) {
+      return res.status(404).json({
+        error: "Koi matching student submission nahi mili. Test ID aur Class check karein."
+      });
+    }
+
+    const unpublishedSubmissions = matchingSubmissions.filter(submission =>
+      !db.results.some(result => result.submissionId === submission.id)
+    );
+
+    if (unpublishedSubmissions.length === 0) {
+      return res.status(409).json({
+        error: "In submissions ke results pehle hi publish ho chuke hain."
+      });
+    }
+
     let count = 0;
 
-    for (const submission of db.submissions) {
-      if (testId && submission.testId !== testId) continue;
-      if (className && submission.className !== className) continue;
-
-      // Already-published results ko dobara count nahi karna.
-      const alreadyPublished = db.results.some(
-        r => r.submissionId === submission.id
-      );
-
-      if (alreadyPublished) continue;
-
+    for (const submission of unpublishedSubmissions) {
       submission.published = true;
 
       const result = {
@@ -1297,7 +1359,7 @@ app.get("/api/notices", requireLogin, (req, res) => {
 });
 
 
-app.post("/api/notices", requireLogin, allowRoles("admin", "teacher"), async (req, res) => {
+app.post("/api/notices", requireLogin, allowRoles("admin"), async (req, res) => {
   try {
     const title = clean(req.body.title);
     const body = clean(req.body.body, 2000);
@@ -1352,6 +1414,27 @@ app.get("/api/college-profile", requireLogin, allowRoles("admin"), (req, res) =>
   res.json({ profile: { ...EMPTY_COLLEGE_PROFILE, ...(db.collegeProfile || {}) } });
 });
 
+
+app.get("/api/college-profile/public", requireLogin, (req, res) => {
+  const profile = db.collegeProfile || {};
+
+  res.json({
+    profile: {
+      collegeName: clean(profile.collegeName, 160),
+      shortName: clean(profile.shortName, 60),
+      address: clean(profile.address, 300),
+      city: clean(profile.city, 80),
+      state: clean(profile.state, 80),
+      pinCode: clean(profile.pinCode, 12),
+      phone: clean(profile.phone, 25),
+      email: clean(profile.email, 160),
+      website: clean(profile.website, 200),
+      affiliation: clean(profile.affiliation, 160),
+      principalName: clean(profile.principalName, 120),
+      academicSession: clean(profile.academicSession, 30)
+    }
+  });
+});
 app.put("/api/college-profile", requireLogin, allowRoles("admin"), async (req, res) => {
   try {
     const body = req.body || {};
@@ -1414,7 +1497,7 @@ app.get("/api/notes", requireLogin, (req, res) => {
 app.post(
   "/api/notes",
   requireLogin,
-  allowRoles("admin"),
+  allowRoles("admin", "teacher"),
   handleNoteUpload,
   async (req, res) => {
     try {
@@ -1523,7 +1606,7 @@ app.get("/api/notes/:id/file", requireLogin, (req, res) => {
 app.delete(
   "/api/notes/:id",
   requireLogin,
-  allowRoles("admin"),
+  allowRoles("admin", "teacher"),
   async (req, res) => {
     const notes = Array.isArray(db.notes) ? db.notes : [];
     const index = notes.findIndex(
@@ -1535,6 +1618,10 @@ app.delete(
     }
 
     const note = notes[index];
+
+    if (req.user.role === "teacher" && note.createdBy !== req.user.id) {
+      return res.status(403).json({ error: "Teacher sirf apne upload kiye Notes delete kar sakta hai." });
+    }
 
     try {
       notes.splice(index, 1);
@@ -1596,7 +1683,7 @@ async function startServer() {
       );
       console.log(
         "Teacher email: " +
-        (process.env.TEACHER_EMAIL || "teacher@example.com")
+           (process.env.TEACHER_EMAIL || "teacher@example.com")
       );
     });
   } catch (error) {
